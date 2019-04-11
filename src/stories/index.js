@@ -6,6 +6,8 @@ import { linkTo } from "@storybook/addon-links";
 
 import { Button, Welcome } from "@storybook/react/demo";
 
+import Progress from "../components/Progress";
+import notes from "./notes/progress.md";
 
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
@@ -23,3 +25,10 @@ storiesOf("Button", module)
     </Button>
   ));
 
+storiesOf("Progress", module).add(
+  "a progress bar",
+  () => <Progress width={256} m={1} percent={30} />,
+  {
+    notes
+  }
+);

@@ -1,7 +1,13 @@
 export default {
   colors: {
     blue: "blue",
-    lightgray: "#f6f6ff"
+    gray: [
+      "rgb(221, 221, 221)",
+      "rgb(187, 187, 187)",
+      "rgb(153, 153, 153)",
+      "rgb(85, 85, 85)",
+      "rgb(51, 51, 51)"
+    ]
   },
   fonts: {
     sans: "system-ui, sans-serif",
