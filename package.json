@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.10",
+    "@rebass/emotion": "^3.1.0",
+    "emotion-theming": "^10.0.10",
+    "polished": "^3.2.0",
+    "prop-types": "^15.7.2",
+    "rc-progress": "^2.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8"
