@@ -23,6 +23,8 @@ export default function MyEventsSummary() {
   }
 
   const handleLogout = () => {
+    const auth2 = window.gapi.auth2.getAuthInstance();
+    auth2.signOut();
     firebase.auth().signOut();
   };
 
