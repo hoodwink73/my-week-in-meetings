@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
+import moment from "moment";
 
 export default function getStartOfWeekInUTC() {
-  return dayjs()
-    .startOf("week")
+  return moment()
+    .startOf("isoWeek")
     .toISOString();
 }
