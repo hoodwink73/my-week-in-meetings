@@ -8,7 +8,7 @@ import { Button, Heading } from "@rebass/emotion";
 
 import Time from "../Time";
 import moment from "moment";
-import getStartOfWeekInUTC from "../../utils";
+import { getStartOfWeekInUTC, filterEventsForToday } from "../../utils";
 
 export default function MyEventsSummary() {
   let calendarDetailsFirebaseRequest,
@@ -78,16 +78,18 @@ export default function MyEventsSummary() {
       moment().day()
     ];
 
-  let eventsThisWeek;
+  let eventsToday;
 
   if (
     !eventsForThisWeekFirebaseRequest.loading &&
     !eventsForThisWeekFirebaseRequest.value.empty
   ) {
-    eventsThisWeek = [];
+    let eventsThisWeek = (eventsToday = []);
     eventsForThisWeekFirebaseRequest.value.forEach(function(doc) {
       eventsThisWeek.push(doc.data());
     });
+
+    eventsToday = filterEventsForToday(eventsThisWeek);
   }
 
   if (calendarDetailsFirebaseRequest.data) {
@@ -105,8 +107,7 @@ export default function MyEventsSummary() {
           </>
         )}
 
-        {eventsThisWeek &&
-          eventsThisWeek.map(event => <div>{event.summary}</div>)}
+        {eventsToday && eventsToday.map(event => <div>{event.summary}</div>)}
 
         <Button onClick={handleLogout}> Logout </Button>
       </>
