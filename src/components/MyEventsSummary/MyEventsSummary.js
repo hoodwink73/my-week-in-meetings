@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDocument } from "react-firebase-hooks/firestore";
+import { useDocument, useCollection } from "react-firebase-hooks/firestore";
 import { Button, Heading } from "@rebass/emotion";
 
 import Time from "../Time";
@@ -11,7 +11,9 @@ import moment from "moment";
 import getStartOfWeekInUTC from "../../utils";
 
 export default function MyEventsSummary() {
-  let calendarDetails, thisWeekAggregateDetails;
+  let calendarDetailsFirebaseRequest,
+    thisWeekAggregateDetailsFirebaseRequest,
+    eventsForThisWeekFirebaseRequest;
 
   const { user } = useAuthState(firebase.auth());
 
@@ -28,7 +30,7 @@ export default function MyEventsSummary() {
       firebase.firestore().doc(`users/${googleID}`)
     );
 
-    calendarDetails = { error, loading, value };
+    calendarDetailsFirebaseRequest = { error, loading, value };
   }
 
   {
@@ -36,18 +38,32 @@ export default function MyEventsSummary() {
       firebase.firestore().doc(`users/${googleID}/aggregates/${startOfWeek}`)
     );
 
-    thisWeekAggregateDetails = { error, loading, value };
+    thisWeekAggregateDetailsFirebaseRequest = { error, loading, value };
   }
 
-  if (!calendarDetails.loading && calendarDetails.value.exists) {
-    calendarDetails.data = calendarDetails.value.data();
+  {
+    const { error, loading, value } = useCollection(
+      firebase
+        .firestore()
+        .collection(`users/${googleID}/events`)
+        .where("enrichedData.week", "==", startOfWeek)
+    );
+
+    eventsForThisWeekFirebaseRequest = { error, loading, value };
   }
 
   if (
-    !thisWeekAggregateDetails.loading &&
-    thisWeekAggregateDetails.value.exists
+    !calendarDetailsFirebaseRequest.loading &&
+    calendarDetailsFirebaseRequest.value.exists
   ) {
-    thisWeekAggregateDetails.data = thisWeekAggregateDetails.value.data();
+    calendarDetailsFirebaseRequest.data = calendarDetailsFirebaseRequest.value.data();
+  }
+
+  if (
+    !thisWeekAggregateDetailsFirebaseRequest.loading &&
+    thisWeekAggregateDetailsFirebaseRequest.value.exists
+  ) {
+    thisWeekAggregateDetailsFirebaseRequest.data = thisWeekAggregateDetailsFirebaseRequest.value.data();
   }
 
   const handleLogout = () => {
@@ -57,15 +73,29 @@ export default function MyEventsSummary() {
   };
 
   const totalMeetingTimeToday =
-    thisWeekAggregateDetails.data &&
-    thisWeekAggregateDetails.data.eventsFrequencyByDayOfWeek[moment().day()];
+    thisWeekAggregateDetailsFirebaseRequest.data &&
+    thisWeekAggregateDetailsFirebaseRequest.data.eventsFrequencyByDayOfWeek[
+      moment().day()
+    ];
 
-  if (calendarDetails.data) {
+  let eventsThisWeek;
+
+  if (
+    !eventsForThisWeekFirebaseRequest.loading &&
+    !eventsForThisWeekFirebaseRequest.value.empty
+  ) {
+    eventsThisWeek = [];
+    eventsForThisWeekFirebaseRequest.value.forEach(function(doc) {
+      eventsThisWeek.push(doc.data());
+    });
+  }
+
+  if (calendarDetailsFirebaseRequest.data) {
     return (
       <>
         <div>
           You are viewing the calendar for{" "}
-          {calendarDetails.data.calendar.summary}
+          {calendarDetailsFirebaseRequest.data.calendar.summary}
         </div>
 
         {totalMeetingTimeToday && (
@@ -74,6 +104,10 @@ export default function MyEventsSummary() {
             <Time timeInMs={totalMeetingTimeToday} />
           </>
         )}
+
+        {eventsThisWeek &&
+          eventsThisWeek.map(event => <div>{event.summary}</div>)}
+
         <Button onClick={handleLogout}> Logout </Button>
       </>
     );
