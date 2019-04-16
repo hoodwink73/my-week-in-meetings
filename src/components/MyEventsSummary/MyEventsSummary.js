@@ -8,7 +8,12 @@ import { Button, Heading } from "@rebass/emotion";
 
 import Time from "../Time";
 import moment from "moment";
-import { getStartOfWeekInUTC, filterEventsForToday } from "../../utils";
+import {
+  getStartOfWeekInUTC,
+  filterEventsForToday,
+  timeLeftForWorkTodayInMs,
+  sortEvents
+} from "../../utils";
 
 export default function MyEventsSummary() {
   let calendarDetailsFirebaseRequest,
@@ -78,7 +83,7 @@ export default function MyEventsSummary() {
       moment().day()
     ];
 
-  let eventsToday;
+  let eventsToday, timeLeftForWorkToday;
 
   if (
     !eventsForThisWeekFirebaseRequest.loading &&
@@ -90,6 +95,7 @@ export default function MyEventsSummary() {
     });
 
     eventsToday = filterEventsForToday(eventsThisWeek);
+    timeLeftForWorkToday = timeLeftForWorkTodayInMs(eventsToday);
   }
 
   if (calendarDetailsFirebaseRequest.data) {
@@ -107,7 +113,20 @@ export default function MyEventsSummary() {
           </>
         )}
 
-        {eventsToday && eventsToday.map(event => <div>{event.summary}</div>)}
+        {timeLeftForWorkToday && (
+          <>
+            <Heading>Total Time Left For Work Today</Heading>
+            <Time timeInMs={timeLeftForWorkToday} />
+          </>
+        )}
+
+        {eventsToday &&
+          sortEvents(eventsToday).map(event => (
+            <div key={event.start.dateTime}>
+              {event.summary} – {moment(event.start.dateTime).format("k : mm")}{" "}
+              – {moment(event.end.dateTime).format("k : mm")}
+            </div>
+          ))}
 
         <Button onClick={handleLogout}> Logout </Button>
       </>
