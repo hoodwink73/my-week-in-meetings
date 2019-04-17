@@ -9,7 +9,7 @@ export default function Time({ timeInMs }) {
 
   return (
     <Text fontSize={[5]} fontWeight="bold" fontFamily="sans" color="gray.4">
-      {`${parseInt(duration.asHours(), 10)} hrs ${
+      {`${parseInt(parseFloat(duration.asHours()).toFixed(2), 10)} hrs ${
         duration.minutes() ? `${leftPad(duration.minutes(), 2, 0)} mins` : ""
       }`}
     </Text>
