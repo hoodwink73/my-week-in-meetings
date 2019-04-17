@@ -14,6 +14,12 @@ export default function timeLeftForWorkTodayInMs(
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
 
+  // if the workday hasn't begun, we should only start counting from beginning
+  // of the work day
+  if (now.isBefore(workStartTime)) {
+    now = workStartTime;
+  }
+
   // TODO: Remove the hard coded value here
   const workStartTime = moment(mock.TODAY)
     .hours(workDayTiming.start.hours)
