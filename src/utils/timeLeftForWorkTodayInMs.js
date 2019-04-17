@@ -66,13 +66,13 @@ export default function timeLeftForWorkTodayInMs(
       key: "end.dateTime"
     })[0];
 
-    now = moment(eventWhichIsTheLastToEnd.end.dateTime);
-  }
-
-  // if the workday hasn't begun, we should only start counting from beginning
-  // of the work day
-  if (now.isBefore(workStartTime)) {
-    now = workStartTime;
+    // if a current meeting (which is occuring now) lasts beyond the workday end
+    // then no time is left for work today
+    if (moment(eventWhichIsTheLastToEnd.end.dateTime).isAfter(workEndTime)) {
+      return 0;
+    } else {
+      now = moment(eventWhichIsTheLastToEnd.end.dateTime);
+    }
   }
 
   const totalTimeLeftForWorkTodayInMs = workEndTime.diff(now, "milliseconds");
@@ -80,5 +80,8 @@ export default function timeLeftForWorkTodayInMs(
     (sum, current) => sum + current
   );
 
-  return totalTimeLeftForWorkTodayInMs - timeThatWillBeSpentInMeetingsTodayInMs;
+  const totalWorkTimeLeftToday =
+    totalTimeLeftForWorkTodayInMs - timeThatWillBeSpentInMeetingsTodayInMs;
+
+  return totalWorkTimeLeftToday;
 }
