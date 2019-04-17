@@ -14,6 +14,7 @@ import {
   timeLeftForWorkTodayInMs,
   sortEvents
 } from "../../utils";
+import mock from "../../mock";
 
 export default function MyEventsSummary() {
   let calendarDetailsFirebaseRequest,
@@ -28,7 +29,7 @@ export default function MyEventsSummary() {
 
   // TODO: replace the hard-coded week value
   // const startOfWeek = getStartOfWeekInUTC();
-  const startOfWeek = "2019-03-31T18:30:00.000Z";
+  const startOfWeek = mock.START_OF_WEEK;
 
   {
     const { error, loading, value } = useDocument(
@@ -108,7 +109,7 @@ export default function MyEventsSummary() {
 
         {totalMeetingTimeToday && (
           <>
-            <Heading>Total Work Time today</Heading>
+            <Heading>Total Meeting Time today</Heading>
             <Time timeInMs={totalMeetingTimeToday} />
           </>
         )}

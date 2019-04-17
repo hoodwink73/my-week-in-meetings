@@ -1,10 +1,11 @@
 import moment from "moment";
+import mock from "../mock";
 
 export default function(events) {
   return events.reduce(
     (timeBuckets, event) => {
       // TODO: Remove the hard coded value here
-      const now = moment("2019-04-02T16:00");
+      const now = moment(mock.NOW);
 
       if (
         moment(event.start.dateTime).isBefore(now, "minute") &&

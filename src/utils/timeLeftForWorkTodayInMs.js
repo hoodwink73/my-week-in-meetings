@@ -1,25 +1,26 @@
 import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
+import mock from "../mock";
 
 export default function timeLeftForWorkTodayInMs(
   events,
   workDayTiming = {
-    start: { hours: 9, minutes: 0 },
-    end: { hours: 17, minutes: 0 }
+    start: mock.WORK_START_TIME,
+    end: mock.WORK_END_TIME
   }
 ) {
   const { happening, willHappen } = groupEventsByTime(events);
   // TODO: Remove the hard coded value here
-  let now = moment("2019-04-02T16:00");
+  let now = moment(mock.NOW);
 
   // TODO: Remove the hard coded value here
-  const workStartTime = moment("2019-04-02")
+  const workStartTime = moment(mock.TODAY)
     .hours(workDayTiming.start.hours)
     .minutes(workDayTiming.start.minutes);
 
   // TODO: Remove the hard coded value here
-  let workEndTime = moment("2019-04-02")
+  let workEndTime = moment(mock.TODAY)
     .hours(workDayTiming.end.hours)
     .minutes(workDayTiming.end.minutes);
 
