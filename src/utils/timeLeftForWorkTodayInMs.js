@@ -36,7 +36,7 @@ export default function timeLeftForWorkTodayInMs(
       ) {
         return 0;
       } else if (
-        now.isBetween(
+        workEndTime.isBetween(
           moment(event.start.dateTime),
           moment(event.end.dateTime),
           "minute"
