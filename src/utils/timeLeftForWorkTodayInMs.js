@@ -16,12 +16,6 @@ export default function timeLeftForWorkTodayInMs(
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
 
-  // if the workday hasn't begun, we should only start counting from beginning
-  // of the work day
-  if (now.isBefore(workStartTime)) {
-    now = workStartTime;
-  }
-
   // TODO: Remove the hard coded value here
   const workStartTime = moment(mock.TODAY)
     .hours(workDayTiming.start.hours)
@@ -31,6 +25,21 @@ export default function timeLeftForWorkTodayInMs(
   let workEndTime = moment(mock.TODAY)
     .hours(workDayTiming.end.hours)
     .minutes(workDayTiming.end.minutes);
+
+  // if the workday hasn't begun, we should only start counting from beginning
+  // of the work day
+  if (now.isBefore(workStartTime, "minutes")) {
+    now = workStartTime;
+  }
+
+  // if the current instant is beyond worday end
+  // no time left for work today
+  if (
+    now.isAfter(workEndTime, "minutes") ||
+    now.isSame(workEndTime, "minutes")
+  ) {
+    return 0;
+  }
 
   let futureEventsDuration = [];
 
@@ -65,9 +74,8 @@ export default function timeLeftForWorkTodayInMs(
   // there can be meetings that are overlapping
   // and these time of overlaps should not be deducted from the available
   // time of work
-  const effectiveTimeInOverlappedEventsInMs = timeInOverlappedMeetingsInMs(
-    willHappen
-  );
+  const effectiveTimeInOverlappedEventsInMs =
+    willHappen.length > 0 ? timeInOverlappedMeetingsInMs(willHappen) : 0;
 
   // if a meeting is happening now, no *work* can be done until it gets over
   // so we can safely say that the work time start at this instant but only after
