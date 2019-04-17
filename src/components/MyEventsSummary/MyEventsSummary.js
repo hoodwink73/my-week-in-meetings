@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -15,6 +15,9 @@ import {
   sortEvents
 } from "../../utils";
 import mock from "../../mock";
+import TimeLeftForWork from "../TimeLeftForWork";
+
+export const EventsContext = createContext(null);
 
 export default function MyEventsSummary() {
   let calendarDetailsFirebaseRequest,
@@ -84,13 +87,14 @@ export default function MyEventsSummary() {
       moment().day()
     ];
 
-  let eventsToday, timeLeftForWorkToday;
+  let eventsThisWeek = [],
+    eventsToday = [],
+    timeLeftForWorkToday;
 
   if (
     !eventsForThisWeekFirebaseRequest.loading &&
     !eventsForThisWeekFirebaseRequest.value.empty
   ) {
-    let eventsThisWeek = (eventsToday = []);
     eventsForThisWeekFirebaseRequest.value.forEach(function(doc) {
       eventsThisWeek.push(doc.data());
     });
@@ -101,25 +105,13 @@ export default function MyEventsSummary() {
 
   if (calendarDetailsFirebaseRequest.data) {
     return (
-      <>
+      <EventsContext.Provider value={eventsThisWeek}>
         <div>
           You are viewing the calendar for{" "}
           {calendarDetailsFirebaseRequest.data.calendar.summary}
         </div>
 
-        {totalMeetingTimeToday && (
-          <>
-            <Heading>Total Meeting Time today</Heading>
-            <Time timeInMs={totalMeetingTimeToday} />
-          </>
-        )}
-
-        {timeLeftForWorkToday && (
-          <>
-            <Heading>Total Time Left For Work Today</Heading>
-            <Time timeInMs={timeLeftForWorkToday} />
-          </>
-        )}
+        <TimeLeftForWork />
 
         {eventsToday &&
           sortEvents(eventsToday).map(event => (
@@ -130,7 +122,7 @@ export default function MyEventsSummary() {
           ))}
 
         <Button onClick={handleLogout}> Logout </Button>
-      </>
+      </EventsContext.Provider>
     );
   } else {
     return null;

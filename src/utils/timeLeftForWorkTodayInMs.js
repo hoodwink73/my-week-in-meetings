@@ -3,28 +3,19 @@ import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
 import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
+import getWorkHours from "./getWorkHours";
 import mock from "../mock";
 
-export default function timeLeftForWorkTodayInMs(
-  events,
-  workDayTiming = {
-    start: mock.WORK_START_TIME,
-    end: mock.WORK_END_TIME
-  }
-) {
+export default function timeLeftForWorkTodayInMs(events, fromTime) {
   let { happening, willHappen } = groupEventsByTime(events);
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
 
-  // TODO: Remove the hard coded value here
-  const workStartTime = moment(mock.TODAY)
-    .hours(workDayTiming.start.hours)
-    .minutes(workDayTiming.start.minutes);
+  if (moment.isMoment(fromTime)) {
+    now = fromTime;
+  }
 
-  // TODO: Remove the hard coded value here
-  let workEndTime = moment(mock.TODAY)
-    .hours(workDayTiming.end.hours)
-    .minutes(workDayTiming.end.minutes);
+  const { workStartTime, workEndTime } = getWorkHours();
 
   // if the workday hasn't begun, we should only start counting from beginning
   // of the work day

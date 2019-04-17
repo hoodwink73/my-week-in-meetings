@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { Box } from "@rebass/emotion";
 
-export default function() {
-  // get all the events for today
-  // pratition the events into three buckets - happened, happening, willHappen
-  // okay from this instant, seek forward and count all the time until end
-  // of the day -> timeLeftInDay
-  // aggregate total time of meetings in willHappen -> totalMeetingTimeYetToHappen
-  // timeLeftInDay = timeLeftInDay - totalMeetingTimeYetToHappen
-  // there is another case -> if at this instant there is a meeting which is onongoing
-  //
+import { EventsContext } from "../MyEventsSummary";
+import Time from "../Time";
+import Progress from "../Progress";
+
+import {
+  filterEventsForToday,
+  timeLeftForWorkTodayInMs,
+  getWorkHours
+} from "../../utils";
+
+export default function TimeLeftForWork() {
+  const eventsForThisWeek = useContext(EventsContext);
+  let eventsForToday = [];
+
+  if (eventsForThisWeek.length > 0) {
+    eventsForToday = filterEventsForToday(eventsForThisWeek);
+  }
+
+  const { workStartTime } = getWorkHours();
+
+  // this is excluding the total meeting time
+  const totalTimeAvailableForWork = timeLeftForWorkTodayInMs(
+    eventsForToday,
+    workStartTime
+  );
+  const timeLeftFromThisInstant = timeLeftForWorkTodayInMs(eventsForToday);
+
+  return (
+    <Box width={256}>
+      <Time timeInMs={timeLeftFromThisInstant} />
+      <Progress
+        width={1}
+        percent={(timeLeftFromThisInstant / totalTimeAvailableForWork) * 100}
+      />
+    </Box>
+  );
 }
