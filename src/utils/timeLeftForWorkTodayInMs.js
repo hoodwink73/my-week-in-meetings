@@ -44,7 +44,7 @@ export default function timeLeftForWorkTodayInMs(
       ) {
         return workEndTime.diff(event.start.dateTime, "milliseconds");
       } else {
-        return event.enrichedData.duration;
+        return event.enrichedData.durationInMs;
       }
     })
   );
