@@ -30,7 +30,10 @@ export default function timeLeftForWorkTodayInMs(
     willHappen.map(event => {
       // if there are some events which are happening post workday,
       // lets filter them out
-      if (moment(event.start.dateTime).isAfter(workEndTime, "minute")) {
+      if (
+        moment(event.start.dateTime).isAfter(workEndTime, "minute") ||
+        moment(event.start.dateTime).isSame(workEndTime, "minute")
+      ) {
         return 0;
       } else if (
         now.isBetween(
