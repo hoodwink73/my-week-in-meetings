@@ -1,6 +1,8 @@
 import moment from "moment";
+
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
+import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
 import mock from "../mock";
 
 export default function timeLeftForWorkTodayInMs(
@@ -10,7 +12,7 @@ export default function timeLeftForWorkTodayInMs(
     end: mock.WORK_END_TIME
   }
 ) {
-  const { happening, willHappen } = groupEventsByTime(events);
+  let { happening, willHappen } = groupEventsByTime(events);
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
 
@@ -32,16 +34,21 @@ export default function timeLeftForWorkTodayInMs(
 
   let futureEventsDuration = [];
 
+  // filter events happening after workday end
+  willHappen = willHappen.filter(event => {
+    if (
+      moment(event.start.dateTime).isAfter(workEndTime, "minute") ||
+      moment(event.start.dateTime).isSame(workEndTime, "minute")
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
   futureEventsDuration = futureEventsDuration.concat(
     willHappen.map(event => {
-      // if there are some events which are happening post workday,
-      // lets filter them out
       if (
-        moment(event.start.dateTime).isAfter(workEndTime, "minute") ||
-        moment(event.start.dateTime).isSame(workEndTime, "minute")
-      ) {
-        return 0;
-      } else if (
         workEndTime.isBetween(
           moment(event.start.dateTime),
           moment(event.end.dateTime),
@@ -53,6 +60,13 @@ export default function timeLeftForWorkTodayInMs(
         return event.enrichedData.durationInMs;
       }
     })
+  );
+
+  // there can be meetings that are overlapping
+  // and these time of overlaps should not be deducted from the available
+  // time of work
+  const effectiveTimeInOverlappedEventsInMs = timeInOverlappedMeetingsInMs(
+    willHappen
   );
 
   // if a meeting is happening now, no *work* can be done until it gets over
@@ -77,11 +91,14 @@ export default function timeLeftForWorkTodayInMs(
 
   const totalTimeLeftForWorkTodayInMs = workEndTime.diff(now, "milliseconds");
   const timeThatWillBeSpentInMeetingsTodayInMs = futureEventsDuration.reduce(
-    (sum, current) => sum + current
+    (sum, current) => sum + current,
+    0
   );
 
   const totalWorkTimeLeftToday =
-    totalTimeLeftForWorkTodayInMs - timeThatWillBeSpentInMeetingsTodayInMs;
+    totalTimeLeftForWorkTodayInMs -
+    timeThatWillBeSpentInMeetingsTodayInMs +
+    effectiveTimeInOverlappedEventsInMs;
 
   return totalWorkTimeLeftToday;
 }
