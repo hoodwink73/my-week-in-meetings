@@ -3,10 +3,12 @@ import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
 import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
-import getWorkHours from "./getWorkHours";
 import mock from "../mock";
 
-export default function timeLeftForWorkTodayInMs(events, fromTime) {
+export default function timeLeftForWorkInMs(
+  events,
+  { workStartTime, workEndTime, fromTime }
+) {
   let { happening, willHappen } = groupEventsByTime(events);
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
@@ -14,8 +16,6 @@ export default function timeLeftForWorkTodayInMs(events, fromTime) {
   if (moment.isMoment(fromTime)) {
     now = fromTime;
   }
-
-  const { workStartTime, workEndTime } = getWorkHours();
 
   // if the workday hasn't begun, we should only start counting from beginning
   // of the work day
@@ -88,14 +88,14 @@ export default function timeLeftForWorkTodayInMs(events, fromTime) {
     }
   }
 
-  const totalTimeLeftForWorkTodayInMs = workEndTime.diff(now, "milliseconds");
+  const totaltimeLeftForWorkInMs = workEndTime.diff(now, "milliseconds");
   const timeThatWillBeSpentInMeetingsTodayInMs = futureEventsDuration.reduce(
     (sum, current) => sum + current,
     0
   );
 
   const totalWorkTimeLeftToday =
-    totalTimeLeftForWorkTodayInMs -
+    totaltimeLeftForWorkInMs -
     timeThatWillBeSpentInMeetingsTodayInMs +
     effectiveTimeInOverlappedEventsInMs;
 

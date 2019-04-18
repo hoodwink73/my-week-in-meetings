@@ -11,7 +11,6 @@ import moment from "moment";
 import {
   getStartOfWeekInUTC,
   filterEventsForToday,
-  timeLeftForWorkTodayInMs,
   sortEvents
 } from "../../utils";
 import mock from "../../mock";
@@ -100,7 +99,6 @@ export default function MyEventsSummary() {
     });
 
     eventsToday = filterEventsForToday(eventsThisWeek);
-    timeLeftForWorkToday = timeLeftForWorkTodayInMs(eventsToday);
   }
 
   if (calendarDetailsFirebaseRequest.data) {

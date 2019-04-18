@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Box } from "@rebass/emotion";
 
 import { EventsContext } from "../MyEventsSummary";
@@ -7,36 +7,48 @@ import Progress from "../Progress";
 
 import {
   filterEventsForToday,
-  timeLeftForWorkTodayInMs,
+  timeLeftForWorkInMs,
   getWorkHours
 } from "../../utils";
 
 export default function TimeLeftForWork() {
   const eventsForThisWeek = useContext(EventsContext);
   let eventsForToday = [];
+  let events;
+  const showDataForWeek = true;
 
   if (eventsForThisWeek.length > 0) {
     eventsForToday = filterEventsForToday(eventsForThisWeek);
   }
 
-  const { workStartTime } = getWorkHours();
+  const { workStartTime, workEndTime } = getWorkHours(showDataForWeek);
+
+  if (showDataForWeek) {
+    events = eventsForThisWeek;
+  } else {
+    events = eventsForToday;
+  }
 
   // this is excluding the total meeting time
-  const totalTimeAvailableForWork = timeLeftForWorkTodayInMs(
-    eventsForToday,
-    workStartTime
-  );
+  const totalTimeAvailableForWorkFromStartTime = timeLeftForWorkInMs(events, {
+    workStartTime,
+    workEndTime,
+    fromTime: workStartTime
+  });
 
   // from right now, how much time I have left for work
   // this is excluding the meetings I have to take in the recent future
   // until my workday ends
-  const timeLeftFromThisInstant = timeLeftForWorkTodayInMs(eventsForToday);
+  const timeLeftFromThisInstant = timeLeftForWorkInMs(events, {
+    workStartTime,
+    workEndTime
+  });
 
   const timeElapsedDoingWorkInPercentage =
-    totalTimeAvailableForWork === 0
+    totalTimeAvailableForWorkFromStartTime === 0
       ? 100
-      : ((totalTimeAvailableForWork - timeLeftFromThisInstant) /
-          totalTimeAvailableForWork) *
+      : ((totalTimeAvailableForWorkFromStartTime - timeLeftFromThisInstant) /
+          totalTimeAvailableForWorkFromStartTime) *
         100;
 
   return (
