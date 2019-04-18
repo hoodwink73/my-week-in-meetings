@@ -26,15 +26,23 @@ export default function TimeLeftForWork() {
     eventsForToday,
     workStartTime
   );
+
+  // from right now, how much time I have left for work
+  // this is excluding the meetings I have to take in the recent future
+  // until my workday ends
   const timeLeftFromThisInstant = timeLeftForWorkTodayInMs(eventsForToday);
+
+  const timeElapsedDoingWorkInPercentage =
+    totalTimeAvailableForWork === 0
+      ? 100
+      : ((totalTimeAvailableForWork - timeLeftFromThisInstant) /
+          totalTimeAvailableForWork) *
+        100;
 
   return (
     <Box width={256}>
       <Time timeInMs={timeLeftFromThisInstant} />
-      <Progress
-        width={1}
-        percent={(timeLeftFromThisInstant / totalTimeAvailableForWork) * 100}
-      />
+      <Progress width={1} percent={timeElapsedDoingWorkInPercentage} />
     </Box>
   );
 }

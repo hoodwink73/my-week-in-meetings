@@ -6,7 +6,7 @@ import notes from "./simple-progress.md";
 
 storiesOf("Progress", module).add(
   "a progress bar",
-  () => <Progress width={256} m={1} percent={30} />,
+  () => <Progress width={256} m={1} percent={93} />,
   {
     notes
   }
