@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -14,6 +14,7 @@ import {
   sortEvents
 } from "../../utils";
 import mock from "../../mock";
+import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
 
 export const EventsContext = createContext(null);
@@ -60,6 +61,15 @@ export default function MyEventsSummary() {
     eventsForThisWeekFirebaseRequest = { error, loading, value };
   }
 
+  const [selectedTimeRange, setSelectedTimeRange] = useState("today");
+  const handleTimeRangeToggle = selectedTabIndex => {
+    if (selectedTabIndex === 0) {
+      setSelectedTimeRange("today");
+    } else if (selectedTabIndex === 1) {
+      setSelectedTimeRange("week");
+    }
+  };
+
   if (
     !calendarDetailsFirebaseRequest.loading &&
     calendarDetailsFirebaseRequest.value.exists
@@ -104,21 +114,9 @@ export default function MyEventsSummary() {
   if (calendarDetailsFirebaseRequest.data) {
     return (
       <EventsContext.Provider value={eventsThisWeek}>
-        <div>
-          You are viewing the calendar for{" "}
-          {calendarDetailsFirebaseRequest.data.calendar.summary}
-        </div>
-
-        <TimeLeftForWork />
-
-        {eventsToday &&
-          sortEvents(eventsToday).map(event => (
-            <div key={event.start.dateTime}>
-              {event.summary} – {moment(event.start.dateTime).format("k : mm")}{" "}
-              – {moment(event.end.dateTime).format("k : mm")}
-            </div>
-          ))}
-
+        <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle}>
+          <TimeLeftForWork selectedTimeRange={selectedTimeRange} />
+        </SelectTimeRange>
         <Button onClick={handleLogout}> Logout </Button>
       </EventsContext.Provider>
     );

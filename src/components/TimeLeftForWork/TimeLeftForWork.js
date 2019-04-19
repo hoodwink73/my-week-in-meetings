@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import { Box } from "@rebass/emotion";
 
 import { EventsContext } from "../MyEventsSummary";
@@ -11,11 +12,20 @@ import {
   getWorkHours
 } from "../../utils";
 
-export default function TimeLeftForWork() {
+export default function TimeLeftForWork({ selectedTimeRange }) {
   const eventsForThisWeek = useContext(EventsContext);
   let eventsForToday = [];
   let events;
-  const showDataForWeek = true;
+  let showDataForWeek;
+
+  switch (selectedTimeRange) {
+    case "week":
+      showDataForWeek = true;
+      break;
+    case "today":
+    case "default":
+      showDataForWeek = false;
+  }
 
   if (eventsForThisWeek.length > 0) {
     eventsForToday = filterEventsForToday(eventsForThisWeek);
@@ -58,3 +68,7 @@ export default function TimeLeftForWork() {
     </Box>
   );
 }
+
+TimeLeftForWork.propTypes = {
+  selectedTimeRange: PropTypes.oneOf(["today", "week"])
+};
