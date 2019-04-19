@@ -3,19 +3,29 @@ import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
 import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
+import getWorkHours from "./getWorkHours";
 import mock from "../mock";
 
-export default function timeLeftForWorkInMs(
+// TODO: Remove the hard coded value here
+// this has to be set by user and we need to have default
+// value to start with
+const workDayTiming = {
+  start: mock.WORK_START_TIME,
+  end: mock.WORK_END_TIME
+};
+
+function timeLeftForWorkTodayInMs(
   events,
   { workStartTime, workEndTime, fromTime }
 ) {
-  let { happening, willHappen } = groupEventsByTime(events);
   // TODO: Remove the hard coded value here
   let now = moment(mock.NOW);
 
   if (moment.isMoment(fromTime)) {
     now = fromTime;
   }
+
+  let { happening, willHappen } = groupEventsByTime(events, now);
 
   // if the workday hasn't begun, we should only start counting from beginning
   // of the work day
@@ -100,4 +110,70 @@ export default function timeLeftForWorkInMs(
     effectiveTimeInOverlappedEventsInMs;
 
   return totalWorkTimeLeftToday;
+}
+
+// TODO: Remove hardcoded value for now
+const isToday = date => date.isSame(moment(mock.NOW), "day");
+
+export default function timeLeftForWorkInMs(
+  events,
+  { workStartTime, workEndTime, fromTime }
+) {
+  // if we are supposed to calculate work time only for today
+  if (isToday(workStartTime) && isToday(workEndTime)) {
+    return timeLeftForWorkTodayInMs(events, {
+      workStartTime,
+      workEndTime,
+      fromTime
+    });
+  } else {
+    // TODO: remove hard coded value of now
+    let dayCursor;
+    if (moment.isMoment(fromTime)) {
+      dayCursor = fromTime.dayOfYear() + 1;
+    } else {
+      dayCursor = moment(mock.NOW).dayOfYear() + 1;
+    }
+
+    let workTimeForDateRange = [];
+
+    while (
+      moment()
+        .dayOfYear(dayCursor - 1)
+        .isBefore(workEndTime, "day")
+    ) {
+      workTimeForDateRange.push(
+        timeLeftForWorkTodayInMs(events, {
+          workStartTime: moment()
+            .dayOfYear(dayCursor)
+            .hours(workDayTiming.start.hours)
+            .minutes(workDayTiming.start.minutes),
+          workEndTime: moment()
+            .dayOfYear(dayCursor)
+            .hours(workDayTiming.end.hours)
+            .minutes(workDayTiming.end.minutes),
+          fromTime: moment()
+            .dayOfYear(dayCursor)
+            .hours(workDayTiming.start.hours)
+            .minutes(workDayTiming.start.minutes)
+        })
+      );
+      dayCursor += 1;
+    }
+
+    workTimeForDateRange.push(
+      timeLeftForWorkTodayInMs(events, {
+        //  TODO: remove mocked value of now
+        workStartTime: moment(mock.NOW)
+          .hours(workDayTiming.start.hours)
+          .minutes(workDayTiming.start.minutes),
+        //  TODO: remove mocked value of now
+        workEndTime: moment(mock.NOW)
+          .hours(workDayTiming.end.hours)
+          .minutes(workDayTiming.end.minutes)
+      })
+    );
+
+    return workTimeForDateRange.reduce((a, b) => a + b, 0);
+  }
 }
