@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Box } from "@rebass/emotion";
 
@@ -12,8 +12,21 @@ import {
   getWorkHours
 } from "../../utils";
 
+const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
+
 export default function TimeLeftForWork({ selectedTimeRange }) {
   const eventsForThisWeek = useContext(EventsContext);
+
+  const [renderCounter, setRenderCounter] = useState(0);
+
+  useEffect(() => {
+    const unsubscribeID = setInterval(() => {
+      setRenderCounter(renderCounter + 1);
+    }, REFRESH_TIMER_FREQUENCY_IN_MS);
+
+    return () => clearInterval(unsubscribeID);
+  });
+
   let eventsForToday = [];
   let events;
   let showDataForWeek;
