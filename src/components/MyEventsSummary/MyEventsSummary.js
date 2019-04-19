@@ -4,7 +4,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocument, useCollection } from "react-firebase-hooks/firestore";
-import { Button, Heading } from "@rebass/emotion";
+import { Button, Heading, Flex, Box } from "@rebass/emotion";
 
 import Time from "../Time";
 import moment from "moment";
@@ -114,10 +114,14 @@ export default function MyEventsSummary() {
   if (calendarDetailsFirebaseRequest.data) {
     return (
       <EventsContext.Provider value={eventsThisWeek}>
-        <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle}>
-          <TimeLeftForWork selectedTimeRange={selectedTimeRange} />
-        </SelectTimeRange>
-        <Button onClick={handleLogout}> Logout </Button>
+        <Flex width="100%" bg="gray.0" justifyContent="center">
+          <Box width={600} py={6}>
+            <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle}>
+              <TimeLeftForWork selectedTimeRange={selectedTimeRange} />
+            </SelectTimeRange>
+            <Button onClick={handleLogout}> Logout </Button>
+          </Box>
+        </Flex>
       </EventsContext.Provider>
     );
   } else {
