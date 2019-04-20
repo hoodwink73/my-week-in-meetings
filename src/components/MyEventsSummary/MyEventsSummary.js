@@ -14,6 +14,7 @@ import {
   sortEvents
 } from "../../utils";
 import mock from "../../mock";
+import Greeting from "../Greeting";
 import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
 
@@ -116,8 +117,16 @@ export default function MyEventsSummary() {
       <EventsContext.Provider value={eventsThisWeek}>
         <Flex width="100%" bg="gray.0" justifyContent="center">
           <Box width={600} py={6}>
-            <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle}>
-              <TimeLeftForWork selectedTimeRange={selectedTimeRange} />
+            {user && <Greeting name={user.displayName} my={3} />}
+            <SelectTimeRange
+              handleTimeRangeToggle={handleTimeRangeToggle}
+              my={3}
+            >
+              <TimeLeftForWork
+                selectedTimeRange={selectedTimeRange}
+                my={3}
+                width={256}
+              />
             </SelectTimeRange>
             <Button onClick={handleLogout}> Logout </Button>
           </Box>

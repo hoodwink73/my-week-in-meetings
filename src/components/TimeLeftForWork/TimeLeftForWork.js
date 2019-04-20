@@ -14,7 +14,7 @@ import {
 
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
-export default function TimeLeftForWork({ selectedTimeRange }) {
+export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   const eventsForThisWeek = useContext(EventsContext);
 
   const [renderCounter, setRenderCounter] = useState(0);
@@ -75,7 +75,7 @@ export default function TimeLeftForWork({ selectedTimeRange }) {
         100;
 
   return (
-    <Box width={256}>
+    <Box {...props}>
       <Time timeInMs={timeLeftFromThisInstant} />
       <Progress width={1} percent={timeElapsedDoingWorkInPercentage} />
     </Box>
@@ -83,5 +83,6 @@ export default function TimeLeftForWork({ selectedTimeRange }) {
 }
 
 TimeLeftForWork.propTypes = {
-  selectedTimeRange: PropTypes.oneOf(["today", "week"])
+  selectedTimeRange: PropTypes.oneOf(["today", "week"]),
+  ...Box.propTypes
 };

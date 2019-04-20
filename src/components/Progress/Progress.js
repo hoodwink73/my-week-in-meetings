@@ -22,7 +22,8 @@ function Progress({ theme, percent, ...props }) {
 }
 
 Line.propTypes = {
-  percent: PropTypes.number.isRequired
+  percent: PropTypes.number.isRequired,
+  ...Box.propTypes
 };
 
 export default withTheme(Progress);
