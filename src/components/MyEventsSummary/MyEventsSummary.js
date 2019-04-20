@@ -17,6 +17,7 @@ import mock from "../../mock";
 import Greeting from "../Greeting";
 import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
+import LogoutLink from "../LogoutLink";
 
 export const EventsContext = createContext(null);
 
@@ -85,12 +86,6 @@ export default function MyEventsSummary() {
     thisWeekAggregateDetailsFirebaseRequest.data = thisWeekAggregateDetailsFirebaseRequest.value.data();
   }
 
-  const handleLogout = () => {
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signOut();
-    firebase.auth().signOut();
-  };
-
   const totalMeetingTimeToday =
     thisWeekAggregateDetailsFirebaseRequest.data &&
     thisWeekAggregateDetailsFirebaseRequest.data.eventsFrequencyByDayOfWeek[
@@ -115,8 +110,9 @@ export default function MyEventsSummary() {
   if (calendarDetailsFirebaseRequest.data) {
     return (
       <EventsContext.Provider value={eventsThisWeek}>
-        <Flex width="100%" bg="gray.0" justifyContent="center">
-          <Box width={600} py={6}>
+        <Flex width="100%" bg="gray.0" flexDirection="column">
+          <LogoutLink alignSelf="flex-end" mt={2} mr={4} />
+          <Box width={600} py={4} alignSelf="center">
             {user && <Greeting name={user.displayName} my={3} />}
             <SelectTimeRange
               handleTimeRangeToggle={handleTimeRangeToggle}
@@ -128,7 +124,6 @@ export default function MyEventsSummary() {
                 width={256}
               />
             </SelectTimeRange>
-            <Button onClick={handleLogout}> Logout </Button>
           </Box>
         </Flex>
       </EventsContext.Provider>

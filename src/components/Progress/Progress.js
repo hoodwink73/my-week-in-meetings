@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Line } from "rc-progress";
-
-import { withTheme } from "emotion-theming";
-
 import { Box } from "@rebass/emotion";
+import { withTheme } from "emotion-theming";
 
 function Progress({ theme, percent, ...props }) {
   const { colors } = theme;
