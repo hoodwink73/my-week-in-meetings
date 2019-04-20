@@ -112,7 +112,7 @@ export default function MyEventsSummary() {
       <EventsContext.Provider value={eventsThisWeek}>
         <Flex width="100%" bg="gray.0" flexDirection="column">
           <LogoutLink alignSelf="flex-end" mt={2} mr={4} />
-          <Box width={600} py={4} alignSelf="center">
+          <Box width={[1, 600]} px={[4, 0]} py={4} alignSelf="center">
             {user && <Greeting name={user.displayName} my={3} />}
             <SelectTimeRange
               handleTimeRangeToggle={handleTimeRangeToggle}
