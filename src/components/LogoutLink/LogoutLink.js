@@ -18,7 +18,7 @@ export default function LogoutLink(props) {
       <Box {...props}>
         <Text
           fontSize={1}
-          style={{ textDecoration: "underline" }}
+          style={{ textDecoration: "underline", cursor: "pointer" }}
           onClick={handleLogout}
         >
           Logout

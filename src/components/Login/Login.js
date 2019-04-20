@@ -4,6 +4,7 @@ import ASQ from "asynquence";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
+import { Flex, Box } from "@rebass/emotion";
 
 export default function Login() {
   const handleSignIn = () => {
@@ -42,8 +43,16 @@ export default function Login() {
   };
 
   return (
-    <>
-      <Button onClick={handleSignIn}>Sign In With Google</Button>
-    </>
+    <Flex
+      width="100vw"
+      style={{ height: "100vh" }}
+      bg="gray.0"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Button bg="gray.4" onClick={handleSignIn} style={{ cursor: "pointer" }}>
+        Sign In With Google
+      </Button>
+    </Flex>
   );
 }
