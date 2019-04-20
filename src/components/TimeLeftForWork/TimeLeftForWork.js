@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Box } from "@rebass/emotion";
+import { Box, Text } from "@rebass/emotion";
 
 import { EventsContext } from "../MyEventsSummary";
 import Time from "../Time";
@@ -76,8 +76,17 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
 
   return (
     <Box {...props}>
+      <Text fontSize={2} mb={1}>
+        You have
+      </Text>
       <Time timeInMs={timeLeftFromThisInstant} />
       <Progress width={1} percent={timeElapsedDoingWorkInPercentage} />
+      <Text fontSize={2} mt={3}>
+        avaialable for work{" "}
+        {selectedTimeRange === "week"
+          ? `this ${selectedTimeRange}`
+          : selectedTimeRange}
+      </Text>
     </Box>
   );
 }
