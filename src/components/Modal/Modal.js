@@ -27,7 +27,9 @@ export default function Modal({ children, ...props }) {
             style={{ cursor: "pointer" }}
           />
         </Box>
-        <Box alignSelf="center">{children}</Box>
+        <Box alignSelf="center" width={1}>
+          {children}
+        </Box>
       </Flex>
     </ReactModal>
   );

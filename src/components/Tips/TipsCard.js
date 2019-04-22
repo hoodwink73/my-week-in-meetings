@@ -5,11 +5,11 @@ import { Card, Text } from "@rebass/emotion";
 export default function TipsCard({ title, onToggle }) {
   return (
     <Card
-      width={[1, 400]}
+      width={[1, 600]}
       bg="gray.0"
       borderRadius={8}
       p={3}
-      boxShadow="0 2px 2px rgba(0, 0, 0, 0.25)"
+      boxShadow="small"
       style={{ cursor: "pointer" }}
       onClick={onToggle}
     >

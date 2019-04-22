@@ -18,6 +18,7 @@ import Greeting from "../Greeting";
 import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
+import Tips from "../Tips";
 
 export const EventsContext = createContext(null);
 
@@ -124,6 +125,14 @@ export default function MyEventsSummary() {
                 width={256}
               />
             </SelectTimeRange>
+          </Box>
+        </Flex>
+        <Flex justifyContent="center">
+          <Box m={4}>
+            <Tips
+              title="Do you say no to meetings if they are not important?"
+              details={["Saying no to meetings might be challenging"]}
+            />
           </Box>
         </Flex>
       </EventsContext.Provider>
