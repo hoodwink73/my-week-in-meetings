@@ -3,9 +3,17 @@ import { configure, addDecorator } from "@storybook/react";
 import { ThemeProvider } from "emotion-theming";
 
 import theme from "../src/theme";
+import GlobalStyles from "../src/components/GlobalStyles";
 
 const ThemeDecorator = storyFn => (
-  <ThemeProvider theme={theme}>{storyFn()}</ThemeProvider>
+  <ThemeProvider theme={theme}>
+    {
+      <>
+        <GlobalStyles />
+        {storyFn()}
+      </>
+    }
+  </ThemeProvider>
 );
 
 addDecorator(ThemeDecorator);

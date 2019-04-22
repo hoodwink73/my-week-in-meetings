@@ -8,6 +8,7 @@ import "firebase/auth";
 import theme from "./theme";
 import Login from "./components/Login";
 import MyEventsSummary from "./components/MyEventsSummary";
+import GlobalStyles from "./components/GlobalStyles";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE =
   "profile email openid https://www.googleapis.com/auth/calendar";
@@ -40,6 +41,7 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <div className="App">
+          <GlobalStyles />
           {initialisingUser && hasGoogleSignInScriptLoaded ? (
             "Loading"
           ) : user ? (
