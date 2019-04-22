@@ -14,6 +14,7 @@ function Progress({ theme, percent, ...props }) {
         strokeWidth={5}
         strokeColor={colors.gray[3]}
         trailColor={colors.gray[1]}
+        style={{ height: "8px" }}
       />
     </Box>
   );
