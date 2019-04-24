@@ -15,7 +15,7 @@ import {
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
-  const eventsForThisWeek = useContext(EventsContext);
+  const { eventsThisWeek } = useContext(EventsContext);
 
   const [renderCounter, setRenderCounter] = useState(0);
 
@@ -40,14 +40,14 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
       showDataForWeek = false;
   }
 
-  if (eventsForThisWeek.length > 0) {
-    eventsForToday = filterEventsForToday(eventsForThisWeek);
+  if (eventsThisWeek.length > 0) {
+    eventsForToday = filterEventsForToday(eventsThisWeek);
   }
 
   const { workStartTime, workEndTime } = getWorkHours(showDataForWeek);
 
   if (showDataForWeek) {
-    events = eventsForThisWeek;
+    events = eventsThisWeek;
   } else {
     events = eventsForToday;
   }

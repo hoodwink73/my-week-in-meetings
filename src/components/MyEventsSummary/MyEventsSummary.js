@@ -19,6 +19,7 @@ import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
 import Tips from "../Tips";
+import AnalyticsCard from "../AnalyticsCard";
 
 export const EventsContext = createContext(null);
 
@@ -87,12 +88,6 @@ export default function MyEventsSummary() {
     thisWeekAggregateDetailsFirebaseRequest.data = thisWeekAggregateDetailsFirebaseRequest.value.data();
   }
 
-  const totalMeetingTimeToday =
-    thisWeekAggregateDetailsFirebaseRequest.data &&
-    thisWeekAggregateDetailsFirebaseRequest.data.eventsFrequencyByDayOfWeek[
-      moment().day()
-    ];
-
   let eventsThisWeek = [],
     eventsToday = [],
     timeLeftForWorkToday;
@@ -110,7 +105,13 @@ export default function MyEventsSummary() {
 
   if (calendarDetailsFirebaseRequest.data) {
     return (
-      <EventsContext.Provider value={eventsThisWeek}>
+      <EventsContext.Provider
+        value={{
+          eventsThisWeek,
+          aggregatedDataThisWeek:
+            thisWeekAggregateDetailsFirebaseRequest.data || null
+        }}
+      >
         <Flex width="100%" bg="gray.0" flexDirection="column">
           <LogoutLink alignSelf="flex-end" mt={2} mr={4} />
           <Box width={[1, 600]} px={[4, 0]} py={4} alignSelf="center">
@@ -130,6 +131,14 @@ export default function MyEventsSummary() {
         <Flex justifyContent="center">
           <Box m={4}>
             <Tips
+              title="Do you say no to meetings if they are not important?"
+              details={["Saying no to meetings might be challenging"]}
+            />
+          </Box>
+        </Flex>
+        <Flex justifyContent="center">
+          <Box mx={4} my={2}>
+            <AnalyticsCard
               title="Do you say no to meetings if they are not important?"
               details={["Saying no to meetings might be challenging"]}
             />
