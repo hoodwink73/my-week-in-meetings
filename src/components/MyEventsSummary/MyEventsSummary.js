@@ -14,6 +14,7 @@ import {
   sortEvents
 } from "../../utils";
 import mock from "../../mock";
+import { userAggregatedEventData } from "../../hooks";
 import Greeting from "../Greeting";
 import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
@@ -47,14 +48,6 @@ export default function MyEventsSummary() {
   }
 
   {
-    const { error, loading, value } = useDocument(
-      firebase.firestore().doc(`users/${googleID}/aggregates/${startOfWeek}`)
-    );
-
-    thisWeekAggregateDetailsFirebaseRequest = { error, loading, value };
-  }
-
-  {
     const { error, loading, value } = useCollection(
       firebase
         .firestore()
@@ -81,13 +74,6 @@ export default function MyEventsSummary() {
     calendarDetailsFirebaseRequest.data = calendarDetailsFirebaseRequest.value.data();
   }
 
-  if (
-    !thisWeekAggregateDetailsFirebaseRequest.loading &&
-    thisWeekAggregateDetailsFirebaseRequest.value.exists
-  ) {
-    thisWeekAggregateDetailsFirebaseRequest.data = thisWeekAggregateDetailsFirebaseRequest.value.data();
-  }
-
   let eventsThisWeek = [],
     eventsToday = [],
     timeLeftForWorkToday;
@@ -107,9 +93,7 @@ export default function MyEventsSummary() {
     return (
       <EventsContext.Provider
         value={{
-          eventsThisWeek,
-          aggregatedDataThisWeek:
-            thisWeekAggregateDetailsFirebaseRequest.data || null
+          eventsThisWeek
         }}
       >
         <Flex width="100%" bg="gray.0" flexDirection="column">

@@ -9,6 +9,8 @@ import theme from "./theme";
 import Login from "./components/Login";
 import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
+import FirestoreData from "./components/FirestoreData";
+import { getUserGoogleID } from "./utils";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE =
   "profile email openid https://www.googleapis.com/auth/calendar";
@@ -45,7 +47,9 @@ function App() {
           {initialisingUser && hasGoogleSignInScriptLoaded ? (
             "Loading"
           ) : user ? (
-            <MyEventsSummary />
+            <FirestoreData googleID={getUserGoogleID(user)}>
+              <MyEventsSummary />
+            </FirestoreData>
           ) : (
             <Login />
           )}

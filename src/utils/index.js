@@ -4,6 +4,7 @@ import groupEventsByTime from "./groupEventsByTime";
 import timeLeftForWorkInMs from "./timeLeftForWorkInMs";
 import sortEvents from "./sortEvents";
 import getWorkHours from "./getWorkHours";
+import getUserGoogleID from "./getUserGoogleID";
 
 export {
   getStartOfWeekInUTC,
@@ -11,5 +12,6 @@ export {
   groupEventsByTime,
   timeLeftForWorkInMs,
   sortEvents,
-  getWorkHours
+  getWorkHours,
+  getUserGoogleID
 };
