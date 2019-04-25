@@ -1,4 +1,3 @@
-import MyEventsSummary, { EventsContext } from "./MyEventsSummary";
+import MyEventsSummary from "./MyEventsSummary";
 
 export default MyEventsSummary;
-export { EventsContext };

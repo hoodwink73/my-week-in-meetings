@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Text } from "@rebass/emotion";
 
-import { EventsContext } from "../MyEventsSummary";
+import { FirestoreDataContext } from "../FirestoreData";
 import Time from "../Time";
 import Progress from "../Progress";
-
 import {
   filterEventsForToday,
   timeLeftForWorkInMs,
@@ -15,7 +14,11 @@ import {
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
-  const { eventsThisWeek } = useContext(EventsContext);
+  const { eventsThisWeek: eventsThisWeekRequest } = useContext(
+    FirestoreDataContext
+  );
+
+  const eventsThisWeek = eventsThisWeekRequest.data;
 
   const [renderCounter, setRenderCounter] = useState(0);
 
@@ -27,7 +30,16 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
     return () => clearInterval(unsubscribeID);
   });
 
-  let eventsForToday = [];
+  if (eventsThisWeekRequest.loading) {
+    return "Loading";
+  }
+
+  if (eventsThisWeekRequest.error) {
+    console.error(eventsThisWeek.error);
+    return null;
+  }
+
+  let eventsForToday = filterEventsForToday(eventsThisWeek);
   let events;
   let showDataForWeek;
 
@@ -38,10 +50,6 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
     case "today":
     case "default":
       showDataForWeek = false;
-  }
-
-  if (eventsThisWeek.length > 0) {
-    eventsForToday = filterEventsForToday(eventsThisWeek);
   }
 
   const { workStartTime, workEndTime } = getWorkHours(showDataForWeek);
