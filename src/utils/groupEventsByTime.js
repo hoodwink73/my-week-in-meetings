@@ -1,8 +1,7 @@
 import moment from "moment";
 import mock from "../mock";
 
-// TODO: Remove the hard coded value here
-export default function(events, now = moment(mock.NOW)) {
+export default function(events, now = moment()) {
   return events.reduce(
     (timeBuckets, event) => {
       if (

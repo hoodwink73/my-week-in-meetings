@@ -6,8 +6,6 @@ import mock from "../mock";
 // https://developers.google.com/calendar/v3/reference/events
 export default function filterEventsForToday(events) {
   return events.filter(event => {
-    // TODO: Remove the hard coded date
-    // this should just represent today
-    return moment(event.start.dateTime).isSame(moment(mock.TODAY), "day");
+    return moment(event.start.dateTime).isSame(moment(), "day");
   });
 }

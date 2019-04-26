@@ -13,14 +13,12 @@ export default function(week = 0, googleID) {
       .where("enrichedData.week", "==", startOfWeek)
   );
 
-  var data;
+  var data = [];
   if (!loading) {
-    if (value.exists) {
-      data = value.reduce((results, docSnapshot) => {
-        results.push(docSnapshot.data());
-      }, []);
-    } else {
-      data = [];
+    if (!value.empty) {
+      value.forEach(docSnapshot => {
+        data.push(docSnapshot.data());
+      });
     }
   }
 

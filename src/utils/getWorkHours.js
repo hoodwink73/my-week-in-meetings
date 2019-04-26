@@ -10,13 +10,11 @@ export default function getWorkHours(forWeek = false) {
     end: mock.WORK_END_TIME
   };
 
-  // TODO: Remove the hard coded value here
-  let workStartTime = moment(mock.TODAY)
+  let workStartTime = moment()
     .hours(workDayTiming.start.hours)
     .minutes(workDayTiming.start.minutes);
 
-  // TODO: Remove the hard coded value here
-  let workEndTime = moment(mock.TODAY)
+  let workEndTime = moment()
     .hours(workDayTiming.end.hours)
     .minutes(workDayTiming.end.minutes);
 

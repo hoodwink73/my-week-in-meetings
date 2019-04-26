@@ -18,8 +18,7 @@ function timeLeftForWorkTodayInMs(
   events,
   { workStartTime, workEndTime, fromTime }
 ) {
-  // TODO: Remove the hard coded value here
-  let now = moment(mock.NOW);
+  let now = moment();
 
   if (moment.isMoment(fromTime)) {
     now = fromTime;
@@ -112,8 +111,7 @@ function timeLeftForWorkTodayInMs(
   return totalWorkTimeLeftToday;
 }
 
-// TODO: Remove hardcoded value for now
-const isToday = date => date.isSame(moment(mock.NOW), "day");
+const isToday = date => date.isSame(moment(), "day");
 
 export default function timeLeftForWorkInMs(
   events,
@@ -127,12 +125,11 @@ export default function timeLeftForWorkInMs(
       fromTime
     });
   } else {
-    // TODO: remove hard coded value of now
     let dayCursor;
     if (moment.isMoment(fromTime)) {
       dayCursor = fromTime.dayOfYear() + 1;
     } else {
-      dayCursor = moment(mock.NOW).dayOfYear() + 1;
+      dayCursor = moment().dayOfYear() + 1;
     }
 
     let workTimeForDateRange = [];
@@ -163,12 +160,10 @@ export default function timeLeftForWorkInMs(
 
     workTimeForDateRange.push(
       timeLeftForWorkTodayInMs(events, {
-        //  TODO: remove mocked value of now
-        workStartTime: moment(mock.NOW)
+        workStartTime: moment()
           .hours(workDayTiming.start.hours)
           .minutes(workDayTiming.start.minutes),
-        //  TODO: remove mocked value of now
-        workEndTime: moment(mock.NOW)
+        workEndTime: moment()
           .hours(workDayTiming.end.hours)
           .minutes(workDayTiming.end.minutes)
       })
