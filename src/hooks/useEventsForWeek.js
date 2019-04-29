@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "@firebase/app";
+import "@firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import { getStartOfWeekInUTC } from "../utils";
@@ -14,12 +14,16 @@ export default function(week = 0, googleID) {
   );
 
   var data = [];
-  if (!loading) {
+  if (!loading && !error) {
     if (!value.empty) {
       value.forEach(docSnapshot => {
         data.push(docSnapshot.data());
       });
     }
+  }
+
+  if (error) {
+    console.error(error);
   }
 
   return {

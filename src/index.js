@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import firebase from "firebase/app";
 import moment from "moment";
 import * as serviceWorker from "./serviceWorker";
+import * as MockDate from "mockdate";
 
 import "./index.css";
 import App from "./App";
@@ -17,6 +18,8 @@ const config = {
 };
 
 firebase.initializeApp(config);
+
+MockDate.set("2019-04-03T09:00");
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
