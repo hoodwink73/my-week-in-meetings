@@ -3,20 +3,11 @@ import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
 import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
-import getWorkHours from "./getWorkHours";
-import mock from "../mock";
-
-// TODO: Remove the hard coded value here
-// this has to be set by user and we need to have default
-// value to start with
-const workDayTiming = {
-  start: mock.WORK_START_TIME,
-  end: mock.WORK_END_TIME
-};
 
 function timeLeftForWorkTodayInMs(
   events,
-  { workStartTime, workEndTime, fromTime }
+  { workStartTime, workEndTime, fromTime },
+  userConfig
 ) {
   let now = moment();
 
@@ -115,7 +106,8 @@ const isToday = date => date.isSame(moment(), "day");
 
 export default function timeLeftForWorkInMs(
   events,
-  { workStartTime, workEndTime, fromTime }
+  { workStartTime, workEndTime, fromTime },
+  userConfig
 ) {
   // if we are supposed to calculate work time only for today
   if (isToday(workStartTime) && isToday(workEndTime)) {
@@ -143,16 +135,16 @@ export default function timeLeftForWorkInMs(
         timeLeftForWorkTodayInMs(events, {
           workStartTime: moment()
             .dayOfYear(dayCursor)
-            .hours(workDayTiming.start.hours)
-            .minutes(workDayTiming.start.minutes),
+            .hours(userConfig.workStartTime.hours)
+            .minutes(userConfig.workStartTime.minutes),
           workEndTime: moment()
             .dayOfYear(dayCursor)
-            .hours(workDayTiming.end.hours)
-            .minutes(workDayTiming.end.minutes),
+            .hours(userConfig.workEndTime.hours)
+            .minutes(userConfig.workEndTime.minutes),
           fromTime: moment()
             .dayOfYear(dayCursor)
-            .hours(workDayTiming.start.hours)
-            .minutes(workDayTiming.start.minutes)
+            .hours(userConfig.workStartTime.hours)
+            .minutes(userConfig.workStartTime.minutes)
         })
       );
       dayCursor += 1;
@@ -161,11 +153,11 @@ export default function timeLeftForWorkInMs(
     workTimeForDateRange.push(
       timeLeftForWorkTodayInMs(events, {
         workStartTime: moment()
-          .hours(workDayTiming.start.hours)
-          .minutes(workDayTiming.start.minutes),
+          .hours(userConfig.workStartTime.hours)
+          .minutes(userConfig.workStartTime.minutes),
         workEndTime: moment()
-          .hours(workDayTiming.end.hours)
-          .minutes(workDayTiming.end.minutes)
+          .hours(userConfig.workEndTime.hours)
+          .minutes(userConfig.workEndTime.minutes)
       })
     );
 

@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
+import { withKnobs, text, boolean } from "@storybook/addon-knobs";
 import { withContexts } from "@storybook/addon-contexts/react";
 
 import TimeLeftForWork from "../../components/TimeLeftForWork";

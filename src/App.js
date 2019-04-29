@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
 import FirestoreData from "./components/FirestoreData";
+import UserConfig from "./components/UserConfig";
 import { getUserGoogleID } from "./utils";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE =
@@ -48,7 +49,9 @@ function App() {
             "Loading"
           ) : user ? (
             <FirestoreData googleID={getUserGoogleID(user)}>
-              <MyEventsSummary />
+              <UserConfig>
+                <MyEventsSummary />
+              </UserConfig>
             </FirestoreData>
           ) : (
             <Login />

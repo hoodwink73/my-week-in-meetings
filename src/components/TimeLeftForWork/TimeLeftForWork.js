@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Box, Text } from "@rebass/emotion";
 
 import { FirestoreDataContext } from "../FirestoreData";
+import { UserConfigContext } from "../UserConfig";
 import Time from "../Time";
 import Progress from "../Progress";
 import {
@@ -17,6 +18,8 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
     FirestoreDataContext
   );
+
+  const { userConfig } = useContext(UserConfigContext);
 
   const eventsThisWeek = eventsThisWeekRequest.data;
 
@@ -52,7 +55,9 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
       showDataForWeek = false;
   }
 
-  const { workStartTime, workEndTime } = getWorkHours(showDataForWeek);
+  const { workStartTime, workEndTime } = getWorkHours(showDataForWeek, {
+    ...userConfig
+  });
 
   if (showDataForWeek) {
     events = eventsThisWeek;
@@ -61,19 +66,27 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   }
 
   // this is excluding the total meeting time
-  const totalTimeAvailableForWorkFromStartTime = timeLeftForWorkInMs(events, {
-    workStartTime,
-    workEndTime,
-    fromTime: workStartTime
-  });
+  const totalTimeAvailableForWorkFromStartTime = timeLeftForWorkInMs(
+    events,
+    {
+      workStartTime,
+      workEndTime,
+      fromTime: workStartTime
+    },
+    userConfig
+  );
 
   // from right now, how much time I have left for work
   // this is excluding the meetings I have to take in the recent future
   // until my workday ends
-  const timeLeftFromThisInstant = timeLeftForWorkInMs(events, {
-    workStartTime,
-    workEndTime
-  });
+  const timeLeftFromThisInstant = timeLeftForWorkInMs(
+    events,
+    {
+      workStartTime,
+      workEndTime
+    },
+    userConfig
+  );
 
   const timeElapsedDoingWorkInPercentage =
     totalTimeAvailableForWorkFromStartTime === 0

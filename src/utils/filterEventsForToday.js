@@ -1,5 +1,4 @@
 import moment from "moment";
-import mock from "../mock";
 
 // we are relying on the shape of a calendar event
 // you can find the documentation here

@@ -1,22 +1,15 @@
 import moment from "moment";
-import mock from "../mock";
 
-export default function getWorkHours(forWeek = false) {
-  // TODO: Remove the hard coded value here
-  // this has to be set by user and we need to have default
-  // value to start with
-  const workDayTiming = {
-    start: mock.WORK_START_TIME,
-    end: mock.WORK_END_TIME
-  };
+export default function getWorkHours(forWeek = false, options) {
+  let { workStartTime, workEndTime } = options;
 
-  let workStartTime = moment()
-    .hours(workDayTiming.start.hours)
-    .minutes(workDayTiming.start.minutes);
+  workStartTime = moment()
+    .hours(workStartTime.hours)
+    .minutes(workStartTime.minutes);
 
-  let workEndTime = moment()
-    .hours(workDayTiming.end.hours)
-    .minutes(workDayTiming.end.minutes);
+  workEndTime = moment()
+    .hours(workEndTime.hours)
+    .minutes(workEndTime.minutes);
 
   if (forWeek) {
     workStartTime = workStartTime.day("Monday");

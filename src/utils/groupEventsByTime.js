@@ -1,5 +1,4 @@
 import moment from "moment";
-import mock from "../mock";
 
 export default function(events, now = moment()) {
   return events.reduce(
