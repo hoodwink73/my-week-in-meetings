@@ -4,3 +4,4 @@ import "./progress";
 import "./Time";
 import "./TimeLeftForWork";
 import "./Tips";
+import "./Cards";

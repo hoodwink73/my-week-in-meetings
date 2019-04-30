@@ -16,7 +16,13 @@ export const contexts = [
             eventsThisWeek: { loading: false, error: null, data: [] },
             userConfig: {
               workStartTime: { hours: 9, minutes: 0 },
-              workEndTime: { hours: 21, minutes: 0 }
+              workEndTime: { hours: 21, minutes: 0 },
+              workingDays: [1, 2, 3, 4, 5]
+            },
+            aggregatedEvents: {
+              error: null,
+              loading: [false, false],
+              data: [null, null, null]
             }
           }
         }
@@ -28,7 +34,13 @@ export const contexts = [
             eventsThisWeek: { loading: false, error: null, data: events },
             userConfig: {
               workStartTime: { hours: 9, minutes: 0 },
-              workEndTime: { hours: 21, minutes: 0 }
+              workEndTime: { hours: 21, minutes: 0 },
+              workingDays: [1, 2, 3, 4, 5]
+            },
+            aggregatedEvents: {
+              error: null,
+              loading: [false, false],
+              data: []
             }
           }
         }

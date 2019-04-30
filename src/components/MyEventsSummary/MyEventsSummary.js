@@ -50,10 +50,8 @@ export default function MyEventsSummary() {
       </Flex>
       <Flex justifyContent="center">
         <Box mx={4} my={2}>
-          <AnalyticsCard
-            title="Do you say no to meetings if they are not important?"
-            details={["Saying no to meetings might be challenging"]}
-          />
+          <AnalyticsCard type="timeSpentInMeetings" />
+          <AnalyticsCard type="busiestDay" mt={4} />
         </Box>
       </Flex>
     </>

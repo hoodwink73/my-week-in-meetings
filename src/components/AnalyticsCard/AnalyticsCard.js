@@ -2,9 +2,13 @@ import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import delve from "dlv";
 import { Box, Card, Text } from "@rebass/emotion";
+
+import TimeSpentInMeetings from "./TimeSpentInMeetings";
+import BusiestDay from "./BusiestDay";
+
 import { FirestoreDataContext } from "../FirestoreData";
 
-export default function AnalyticsCard() {
+export default function AnalyticsCard({ type, ...props }) {
   const { aggregatedEvents } = useContext(FirestoreDataContext);
 
   const isDataForThisWeekLoading =
@@ -12,29 +16,52 @@ export default function AnalyticsCard() {
   const areDataForLastWeeksLoading =
     delve(aggregatedEvents, "loading", false) && aggregatedEvents.loading[1];
 
-  const getDataForThisWeek =
-    delve(aggregatedEvents, "data", null) && aggregatedEvents.data[0];
-  const getDataForLastWeeks =
-    delve(aggregatedEvents, "data.1", null) && aggregatedEvents.data.slice(1);
+  const dataForThisWeek =
+    delve(aggregatedEvents, "data", []) && aggregatedEvents.data[0];
+  const dataForLastWeeks =
+    delve(aggregatedEvents, "data", []) && aggregatedEvents.data.slice(1);
 
-  // loading
-  //  - both
-  //  - this week - false, last three weeks - true
+  const error = aggregatedEvents.error;
+
+  let loading = false;
+  let data = null;
+  let Component;
+
+  switch (type) {
+    case "timeSpentInMeetings":
+    case "busiestDay":
+      loading = areDataForLastWeeksLoading;
+      data = [dataForThisWeek, ...dataForLastWeeks];
+      Component = TimeSpentInMeetings;
+      break;
+    default:
+      loading = isDataForThisWeekLoading;
+      data = [dataForThisWeek];
+  }
+
+  switch (type) {
+    case "timeSpentInMeetings":
+      Component = TimeSpentInMeetings;
+      break;
+    case "busiestDay":
+      Component = BusiestDay;
+      break;
+    default:
+      Component = "div";
+  }
+
+  if (error) {
+    console.error(error);
+  }
 
   return (
-    <Card width={[1, 600]} borderRadius={4} bg="gray.0">
-      <Text fontFamily="sans" fontSize={3} p={4} lineHeight={1.5}>
-        Busiest day of the week (aggregated over last four weeks) Monthly
-        meeting time trend (relative to last month) Total Amount of time spent
-        in meetings this week Average duration of meetings (this week or this
-        month) Meetings organised vs meetings invited to or who invites you to
-        most meetings Meetings with folks oustide company vs meeting with folks
-        inside company
-      </Text>
+    <Card width={[1, 600]} borderRadius={4} bg="gray.0" p={[3]} {...props}>
+      {!loading && !error ? <Component data={data} /> : null}
     </Card>
   );
 }
 
 AnalyticsCard.propTypes = {
-  type: PropTypes.string.isRequired
+  type: PropTypes.oneOf(["timeSpentInMeetings"]),
+  ...Card.propTypes
 };

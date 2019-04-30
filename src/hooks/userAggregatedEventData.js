@@ -42,16 +42,21 @@ export default function useAggregatedEventData(googleID) {
 
   // these are timestamp representing the beginning of the week
   // expressed as ISO stings
-  var lastWeeks = [...Array(LAST_WEEKS_TO_FETCH).keys()].map(
-    getStartOfWeekInUTC
-  );
+  var lastWeeks = [...Array(LAST_WEEKS_TO_FETCH + 1).keys()]
+    .slice(1)
+    .map(getStartOfWeekInUTC);
 
   useEffect(() => {
-    const aggregateDataForLastThreeWeeksReq = ASQ().all(
-      ...lastWeeks.map(week =>
-        ASQ().promise(getAggregatedDataForWeek(week, googleID))
-      )
-    );
+    const aggregateDataForLastThreeWeeksReq = currentWeekData =>
+      ASQ()
+        .all(
+          ...lastWeeks.map(week =>
+            ASQ().promise(getAggregatedDataForWeek(week, googleID))
+          )
+        )
+        .val(function(...lastThreeWeeksAggregate) {
+          return [currentWeekData, ...lastThreeWeeksAggregate];
+        });
 
     ASQ()
       .val(() => {
@@ -59,18 +64,26 @@ export default function useAggregatedEventData(googleID) {
       })
       .promise(getAggregatedDataForWeek(getStartOfWeekInUTC(), googleID))
       .val(doc => {
+        let thisWeekAggregate = null;
         if (doc.exists) {
+          thisWeekAggregate = doc.data();
           setResults({
             ...results,
             loading: [false, true],
-            data: [doc.data()]
+            data: [thisWeekAggregate]
           });
         } else {
-          setResults({ ...results, loading: [false, true], data: [null] });
+          setResults({
+            ...results,
+            loading: [false, true],
+            data: [thisWeekAggregate]
+          });
         }
+
+        return thisWeekAggregate;
       })
       .seq(aggregateDataForLastThreeWeeksReq)
-      .val((...lastWeeksDataResponse) => {
+      .val(([currentWeekData, ...lastWeeksDataResponse]) => {
         var dataForLastThreeWeeks = lastWeeksDataResponse.map(result => {
           if (result.exists) {
             return result.data();
@@ -79,10 +92,12 @@ export default function useAggregatedEventData(googleID) {
           }
         });
 
-        setResults({
-          ...results,
-          loading: [false, false],
-          data: results.data.concat(dataForLastThreeWeeks)
+        setResults(() => {
+          return {
+            error: null,
+            loading: [false, false],
+            data: [currentWeekData, ...dataForLastThreeWeeks]
+          };
         });
       })
       .or(err => {
