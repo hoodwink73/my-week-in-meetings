@@ -2,52 +2,36 @@ import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { Text } from "@rebass/emotion";
 import moment from "moment";
-import delve from "dlv";
 
 import AggregatedDataPropType from "./AggregatedData.propType";
+import { sortCollectionByKey } from "../../utils";
+import { DAYS_OF_WEEKS } from "../../constants";
 
 const KEY_FOR_AGGREGATED_DATA = "eventsFrequencyByDayOfWeek";
 
-const daysOfWeeks = [...Array(7).keys()].map(index =>
-  moment()
-    .isoWeekday(index)
-    .format("dddd")
-);
-
 export default function BusiestDay({ data }) {
   let noDataAvailable = false;
-  let totalMeetingTimeByDayAggregateOverWeeks = data.reduce(
-    (totalMeetingTimeByDay, currentWeekAggregate) => {
-      if (!currentWeekAggregate) {
-        return totalMeetingTimeByDay;
+  // accumulated over last few weeks
+  let sortedMeetingTimeByDays = sortCollectionByKey(
+    data.reduce((acc, aggregateForOneWeek) => {
+      const eventsByday =
+        aggregateForOneWeek && aggregateForOneWeek[KEY_FOR_AGGREGATED_DATA];
+      if (eventsByday) {
+        return acc.concat([eventsByday]);
+      } else {
+        return acc;
       }
-      let i = 0;
-      const result = Object.assign({}, totalMeetingTimeByDay);
-      while (i < 7) {
-        result[i] =
-          delve(result, `${i}`, 0) +
-          delve(currentWeekAggregate, `${KEY_FOR_AGGREGATED_DATA}.${i}`, 0);
-        i++;
-      }
-
-      return result;
-    },
-    {}
+    }, []),
+    "desc"
   );
 
-  if (!Object.keys(totalMeetingTimeByDayAggregateOverWeeks).length) {
+  var busiestDay;
+  if (!sortedMeetingTimeByDays.size) {
     noDataAvailable = true;
+  } else {
+    const [busiestDayIndex] = sortedMeetingTimeByDays.keys();
+    busiestDay = DAYS_OF_WEEKS[busiestDayIndex];
   }
-
-  const orderedDayOfWeek = Object.keys(
-    totalMeetingTimeByDayAggregateOverWeeks
-  ).sort(
-    (a, b) =>
-      totalMeetingTimeByDayAggregateOverWeeks[b] -
-      totalMeetingTimeByDayAggregateOverWeeks[a]
-  );
-
-  const busiestDay = daysOfWeeks[orderedDayOfWeek[0]];
 
   return noDataAvailable ? null : (
     <Text fontSize={3}>
