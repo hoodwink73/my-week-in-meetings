@@ -5,6 +5,8 @@ import { Box, Card, Text } from "@rebass/emotion";
 
 import TimeSpentInMeetings from "./TimeSpentInMeetings";
 import BusiestDay from "./BusiestDay";
+import TopOrganizer from "./TopOrganizer";
+import MeetingsByDomains from "./MeetingsByDomains";
 
 import { FirestoreDataContext } from "../FirestoreData";
 
@@ -30,9 +32,10 @@ export default function AnalyticsCard({ type, ...props }) {
   switch (type) {
     case "timeSpentInMeetings":
     case "busiestDay":
+    case "topOrganizer":
+    case "meetingsByDomains":
       loading = areDataForLastWeeksLoading;
       data = [dataForThisWeek, ...dataForLastWeeks];
-      Component = TimeSpentInMeetings;
       break;
     default:
       loading = isDataForThisWeekLoading;
@@ -45,6 +48,12 @@ export default function AnalyticsCard({ type, ...props }) {
       break;
     case "busiestDay":
       Component = BusiestDay;
+      break;
+    case "topOrganizer":
+      Component = TopOrganizer;
+      break;
+    case "meetingsByDomains":
+      Component = MeetingsByDomains;
       break;
     default:
       Component = "div";
@@ -62,6 +71,11 @@ export default function AnalyticsCard({ type, ...props }) {
 }
 
 AnalyticsCard.propTypes = {
-  type: PropTypes.oneOf(["timeSpentInMeetings"]),
+  type: PropTypes.oneOf([
+    "timeSpentInMeetings",
+    "busiestDay",
+    "topOrganizer",
+    "meetingsByDomains"
+  ]),
   ...Card.propTypes
 };

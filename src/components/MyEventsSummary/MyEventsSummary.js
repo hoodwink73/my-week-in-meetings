@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import "firebase/firestore";
+import React, { useState } from "react";
 import { Flex, Box } from "@rebass/emotion";
 
 import {
@@ -52,6 +51,8 @@ export default function MyEventsSummary() {
         <Box mx={4} my={2}>
           <AnalyticsCard type="timeSpentInMeetings" />
           <AnalyticsCard type="busiestDay" mt={4} />
+          <AnalyticsCard type="topOrganizer" mt={4} />
+          <AnalyticsCard type="meetingsByDomains" mt={4} />
         </Box>
       </Flex>
     </>

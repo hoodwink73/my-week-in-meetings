@@ -5,6 +5,8 @@ import timeLeftForWorkInMs from "./timeLeftForWorkInMs";
 import sortEvents from "./sortEvents";
 import getWorkHours from "./getWorkHours";
 import getUserGoogleID from "./getUserGoogleID";
+import getUserDomain from "./getUserDomain";
+import sortCollectionByKey from "./sortCollectionByKey";
 
 export {
   getStartOfWeekInUTC,
@@ -13,5 +15,7 @@ export {
   timeLeftForWorkInMs,
   sortEvents,
   getWorkHours,
-  getUserGoogleID
+  getUserGoogleID,
+  getUserDomain,
+  sortCollectionByKey
 };

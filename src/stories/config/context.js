@@ -2,6 +2,7 @@ import { FirestoreDataContext } from "../../components/FirestoreData";
 import { UserConfigContext } from "../../components/UserConfig";
 
 import events from "./events/2019-04-01";
+import aggregates from "./aggregates/2019-04-01";
 export const contexts = [
   {
     icon: "box", // a icon displayed in the Storybook toolbar to control contextual props
@@ -40,7 +41,7 @@ export const contexts = [
             aggregatedEvents: {
               error: null,
               loading: [false, false],
-              data: []
+              data: [aggregates, null, null, null]
             }
           }
         }

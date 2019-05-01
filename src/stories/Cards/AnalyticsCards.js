@@ -18,4 +18,14 @@ storiesOf("Analytics Card")
   )
   .add("Busiest day of week", () => {
     return <AnalyticsCard type="busiestDay" />;
+  })
+  .add("Who invited you to the most number of meetings", () => {
+    return <AnalyticsCard type="topOrganizer" />;
   });
+// TODO
+// this story includes component dependent on firebase
+// hence requires us to initialize firebase
+// will try to resolve later
+// .add("Meetings attended organised by outside the company vs inside", () => {
+//   return <AnalyticsCard type="meetingsByDomains" />;
+// });

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "emotion-theming";
 import { Helmet } from "react-helmet";
 import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "@firebase/app";
+import "@firebase/auth";
 
 import theme from "./theme";
 import Login from "./components/Login";
