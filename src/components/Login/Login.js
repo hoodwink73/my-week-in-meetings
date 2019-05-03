@@ -30,10 +30,14 @@ export default function Login() {
 
     ASQ()
       .promise(auth2.grantOfflineAccess())
-      .val(({ code }) => ({
-        authorizationCode: code,
-        googleID: auth2.currentUser.get().getId()
-      }))
+      .then((done, { code }) => {
+        auth2.currentUser.listen(user => {
+          done({
+            authorizationCode: code,
+            googleID: user.getId()
+          });
+        });
+      })
       .seq(persistOfflineAccessToken)
       .val(({ data: idToken }) => ({ idToken }))
       .seq(signInWithFirebase)
