@@ -7,9 +7,6 @@ import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 import App from "./App";
 
-import * as MockDate from "mockdate";
-MockDate.set("2019-04-01T09:00");
-
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_PROJECT_AUTH_DOMAIN,

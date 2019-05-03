@@ -31,7 +31,7 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "now-dev": "react-scripts start",
-    "now-build": "react-scripts build"
+    "now-build": "env-cmd .env.dev.build npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,6 +53,7 @@
     "@storybook/addons": "^5.0.6",
     "@storybook/react": "^5.0.6",
     "babel-loader": "^8.0.5",
+    "env-cmd": "^8.0.2",
     "mockdate": "^2.0.2"
   }
 }
