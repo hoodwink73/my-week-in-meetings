@@ -31,22 +31,22 @@ export default function MyEventsSummary() {
         <Box width={[1, 600]} px={[4, 0]} py={2} alignSelf="center">
           <Greeting my={1} />
           {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
-            <TimeLeftForWork
-              selectedTimeRange={selectedTimeRange}
-              my={3}
-              width={256}
-            />
           </SelectTimeRange> */}
+          <TimeLeftForWork
+            selectedTimeRange={selectedTimeRange}
+            my={4}
+            width={[1]}
+          />
         </Box>
       </Flex>
-      <Flex justifyContent="center">
+      {/* <Flex justifyContent="center">
         <Box m={4}>
           <Tips
             title="Do you say no to meetings if they are not important?"
             details={["Saying no to meetings might be challenging"]}
           />
         </Box>
-      </Flex>
+      </Flex> */}
       <Flex justifyContent="center">
         <Box mx={4} my={2}>
           <AnalyticsCard type="timeSpentInMeetings" />

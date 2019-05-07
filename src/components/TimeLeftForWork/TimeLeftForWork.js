@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Text } from "@rebass/emotion";
-
+import { Flex, Box, Text } from "@rebass/emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import { FirestoreDataContext } from "../FirestoreData";
 import { UserConfigContext } from "../UserConfig";
 import Time from "../Time";
@@ -96,18 +97,34 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
         100;
 
   return (
-    <Box {...props}>
-      <Text fontSize={2} mb={1}>
-        You have
-      </Text>
-      <Time timeInMs={timeLeftFromThisInstant} />
+    <Box
+      bg="white.1"
+      pl={4}
+      py={3}
+      css={css`
+        border-radius: 25px;
+      `}
+      {...props}
+    >
+      <Flex>
+        <Time
+          fontSize={2}
+          fontWeight="bold"
+          timeInMs={timeLeftFromThisInstant}
+          mr={1}
+        />
+        <Text fontSize={2} fontWeight="bold" mb={1}>
+          left today to get work done
+        </Text>
+      </Flex>
+      {/* <Time timeInMs={timeLeftFromThisInstant} />
       <Progress width={1} percent={timeElapsedDoingWorkInPercentage} />
       <Text fontSize={2} mt={3}>
         avaialable for work{" "}
         {selectedTimeRange === "week"
           ? `this ${selectedTimeRange}`
           : selectedTimeRange}
-      </Text>
+      </Text> */}
     </Box>
   );
 }

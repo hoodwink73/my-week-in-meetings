@@ -1,6 +1,7 @@
 export default {
   colors: {
     blue: "blue",
+    white: ["rgb(255, 255, 255)", "rgb(240, 240, 240)"],
     gray: [
       "rgb(221, 221, 221)",
       "rgb(187, 187, 187)",
