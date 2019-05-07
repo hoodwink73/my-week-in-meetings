@@ -26,17 +26,17 @@ export default function MyEventsSummary() {
 
   return (
     <>
-      <Flex width="100%" bg="gray.0" flexDirection="column">
-        <LogoutLink alignSelf="flex-end" mt={2} mr={4} />
-        <Box width={[1, 600]} px={[4, 0]} py={4} alignSelf="center">
-          <Greeting my={3} />
-          <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
+      <Flex width="100%" flexDirection="column">
+        {/* <LogoutLink alignSelf="flex-end" mt={2} mr={4} /> */}
+        <Box width={[1, 600]} px={[4, 0]} py={2} alignSelf="center">
+          <Greeting my={1} />
+          {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
             <TimeLeftForWork
               selectedTimeRange={selectedTimeRange}
               my={3}
               width={256}
             />
-          </SelectTimeRange>
+          </SelectTimeRange> */}
         </Box>
       </Flex>
       <Flex justifyContent="center">
