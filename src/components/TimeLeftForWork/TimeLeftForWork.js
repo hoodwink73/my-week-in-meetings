@@ -99,32 +99,17 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   return (
     <Box
       bg="white.1"
-      pl={4}
+      px={2}
       py={3}
       css={css`
         border-radius: 25px;
       `}
       {...props}
     >
-      <Flex>
-        <Time
-          fontSize={2}
-          fontWeight="bold"
-          timeInMs={timeLeftFromThisInstant}
-          mr={1}
-        />
-        <Text fontSize={2} fontWeight="bold" mb={1}>
-          left today to get work done
-        </Text>
-      </Flex>
-      {/* <Time timeInMs={timeLeftFromThisInstant} />
-      <Progress width={1} percent={timeElapsedDoingWorkInPercentage} />
-      <Text fontSize={2} mt={3}>
-        avaialable for work{" "}
-        {selectedTimeRange === "week"
-          ? `this ${selectedTimeRange}`
-          : selectedTimeRange}
-      </Text> */}
+      <Text fontSize={[2, 4]} fontWeight="bold" textAlign="center">
+        <Time timeInMs={timeLeftFromThisInstant} as="span" />
+        <span>left today to get work done</span>
+      </Text>
     </Box>
   );
 }

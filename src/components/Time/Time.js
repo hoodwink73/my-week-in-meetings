@@ -4,19 +4,19 @@ import { Text } from "@rebass/emotion";
 import moment from "moment";
 import leftPad from "left-pad";
 
-export default function Time({ timeInMs, ...props }) {
+export default function Time({ timeInMs, as: Component, ...props }) {
   const duration = moment.duration(timeInMs);
 
   return (
-    <Text {...props}>
+    <Component {...props}>
       {`${parseInt(parseFloat(duration.asHours()).toFixed(2), 10)} hrs ${
         duration.minutes() ? `${leftPad(duration.minutes(), 2, 0)} mins` : ""
       }`}
-    </Text>
+    </Component>
   );
 }
 
 Time.propTypes = {
   timeInMs: PropTypes.number.isRequired,
-  ...Text.propTypes
+  as: PropTypes.node.isRequired
 };
