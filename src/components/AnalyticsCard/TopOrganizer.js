@@ -92,16 +92,22 @@ export default function TopOrganizer({ data, ...props }) {
           </Text>
         ) : (
           <Flex mt="auto" justifyContent="space-between">
-            <Box>
+            <Box alignSelf="flex-end">
               <Text fontSize={6} fontWeight="bold">
                 {numberOfMeetings}
               </Text>
             </Box>
-            <Box alignSelf="flex-end">
+            <Box width={1 / 2} alignSelf="flex-end" ml="2">
               <Text mb={1} textAlign="right">
                 organised by
               </Text>
-              <Text fontWeight="bold" textAlign="right">
+              <Text
+                fontWeight="bold"
+                textAlign="right"
+                css={css`
+                  overflow-wrap: break-word;
+                `}
+              >
                 {topOrganizerEmail}
               </Text>
             </Box>
