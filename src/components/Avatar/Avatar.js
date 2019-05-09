@@ -10,9 +10,9 @@ import { css, jsx } from "@emotion/core";
 export default function Avatar({ ...props }) {
   const { user } = useAuthState(firebase.auth());
 
-  // const userProfilePicSrc = delve(user, "providerData.0.photoURL", null);
-  const userProfilePicSrc =
-    "https://api.adorable.io/avatars/285/hoodwink73@gmail.com";
+  const userProfilePicSrc = delve(user, "providerData.0.photoURL", null);
+  // const userProfilePicSrc =
+  //   "https://api.adorable.io/avatars/285/hoodwink73@gmail.com";
 
   if (userProfilePicSrc) {
     return (
