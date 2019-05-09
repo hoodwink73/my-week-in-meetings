@@ -48,36 +48,47 @@ export default function Events({ events }) {
 
   return (
     <Flex flexDirection="column" py={4}>
-      {events.map(event => (
-        <Flex
-          key={event.id}
-          justifyContent="space-between"
-          flexWrap={["wrap", "nowrap"]}
-          mb={[4, 0]}
-        >
-          <Text
-            width={[1, 1 / 4]}
-            alignSelf="center"
-            fontWeight="bold"
-            order={[1, 2]}
+      {events.length < 1 ? (
+        <Text textAlign="center" color="gray.3">
+          No upcoming meetings today
+        </Text>
+      ) : (
+        events.map(event => (
+          <Flex
+            key={event.id}
+            justifyContent="space-between"
+            flexWrap={["wrap", "nowrap"]}
+            mb={[4, 0]}
           >
-            {formatDateTime(event.start.dateTime)} -{" "}
-            {formatDateTime(event.end.dateTime)}{" "}
-          </Text>
-          <Box width={[1, 3 / 4]} p={[0, 3]} alignSelf="center" order={[2, 1]}>
-            <Text fontSize={3} fontWeight="bold" mb={1}>
-              {event.summary}
+            <Text
+              width={[1, 1 / 4]}
+              alignSelf="center"
+              fontWeight="bold"
+              order={[1, 2]}
+            >
+              {formatDateTime(event.start.dateTime)} -{" "}
+              {formatDateTime(event.end.dateTime)}{" "}
             </Text>
-            <Text fontSize={2} color="gray.3" mb={1}>
-              Organised by{" "}
-              {event.organizer.email === user.email
-                ? "you"
-                : event.organizer.email}
-            </Text>
-            {getAttendeeStatusForEvent(event)}
-          </Box>
-        </Flex>
-      ))}
+            <Box
+              width={[1, 3 / 4]}
+              p={[0, 3]}
+              alignSelf="center"
+              order={[2, 1]}
+            >
+              <Text fontSize={3} fontWeight="bold" mb={1}>
+                {event.summary}
+              </Text>
+              <Text fontSize={2} color="gray.3" mb={1}>
+                Organised by{" "}
+                {event.organizer.email === user.email
+                  ? "you"
+                  : event.organizer.email}
+              </Text>
+              {getAttendeeStatusForEvent(event)}
+            </Box>
+          </Flex>
+        ))
+      )}
     </Flex>
   );
 }

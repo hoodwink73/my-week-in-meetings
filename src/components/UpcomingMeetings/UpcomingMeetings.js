@@ -5,10 +5,18 @@ import { Flex, Box, Text } from "@rebass/emotion";
 import Events from "./Events";
 import { sortEvents } from "../../utils";
 
+import { useRerender } from "../../hooks";
+
+// a minute
+const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
+
 export default function UpcomingMeetings() {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
     FirestoreDataContext
   );
+
+  // render the component after a certain interval to get the correct time left
+  useRerender(REFRESH_TIMER_FREQUENCY_IN_MS);
 
   const eventsThisWeek = eventsThisWeekRequest.data;
 
