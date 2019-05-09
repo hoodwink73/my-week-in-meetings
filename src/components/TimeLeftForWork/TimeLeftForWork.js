@@ -108,7 +108,7 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
     >
       <Text fontSize={[2, 4]} fontWeight="bold" textAlign="center">
         <Time timeInMs={timeLeftFromThisInstant} as="span" />
-        <span>left today to get work done</span>
+        <span> left today to get work done</span>
       </Text>
     </Box>
   );

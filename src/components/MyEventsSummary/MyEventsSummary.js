@@ -15,6 +15,7 @@ import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
 import Tips from "../Tips";
 import AnalyticsCard from "../AnalyticsCard";
+import UpcomingMeetings from "../UpcomingMeetings";
 
 export default function MyEventsSummary() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
@@ -28,24 +29,24 @@ export default function MyEventsSummary() {
 
   return (
     <>
-      <Flex width="100%" flexDirection="column">
+      <Flex width={[1, 600]} px={[4, 0]} m="auto" flexDirection="column">
         {/* <LogoutLink alignSelf="flex-end" mt={2} mr={4} /> */}
-        <Box width={[1, 600]} px={[4, 0]} py={2} alignSelf="center">
-          <Greeting my={1} />
-          {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
+        <Box py={2} />
+        <Greeting my={1} />
+        {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
           </SelectTimeRange> */}
-          <TimeLeftForWork
-            selectedTimeRange={selectedTimeRange}
-            my={4}
-            width={[1]}
-          />
-          <Flex justifyContent="space-between" flexWrap="wrap">
-            <AnalyticsCard type="timeSpentInMeetings" />
-            <AnalyticsCard type="busiestDay" />
-            <AnalyticsCard type="topOrganizer" mt={[0, 3]} />
-            <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} />
-          </Flex>
-        </Box>
+        <TimeLeftForWork
+          selectedTimeRange={selectedTimeRange}
+          my={4}
+          width={[1]}
+        />
+        <UpcomingMeetings />
+        <Flex justifyContent="space-between" flexWrap="wrap">
+          <AnalyticsCard type="timeSpentInMeetings" />
+          <AnalyticsCard type="busiestDay" />
+          <AnalyticsCard type="topOrganizer" mt={[0, 3]} />
+          <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} />
+        </Flex>
       </Flex>
       {/* <Flex justifyContent="center">
         <Box m={4}>
