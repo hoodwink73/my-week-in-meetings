@@ -22,7 +22,7 @@ export default function Events({ events }) {
   ]);
 
   const numAttendeeForEventStatus = (event, status) =>
-    event.attendees.length > 0
+    event.attendees && event.attendees.length > 0
       ? event.attendees.filter(attendee => attendee.responseStatus === status)
           .length
       : 0;
