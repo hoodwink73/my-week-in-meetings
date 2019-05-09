@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Flex, Box } from "@rebass/emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 
 import {
   getStartOfWeekInUTC,
@@ -37,6 +39,12 @@ export default function MyEventsSummary() {
             my={4}
             width={[1]}
           />
+          <Flex justifyContent="space-between" flexWrap="wrap">
+            <AnalyticsCard type="timeSpentInMeetings" />
+            <AnalyticsCard type="busiestDay" />
+            <AnalyticsCard type="topOrganizer" mt={[0, 3]} />
+            <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} />
+          </Flex>
         </Box>
       </Flex>
       {/* <Flex justifyContent="center">
@@ -47,14 +55,6 @@ export default function MyEventsSummary() {
           />
         </Box>
       </Flex> */}
-      <Flex justifyContent="center">
-        <Box mx={4} my={2}>
-          <AnalyticsCard type="timeSpentInMeetings" />
-          <AnalyticsCard type="busiestDay" mt={4} />
-          <AnalyticsCard type="topOrganizer" mt={4} />
-          <AnalyticsCard type="meetingsByDomains" mt={4} />
-        </Box>
-      </Flex>
     </>
   );
 }

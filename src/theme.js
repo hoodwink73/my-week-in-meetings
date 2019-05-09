@@ -8,7 +8,8 @@ export default {
       "rgb(153, 153, 153)",
       "rgb(85, 85, 85)",
       "rgb(51, 51, 51)"
-    ]
+    ],
+    red: ["rgb(255, 214, 214)", "rgb(247, 105, 105)", "rgb(238, 68, 68)"]
   },
   fonts: {
     sans: "system-ui, sans-serif",
@@ -16,6 +17,7 @@ export default {
   },
   shadows: {
     small: "0 0 4px rgba(0, 0, 0, .125)",
+    medium: "0 0 8px rgba(0, 0, 0, .125)",
     large: "0 0 24px rgba(0, 0, 0, .125)"
   },
   text: {}

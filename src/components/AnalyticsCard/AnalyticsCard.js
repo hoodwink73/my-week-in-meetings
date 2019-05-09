@@ -63,11 +63,11 @@ export default function AnalyticsCard({ type, ...props }) {
     console.error(error);
   }
 
-  return (
-    <Card width={[1, 600]} borderRadius={4} bg="gray.0" p={[3]} {...props}>
-      {!loading && !error ? <Component data={data} /> : null}
-    </Card>
-  );
+  if (!loading & !error) {
+    return <Component data={data} {...props} />;
+  } else {
+    return null;
+  }
 }
 
 AnalyticsCard.propTypes = {
@@ -76,6 +76,5 @@ AnalyticsCard.propTypes = {
     "busiestDay",
     "topOrganizer",
     "meetingsByDomains"
-  ]),
-  ...Card.propTypes
+  ])
 };
