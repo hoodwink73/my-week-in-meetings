@@ -4,6 +4,7 @@ import { Flex, Box, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { FirestoreDataContext } from "../FirestoreData";
+
 import { UserConfigContext } from "../UserConfig";
 import Time from "../Time";
 import Progress from "../Progress";
@@ -12,7 +13,9 @@ import {
   timeLeftForWorkInMs,
   getWorkHours
 } from "../../utils";
+import { useRerender } from "../../hooks";
 
+// a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
@@ -22,17 +25,10 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
 
   const { userConfig } = useContext(UserConfigContext);
 
+  // render the component after a certain interval to get the correct time left
+  useRerender(REFRESH_TIMER_FREQUENCY_IN_MS);
+
   const eventsThisWeek = eventsThisWeekRequest.data;
-
-  const [renderCounter, setRenderCounter] = useState(0);
-
-  useEffect(() => {
-    const unsubscribeID = setInterval(() => {
-      setRenderCounter(renderCounter + 1);
-    }, REFRESH_TIMER_FREQUENCY_IN_MS);
-
-    return () => clearInterval(unsubscribeID);
-  });
 
   if (eventsThisWeekRequest.loading) {
     return "Loading";
