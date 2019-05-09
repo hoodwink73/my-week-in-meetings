@@ -4,6 +4,9 @@ import { Flex, Box, Text, Card } from "@rebass/emotion";
 import { ReactComponent as MeetingIcon } from "../../icons/meeting.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import firebase from "@firebase/app";
+import "@firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { sortCollectionByKey } from "../../utils";
@@ -11,6 +14,8 @@ import { sortCollectionByKey } from "../../utils";
 const KEY_FOR_AGGREGATED_DATA = "rankCollaborators";
 
 export default function TopOrganizer({ data, ...props }) {
+  const { user } = useAuthState(firebase.auth());
+
   let noDataAvailable = false;
   // accumulated over last few weeks
   let sortedMeetingTimeByOrganizers = sortCollectionByKey(
@@ -25,6 +30,9 @@ export default function TopOrganizer({ data, ...props }) {
     }, []),
     "desc"
   );
+
+  // filter out events organized by me
+  sortedMeetingTimeByOrganizers.delete(user.email);
 
   // the person who invited me to most meetings
   if (!sortedMeetingTimeByOrganizers.size) {

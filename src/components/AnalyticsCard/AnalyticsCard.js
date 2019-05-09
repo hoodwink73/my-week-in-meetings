@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import delve from "dlv";
-import { Box, Card, Text } from "@rebass/emotion";
 
 import TimeSpentInMeetings from "./TimeSpentInMeetings";
 import BusiestDay from "./BusiestDay";
