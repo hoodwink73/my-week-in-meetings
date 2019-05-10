@@ -1,18 +1,50 @@
 import React, { createContext, useState } from "react";
 import PropTypes from "prop-types";
+import firebase from "@firebase/app";
+import "@firebase/firestore";
+import "@firebase/auth";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import { getUserGoogleID } from "../../utils";
+import { DEFAULT_WORKING_TIME } from "../../constants";
 
 export const UserConfigContext = createContext();
 
 export default function UserConfig({ children }) {
-  const [userConfig, setUserConfig] = useState({
-    workStartTime: { hours: 9, minutes: 0 },
-    workEndTime: { hours: 21, minutes: 0 },
-    workingDays: [1, 2, 3, 4, 5]
-  });
+  const { user } = useAuthState(firebase.auth());
+  const googleUserID = getUserGoogleID(user);
+
+  const userConfigDocRef = firebase.firestore().doc(`users/${googleUserID}`);
+  const { error, loading, value } = useDocument(userConfigDocRef);
+
+  const setUserConfigInFirestore = workingTime => {
+    userConfigDocRef.set(
+      {
+        userConfig: { workingTime }
+      },
+      { merge: true }
+    );
+  };
+
+  let userConfig;
+
+  if (loading) {
+    userConfig = null;
+  } else if (!loading && error) {
+    userConfig = null;
+  } else if (!value.data().userConfig) {
+    // this is useful unless the user change
+    // the settings
+    userConfig = DEFAULT_WORKING_TIME;
+  } else {
+    userConfig = value.data().userConfig.workingTime;
+  }
 
   const userConfigStateAndHelpers = {
     userConfig,
-    setUserConfig
+    setUserConfig: setUserConfigInFirestore,
+    userConfigRequest: { error, loading }
   };
 
   return (

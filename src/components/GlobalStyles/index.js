@@ -6,11 +6,11 @@ export default function() {
     <Global
       styles={theme => css`
         .primary {
-          fill: ${theme.colors.gray[0]};
+          fill: ${theme.colors.gray[1]};
         }
 
         .secondary {
-          fill: ${theme.colors.gray[1]};
+          fill: ${theme.colors.gray[2]};
         }
       `}
     />

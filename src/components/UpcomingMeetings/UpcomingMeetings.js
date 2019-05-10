@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FirestoreDataContext } from "../FirestoreData";
 import { Flex, Box, Text } from "@rebass/emotion";
-import Events from "./Events";
-import { sortEvents } from "../../utils";
 
+import { UserConfigContext } from "../UserConfig";
+import { sortEvents, getWorkHours } from "../../utils";
 import { useRerender } from "../../hooks";
+import Events from "./Events";
 
 // a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
@@ -15,6 +16,8 @@ export default function UpcomingMeetings() {
     FirestoreDataContext
   );
 
+  const { userConfig } = useContext(UserConfigContext);
+
   // render the component after a certain interval to get the correct time left
   useRerender(REFRESH_TIMER_FREQUENCY_IN_MS);
 
@@ -23,7 +26,9 @@ export default function UpcomingMeetings() {
   let upcomingEvents = eventsThisWeek.filter(event => {
     if (
       moment(event.start.dateTime).isAfter(moment()) &&
-      moment(event.start.dateTime).isBefore(moment().endOf("day"))
+      moment(event.start.dateTime).isBefore(
+        getWorkHours(false, userConfig).workEndTime
+      )
     ) {
       return true;
     } else {
