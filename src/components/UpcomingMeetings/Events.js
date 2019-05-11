@@ -6,6 +6,8 @@ import firebase from "@firebase/app";
 import "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+import { EVENT_STATUSES } from "../../constants";
+
 export default function Events({ events }) {
   const { user } = useAuthState(firebase.auth());
 
@@ -13,13 +15,6 @@ export default function Events({ events }) {
 
   const formatDateTime = dateTimeString =>
     moment(dateTimeString).format(dateFormatString);
-
-  const EVENT_STATUSES = new Map([
-    ["Accepted", "accepted"],
-    ["Maybe", "tentative"],
-    ["Declined", "declined"],
-    ["Not Responded", "needsAction"]
-  ]);
 
   const numAttendeeForEventStatus = (event, status) =>
     event.attendees && event.attendees.length > 0

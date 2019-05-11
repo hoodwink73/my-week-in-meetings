@@ -11,3 +11,10 @@ export const DEFAULT_WORKING_TIME = {
   workEndTime: { hours: 21, minutes: 0 },
   workingDays: [1, 2, 3, 4, 5]
 };
+
+export const EVENT_STATUSES = new Map([
+  ["Accepted", "accepted"],
+  ["Maybe", "tentative"],
+  ["Declined", "declined"],
+  ["Not Responded", "needsAction"]
+]);
