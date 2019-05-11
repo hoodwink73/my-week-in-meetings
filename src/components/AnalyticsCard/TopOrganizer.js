@@ -11,7 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { sortCollectionByKey } from "../../utils";
 
-const KEY_FOR_AGGREGATED_DATA = "rankCollaborators";
+const KEY_FOR_AGGREGATED_DATA = "rankOrganizers";
 
 export default function TopOrganizer({ data, ...props }) {
   const { user } = useAuthState(firebase.auth());
@@ -20,9 +20,18 @@ export default function TopOrganizer({ data, ...props }) {
   // accumulated over last few weeks
   let sortedMeetingTimeByOrganizers = sortCollectionByKey(
     data.reduce((acc, aggregateForOneWeek) => {
-      const eventsByOrganizers =
+      let aggregate =
         aggregateForOneWeek && aggregateForOneWeek[KEY_FOR_AGGREGATED_DATA];
-      if (eventsByOrganizers) {
+
+      if (aggregate) {
+        // this data will look like this
+        // {"ari@email.com": {count: 4, displayName: "Ari"}, ...}
+        // we want it like this {"ari@email.com": 4} for our utility function
+        // `sortCollectionByKey`
+        let eventsByOrganizers = {};
+        for (let [email, details] of Object.entries(aggregate)) {
+          eventsByOrganizers[email] = details.count;
+        }
         return acc.concat([eventsByOrganizers]);
       } else {
         return acc;
