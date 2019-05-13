@@ -1,4 +1,5 @@
 export default {
+  breakpoints: ["40em", "52em", "64em"],
   colors: {
     blue: "blue",
     white: ["rgb(255, 255, 255)", "rgb(240, 240, 240)"],

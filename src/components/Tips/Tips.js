@@ -1,29 +1,16 @@
 import React, { useState, useCallback } from "react";
+import { Flex, Box, Card } from "@rebass/emotion";
+
 import PropTypes from "prop-types";
 
-import TipsCard from "./TipsCard";
-import TipsDetails from "./TipsDetails";
+import DeclineMeetingTip from "./DeclineMeetingTip";
 
-export default function Tips({ title, details }) {
-  const [isExpanded, expandTip] = useState(false);
-
-  const toggleTipDetails = () => {
-    expandTip(!isExpanded);
-  };
-
+export default function Tips() {
   return (
-    <>
-      <TipsCard title={title} onToggle={toggleTipDetails} />
-      <TipsDetails
-        isOpen={isExpanded}
-        details={details}
-        onToggle={toggleTipDetails}
-      />
-    </>
+    <Flex mt={2} mb={4}>
+      <DeclineMeetingTip />
+    </Flex>
   );
 }
 
-Tips.propTypes = {
-  title: PropTypes.string.isRequired,
-  details: PropTypes.arrayOf(PropTypes.string).isRequired
-};
+Tips.propTypes = {};

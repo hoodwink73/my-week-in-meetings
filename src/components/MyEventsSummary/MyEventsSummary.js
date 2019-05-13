@@ -53,6 +53,8 @@ export default function MyEventsSummary() {
             width={[1]}
           />
           <UpcomingMeetings />
+
+          <Tips />
           <Flex justifyContent="space-between" flexWrap="wrap">
             <AnalyticsCard type="timeSpentInMeetings" />
             <AnalyticsCard type="busiestDay" />
