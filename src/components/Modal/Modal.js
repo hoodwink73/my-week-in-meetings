@@ -1,5 +1,11 @@
 /** @jsx jsx */
-import React from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useLayoutEffect
+} from "react";
 import PropTypes from "prop-types";
 import { Flex, Box } from "@rebass/emotion";
 import ReactModal from "react-modal";
@@ -36,28 +42,65 @@ const CUSTOM_STYLES = {
   }
 };
 
-export default function Modal({ children, ...props }) {
+export default function Modal({ children, contentFit, ...props }) {
   const isSmall = useMedia("(min-width: 40em)");
   const isMedium = useMedia("(min-width: 52em)");
   const isLarge = useMedia("(min-width: 64em)");
 
+  const [modalDimesions, setModalDimensions] = useState(null);
+
+  const measuredRef = useCallback(
+    node => {
+      if (node !== null) {
+        setModalDimensions(node.getBoundingClientRect());
+      }
+    },
+    [children]
+  );
+
   let customStyles;
 
-  if (isLarge) {
+  if (contentFit) {
+    // this is a fix to get the correct width of the
+    // modal content for the first time
+    let styles = { right: "auto" };
+    if (modalDimesions) {
+      const { width, height } = modalDimesions;
+      styles = {
+        height,
+        top: `calc(50% - ${height / 2}px)`,
+        left: `calc(50% - ${width / 2}px)`,
+        bottom: "auto",
+        right: "auto"
+      };
+    }
+
+    customStyles = {
+      content: {
+        ...styles
+      }
+    };
+  } else if (isLarge) {
     customStyles = CUSTOM_STYLES.large;
   } else if (isMedium) {
     customStyles = CUSTOM_STYLES.medium;
-  } else {
+  } else if (isSmall) {
     customStyles = CUSTOM_STYLES.small;
   }
 
   return (
     <ReactModal {...props} style={customStyles}>
       <Flex
+        width="auto"
+        ref={measuredRef}
         flexDirection="column"
-        css={css`
-          height: 100%;
-        `}
+        css={() =>
+          contentFit
+            ? ""
+            : css`
+                height: 100%;
+              `
+        }
       >
         <Box>
           <NavigationBackIcon
@@ -66,14 +109,17 @@ export default function Modal({ children, ...props }) {
             style={{ cursor: "pointer" }}
           />
         </Box>
-        <Box mt={2} width={1} flex="1 0 auto">
-          {children}
-        </Box>
+        <Box mt={2}>{children}</Box>
       </Flex>
     </ReactModal>
   );
 }
 
 Modal.propTypes = {
+  contentFit: PropTypes.bool,
   ...ReactModal.propTypes
+};
+
+Modal.defaultProps = {
+  contentFit: true
 };

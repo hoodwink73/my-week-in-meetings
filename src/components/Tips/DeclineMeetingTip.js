@@ -3,6 +3,7 @@ import React, { useReducer, useCallback } from "react";
 import { Flex, Box, Card, Text, Button } from "@rebass/emotion";
 import { css, jsx } from "@emotion/core";
 import { useClipboard } from "use-clipboard-copy";
+import useMedia from "react-use/lib/useMedia";
 
 import Modal from "../Modal";
 
@@ -35,6 +36,8 @@ export default function DeclineMeetingTip() {
   const handleCopy = useCallback(() => {
     clipboard.copy(CONTENT[state].suggestion); // programmatically copying a value
   }, [clipboard.copy, state]);
+
+  const isLarge = useMedia("(min-width: 64em)");
 
   const handleOpen = () => {
     dispatch({ type: "open" });
@@ -101,10 +104,11 @@ export default function DeclineMeetingTip() {
     <>
       <Modal
         isOpen={["open", ...POSSIBLE_SUGGESTIONS].includes(state)}
+        contentFit={isLarge ? true : false}
         onRequestClose={handleClose}
       >
         <Flex
-          width={1}
+          width={[1, 600]}
           justifyContent="center"
           alignItems={["center", "flex-start"]}
           css={css`
