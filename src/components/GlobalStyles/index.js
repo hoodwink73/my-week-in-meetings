@@ -11,7 +11,7 @@ export default function() {
           height: 100%;
         }
         .primary {
-          fill: ${theme.colors.gray[1]};
+          fill: ${theme.colors.gray[0]};
         }
 
         .secondary {

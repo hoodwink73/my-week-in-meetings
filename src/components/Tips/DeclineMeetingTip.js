@@ -6,6 +6,8 @@ import { useClipboard } from "use-clipboard-copy";
 import useMedia from "react-use/lib/useMedia";
 
 import Modal from "../Modal";
+import { ReactComponent as DuplicateIcon } from "../../icons/icon-duplicate.svg";
+import { ReactComponent as NavigationBackIcon } from "../../icons/icon-cheveron-left-circle.svg";
 
 const POSSIBLE_SUGGESTIONS = ["agenda", "priority", "value"];
 
@@ -52,51 +54,99 @@ export default function DeclineMeetingTip() {
   for (let [key, problem] of Object.entries(CONTENT)) {
     problems.push(
       <Card
-        width={1}
-        bg="gray.0"
+        as={Flex}
+        alignItems="center"
+        width={[1, 3 / 7]}
+        bg="purple.4"
         key={key}
-        p={4}
-        my={[3, 4]}
+        p={3}
+        my={[2, 3]}
+        mr={[0, 4]}
         borderRadius={[10]}
+        flex={["1 0 auto", "0 0 auto"]}
         css={css`
           cursor: pointer;
+          min-height: ${isLarge ? "150px" : "auto"};
+          box-shadow: 6px 6px 1px 0 #7069fa8a;
+          transition: box-shadow 200ms;
+          &:hover {
+            box-shadow: 8px 8px 1px 0 #7069fa8a;
+          }
         `}
         onClick={() => dispatch({ type: key })}
       >
-        <Text fontSize={[4, 3]}>{problem.title}</Text>
+        <Text fontSize={[2, 3]} color="white.0" textAlign="center">
+          {problem.title}
+        </Text>
       </Card>
     );
   }
 
   const Problems = () => {
     return (
-      <Box width={[1, 600]}>
-        <Text fontSize={[5, 4]} fontWeight="bold">
-          Why do you think you shouldn't attend the meeting
+      <Box width={[1, 600]} px={[4, 5]} py={[0, 4]}>
+        <Text fontSize={[3, 4]} fontWeight="bold">
+          Why do you think you shouldn't attend the meeting?
         </Text>
-        <Box mt={[5, 4]}>{problems}</Box>
+        <Flex flexWrap="wrap" mt={[3, 4]}>
+          {problems}
+        </Flex>
       </Box>
     );
   };
 
   const Suggestion = () => (
-    <Box>
-      <Text onClick={() => dispatch({ type: "open" })} m={3}>
-        Back
-      </Text>
-      <Card width={[1, 600]} mt={[2, 4]} p={[3]} borderRadius={8} bg="gray.0">
-        <Text fontSize={[3, 4]}>{CONTENT[state].suggestion}</Text>
+    <Box width={1}>
+      <Flex width={1} flexDirection="column" alignItems={"center"}>
+        <Box
+          onClick={() => dispatch({ type: "open" })}
+          width={24}
+          alignSelf="flex-start"
+          ml={2}
+          mt={2}
+          css={css`
+            position: absolute;
+            top: 2px;
+          `}
+        >
+          <NavigationBackIcon />
+        </Box>
+        <Card
+          width={[3 / 4]}
+          mt={[2]}
+          mb={[2]}
+          p={[3]}
+          borderRadius={8}
+          bg="white.1"
+        >
+          <Text fontSize={[4, 3]}>{CONTENT[state].suggestion}</Text>
+        </Card>
         <Button
           onClick={handleCopy}
           fontSize="2"
-          mt={3}
+          mt={2}
+          mb={2}
+          variant="primary"
           css={css`
-            cursor: pointer;
+            &:hover {
+              background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
+              background-position: -0.5em;
+              border-color: rgba(27, 31, 35, 0.35);
+            }
+            &: active {
+              border-color: rgba(27, 31, 35, 0.35);
+              box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+            }
           `}
         >
-          {clipboard.copied ? "Copied" : "Copy Suggestion"}
+          <Flex jsutifyContent="center" alignItems="center">
+            <Box width={16} mr={2}>
+              <DuplicateIcon />
+            </Box>
+            <Text fontSize={1}>{clipboard.copied ? "Copied" : "Copy"}</Text>
+          </Flex>
         </Button>
-      </Card>
+      </Flex>
     </Box>
   );
 
@@ -111,6 +161,7 @@ export default function DeclineMeetingTip() {
           width={[1, 600]}
           justifyContent="center"
           alignItems={["center", "flex-start"]}
+          bg="white.0"
           css={css`
             height: 100%;
           `}
@@ -121,14 +172,15 @@ export default function DeclineMeetingTip() {
       </Modal>
 
       <Card
-        bg="gray.0"
-        width={1 / 3}
+        bg="white.1"
+        width={[1 / 2, 1 / 3]}
         p={3}
-        fontSize={3}
+        fontSize={[2, 3]}
         borderRadius={8}
         css={css`
           cursor: pointer;
         `}
+        mr={2}
         onClick={handleOpen}
       >
         <Text fontWeight="bold">Decline Meetings, politely</Text>

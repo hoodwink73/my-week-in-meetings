@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import { Flex, Box } from "@rebass/emotion";
 import ReactModal from "react-modal";
 import { css, jsx } from "@emotion/core";
-import { ReactComponent as NavigationBackIcon } from "../../icons/icon-cheveron-left-circle.svg";
+import { ReactComponent as CloseIcon } from "../../icons/icon-close.svg";
 import useMedia from "react-use/lib/useMedia";
 
 ReactModal.setAppElement("#root");
@@ -21,7 +21,8 @@ const CUSTOM_STYLES = {
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0
+      bottom: 0,
+      padding: 0
     }
   },
   medium: {
@@ -71,7 +72,8 @@ export default function Modal({ children, contentFit, ...props }) {
         top: `calc(50% - ${height / 2}px)`,
         left: `calc(50% - ${width / 2}px)`,
         bottom: "auto",
-        right: "auto"
+        right: "auto",
+        padding: 0
       };
     }
 
@@ -82,9 +84,7 @@ export default function Modal({ children, contentFit, ...props }) {
     };
   } else if (isLarge) {
     customStyles = CUSTOM_STYLES.large;
-  } else if (isMedium) {
-    customStyles = CUSTOM_STYLES.medium;
-  } else if (isSmall) {
+  } else {
     customStyles = CUSTOM_STYLES.small;
   }
 
@@ -102,14 +102,24 @@ export default function Modal({ children, contentFit, ...props }) {
               `
         }
       >
-        <Box>
-          <NavigationBackIcon
+        <Box alignSelf="flex-end">
+          <CloseIcon
             width="32"
             onClick={props.onRequestClose}
             style={{ cursor: "pointer" }}
           />
         </Box>
-        <Box mt={2}>{children}</Box>
+        <Box
+          css={() =>
+            contentFit
+              ? ""
+              : css`
+                  height: 100%;
+                `
+          }
+        >
+          {children}
+        </Box>
       </Flex>
     </ReactModal>
   );
@@ -121,5 +131,5 @@ Modal.propTypes = {
 };
 
 Modal.defaultProps = {
-  contentFit: true
+  contentFit: false
 };
