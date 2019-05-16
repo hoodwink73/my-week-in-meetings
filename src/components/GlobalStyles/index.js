@@ -5,6 +5,16 @@ export default function() {
   return (
     <Global
       styles={theme => css`
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
         body,
         html {
           width: 100%;
@@ -16,6 +26,13 @@ export default function() {
 
         .secondary {
           fill: ${theme.colors.gray[2]};
+        }
+
+        .loading-icon {
+          animation-duration: 1s;
+          animation-name: rotate;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
         }
       `}
     />
