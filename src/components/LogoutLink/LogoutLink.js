@@ -1,9 +1,12 @@
+/** @jsx jsx */
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Text } from "@rebass/emotion";
+import { css, jsx } from "@emotion/core";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { ReactComponent as LogoutIcon } from "../../icons/icon-door-enter.svg";
 
 export default function LogoutLink(props) {
   const { user } = useAuthState(firebase.auth());
@@ -15,14 +18,15 @@ export default function LogoutLink(props) {
 
   if (user) {
     return (
-      <Box {...props}>
-        <Text
-          fontSize={1}
-          style={{ textDecoration: "underline", cursor: "pointer" }}
-          onClick={handleLogout}
-        >
-          Logout
-        </Text>
+      <Box
+        width={24}
+        onClick={handleLogout}
+        {...props}
+        css={css`
+          cursor: pointer;
+        `}
+      >
+        <LogoutIcon />
       </Box>
     );
   } else {

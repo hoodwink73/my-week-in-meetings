@@ -39,11 +39,11 @@ export default function MyEventsSummary() {
     return (
       <>
         <Flex width={[1, 600]} px={[4, 0]} m="auto" flexDirection="column">
-          {/* <LogoutLink alignSelf="flex-end" mt={2} mr={4} /> */}
           <Box py={2} />
           <Flex>
             <Greeting my={1} />
-            <UserSettings ml="auto" alignSelf="center" />
+            <UserSettings ml="auto" mr={2} alignSelf="center" />
+            <LogoutLink alignSelf="center" />
           </Flex>
           {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
             </SelectTimeRange> */}

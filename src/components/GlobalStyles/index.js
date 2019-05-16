@@ -22,6 +22,9 @@ export default function() {
         }
         .primary {
           fill: ${theme.colors.gray[0]};
+          &:hover {
+            fill: ${theme.colors.gray[1]};
+          }
         }
 
         .secondary {
