@@ -18,12 +18,11 @@ import AnalyticsCard from "../AnalyticsCard";
 import UpcomingMeetings from "../UpcomingMeetings";
 import UserSettings from "../UserSettings";
 import { UserConfigContext } from "../UserConfig";
+import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 
 export default function MyEventsSummary() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
-  const { userConfig, setUserConfig, userConfigRequest } = useContext(
-    UserConfigContext
-  );
+  const { userConfigRequest } = useContext(UserConfigContext);
 
   const handleTimeRangeToggle = selectedTabIndex => {
     if (selectedTabIndex === 0) {
@@ -34,7 +33,19 @@ export default function MyEventsSummary() {
   };
 
   if (userConfigRequest.loading) {
-    return "Loading";
+    return (
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        css={css`
+          height: 100vh;
+        `}
+      >
+        <Box width={64} pt={1} mr={2}>
+          <LoadingIcon />
+        </Box>
+      </Flex>
+    );
   } else {
     return (
       <>
