@@ -48,6 +48,11 @@ function timeLeftForWorkTodayInMs(
 
   futureEventsDuration = futureEventsDuration.concat(
     willHappen.map(event => {
+      // what if a meeting starts before the work end time
+      // but ends after the work end time
+      // we count the duration of the meeting to be
+      // from the meeting start timeout
+      // until the work end time
       if (
         workEndTime.isBetween(
           moment(event.start.dateTime),
