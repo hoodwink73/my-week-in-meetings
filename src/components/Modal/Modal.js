@@ -43,7 +43,7 @@ const CUSTOM_STYLES = {
   }
 };
 
-export default function Modal({ children, contentFit, ...props }) {
+export default function Modal({ children, contentFit, mobileMenu, ...props }) {
   const isSmall = useMedia("(min-width: 40em)");
   const isMedium = useMedia("(min-width: 52em)");
   const isLarge = useMedia("(min-width: 64em)");
@@ -82,6 +82,26 @@ export default function Modal({ children, contentFit, ...props }) {
         ...styles
       }
     };
+  } else if (mobileMenu) {
+    let styles = { right: 0 };
+    if (modalDimesions) {
+      const { width, height } = modalDimesions;
+      styles = {
+        height,
+        top: "auto",
+        left: 0,
+        bottom: 0,
+        right: 0,
+        padding: 0,
+        borderRadius: "25px 25px 0 0"
+      };
+    }
+
+    customStyles = {
+      content: {
+        ...styles
+      }
+    };
   } else if (isLarge) {
     customStyles = CUSTOM_STYLES.large;
   } else {
@@ -95,23 +115,26 @@ export default function Modal({ children, contentFit, ...props }) {
         ref={measuredRef}
         flexDirection="column"
         css={() =>
-          contentFit
+          contentFit || mobileMenu
             ? ""
             : css`
                 height: 100%;
               `
         }
       >
-        <Box alignSelf="flex-end">
-          <CloseIcon
-            width="32"
-            onClick={props.onRequestClose}
-            style={{ cursor: "pointer" }}
-          />
-        </Box>
+        {!mobileMenu && (
+          <Box alignSelf="flex-end">
+            <CloseIcon
+              width="32"
+              onClick={props.onRequestClose}
+              style={{ cursor: "pointer" }}
+            />
+          </Box>
+        )}
+
         <Box
           css={() =>
-            contentFit
+            contentFit || mobileMenu
               ? ""
               : css`
                   height: 100%;

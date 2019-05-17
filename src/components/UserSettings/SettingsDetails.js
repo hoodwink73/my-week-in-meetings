@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Flex, Box, Text, Button } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import useMedia from "react-use/lib/useMedia";
+import leftPad from "left-pad";
 
 import { UserConfigContext } from "../UserConfig";
 import Modal from "../Modal";
@@ -29,6 +31,8 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   );
 
   const [workingTime, setWorkingTime] = useState(userConfig);
+
+  const isLarge = useMedia("(min-width: 64em)");
 
   if (userConfigRequest.error) {
     console.error(userConfigRequest.error);
@@ -65,26 +69,31 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onToggle}>
-      <Flex width={[1, 600]} px={[4, 0]} m="auto" flexDirection="column">
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onToggle}
+      contentFit={isLarge}
+      mobileMenu={!isLarge}
+    >
+      <Flex width={[1, 400]} px={[4, 3]} m="auto" flexDirection="column">
         <Text
           fontFamily="sans"
           fontSize={4}
           fontWeight="bold"
           width={3 / 4}
-          my={4}
+          my={3}
         >
           Settings
         </Text>
 
-        <Flex justifyContent="space-between" mb={2}>
+        <Flex justifyContent="space-between" mb={2} alignItems="center">
           <Text fontWeight="bold" fontSize={2}>
             Work Day Begins At
           </Text>
           <Flex>
             <Box>
               <Input
-                value={workingTime.workStartTime.hours}
+                value={leftPad(workingTime.workStartTime.hours, 2, 0)}
                 onChange={changeWorkStartTimeHours}
                 timeUnit="hours"
               />
@@ -92,7 +101,7 @@ export default function SettingsDetails({ isOpen, onToggle }) {
             <Text px={2}>:</Text>
             <Box>
               <Input
-                value={workingTime.workStartTime.minutes}
+                value={leftPad(workingTime.workStartTime.minutes, 2, 0)}
                 onChange={changeWorkStartTimeMinutes}
                 timeUnit="minutes"
               />
@@ -100,22 +109,24 @@ export default function SettingsDetails({ isOpen, onToggle }) {
           </Flex>
         </Flex>
 
-        <Flex justifyContent="space-between">
+        <Flex justifyContent="space-between" alignItems="center" mb={3}>
           <Text fontWeight="bold" fontSize={2}>
             Work Day Ends At
           </Text>
           <Flex>
             <Box>
               <Input
-                value={workingTime.workEndTime.hours}
+                value={leftPad(workingTime.workEndTime.hours, 2, 0)}
                 onChange={changeWorkEndTimeHours}
                 timeUnit="hours"
               />
             </Box>
-            <Text px={2}>:</Text>
+            <Text px={2} alignSelf="center">
+              :
+            </Text>
             <Box>
               <Input
-                value={workingTime.workEndTime.minutes}
+                value={leftPad(workingTime.workEndTime.minutes, 2, 0)}
                 onChange={changeWorkEndTimeMinutes}
                 timeUnit="minutes"
               />
@@ -124,8 +135,10 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         </Flex>
 
         <Button
+          bg="gray.3"
           mt={4}
           mx={["auto", 0]}
+          my={3}
           width={[3 / 4, 1 / 4]}
           onClick={handleSavingUserConfig}
           css={css`
