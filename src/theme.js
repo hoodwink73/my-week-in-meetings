@@ -40,6 +40,12 @@ export default {
       backgroundImage: "linear-gradient(-180deg,#fafbfc,#eff3f6 90%)",
       color: "#24292e",
       cursor: "pointer"
+    },
+    copy: {
+      backgroundColor: "#f0f3f6",
+      border: "1px solid rgb(187, 187, 187)",
+      cursor: "pointer",
+      padding: "0 4px"
     }
   }
 };

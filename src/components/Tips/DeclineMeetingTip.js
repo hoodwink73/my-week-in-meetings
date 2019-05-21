@@ -13,17 +13,43 @@ const POSSIBLE_SUGGESTIONS = ["agenda", "priority", "value"];
 
 const CONTENT = {
   agenda: {
-    title: "The agenda of the meeting is not clear",
-    suggestion:
-      "Can I please get a clear agenda. Can I please get a clear agenda. Can I please get a clear agenda. Can I please get a clear agenda"
+    title: "Agenda of the meeting is unclear",
+    suggestions: [
+      `
+      I am unclear about the agenda of the meeting. Can you please clarify it?
+
+      If the meeting requires me to preapre something, can you list them?
+    `
+    ]
   },
   value: {
-    title: "You are not the right person",
-    suggestion: "Can I suggest somebody else?"
+    title: "Scope of the meeting does not fit my responsibilities",
+    suggestions: [
+      `
+      I am not well informed about the discussion topic.
+
+      So, I will like to opt out of this meeting.
+    `,
+      `
+    The meeting agenda is outside the purview of my role. So, I will like to opt out of this meeting.
+
+    If you think otherwise, please let me know how can I make myself useful.
+  `,
+      `
+    The meeting expects me to take a decision. But I do not have the authority.
+
+    So, I will like to opt out of this meeting.
+  `
+    ]
   },
   priority: {
-    title: "You have other high priority task",
-    suggestion: "I have other task."
+    title: "Busy with more important tasks",
+    suggestions: [
+      `Although the topic of the meeting is relevant to me, it is outside the scope of my immediate priorities.
+
+      But I will await the summary of the meeting. And keep myself updated.
+    `
+    ]
   }
 };
 
@@ -31,13 +57,21 @@ const reducer = (state, action) => {
   return action.type;
 };
 
+const CopyResponse = ({ text, ...props }) => {
+  const clipboard = useClipboard();
+  const handleCopy = useCallback(() => {
+    clipboard.copy(text); // programmatically copying a value
+  }, [clipboard.copy, text]);
+
+  return (
+    <Button onClick={handleCopy} variant="copy" {...props}>
+      <DuplicateIcon />
+    </Button>
+  );
+};
+
 export default function DeclineMeetingTip() {
   const [state, dispatch] = useReducer(reducer, "close");
-  const clipboard = useClipboard({ copiedTimeout: 1000 });
-
-  const handleCopy = useCallback(() => {
-    clipboard.copy(CONTENT[state].suggestion); // programmatically copying a value
-  }, [clipboard.copy, state]);
 
   const isLarge = useMedia("(min-width: 64em)");
 
@@ -85,9 +119,15 @@ export default function DeclineMeetingTip() {
   const Problems = () => {
     return (
       <Box width={[1, 600]} px={[4, 5]} py={[0, 4]}>
-        <Text fontSize={[3, 4]} fontWeight="bold">
-          Why do you think you shouldn't attend the meeting?
-        </Text>
+        <Text fontSize={[3, 4]} fontWeight="bold" />
+        <Box>
+          <Text fontWeight="bold" fontSize={[4, 3]}>
+            Here are a few reasons to decline a meeting.
+          </Text>
+          <Text mt={2} fontSize={[4, 3]}>
+            We provide plausible responses for each reason.
+          </Text>
+        </Box>
         <Flex flexWrap="wrap" mt={[3, 4]}>
           {problems}
         </Flex>
@@ -111,41 +151,34 @@ export default function DeclineMeetingTip() {
         >
           <NavigationBackIcon />
         </Box>
-        <Card
-          width={[3 / 4]}
-          mt={[2]}
-          mb={[2]}
-          p={[3]}
-          borderRadius={8}
-          bg="white.1"
-        >
-          <Text fontSize={[4, 3]}>{CONTENT[state].suggestion}</Text>
-        </Card>
-        <Button
-          onClick={handleCopy}
-          fontSize="2"
-          mt={2}
-          mb={2}
-          variant="primary"
-          css={css`
-            &:hover {
-              background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
-              background-position: -0.5em;
-              border-color: rgba(27, 31, 35, 0.35);
-            }
-            &: active {
-              border-color: rgba(27, 31, 35, 0.35);
-              box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
-            }
-          `}
-        >
-          <Flex jsutifyContent="center" alignItems="center">
-            <Box width={16} mr={2}>
-              <DuplicateIcon />
-            </Box>
-            <Text fontSize={1}>{clipboard.copied ? "Copied" : "Copy"}</Text>
-          </Flex>
-        </Button>
+
+        {CONTENT[state].suggestions.map((suggestion, index) => (
+          <Card
+            key={index}
+            width={[3 / 4]}
+            mt={[2]}
+            mb={[3]}
+            p={[3]}
+            borderRadius={8}
+            bg="white.1"
+          >
+            <Flex flexDirection="row">
+              <Text
+                fontSize={[4, 3]}
+                css={css`
+                  white-space: pre-line;
+                `}
+              >
+                {suggestion}
+              </Text>
+              <CopyResponse
+                text={suggestion}
+                width={[64, 28]}
+                alignSelf="flex-start"
+              />
+            </Flex>
+          </Card>
+        ))}
       </Flex>
     </Box>
   );
@@ -183,7 +216,7 @@ export default function DeclineMeetingTip() {
         mr={2}
         onClick={handleOpen}
       >
-        <Text fontWeight="bold">Decline Meetings, politely</Text>
+        <Text fontWeight="bold">When to decline meetings</Text>
       </Card>
     </>
   );

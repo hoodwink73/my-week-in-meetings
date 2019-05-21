@@ -19,6 +19,12 @@ export default function() {
         html {
           width: 100%;
           height: 100%;
+
+          ul,
+          li {
+            list-style-type: none;
+            padding: 0;
+          }
         }
         .primary {
           fill: ${theme.colors.gray[0]};

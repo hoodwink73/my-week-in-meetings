@@ -8,7 +8,7 @@ import "./index.css";
 import App from "./App";
 
 // import * as MockDate from "mockdate";
-// MockDate.set("2019-04-03T10:01");
+// MockDate.set("2019-05-18T18:30:00");
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_API_KEY,

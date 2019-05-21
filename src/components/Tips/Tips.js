@@ -6,6 +6,8 @@ import { Flex, Box, Card } from "@rebass/emotion";
 import useMedia from "react-use/lib/useMedia";
 
 import DeclineMeetingTip from "./DeclineMeetingTip";
+import InviteList from "./InviteList";
+import ActiveParticipation from "./ActiveParticipation";
 
 export default function Tips() {
   const isLarge = useMedia("(min-width: 64em)");
@@ -23,8 +25,8 @@ export default function Tips() {
       `}
     >
       <DeclineMeetingTip />
-      <DeclineMeetingTip />
-      <DeclineMeetingTip />
+      <InviteList />
+      <ActiveParticipation />
     </Flex>
   );
 }
