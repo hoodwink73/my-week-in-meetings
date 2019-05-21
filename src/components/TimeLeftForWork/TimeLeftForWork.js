@@ -11,9 +11,12 @@ import Progress from "../Progress";
 import {
   filterEventsForToday,
   timeLeftForWorkInMs,
-  getWorkHours
+  getWorkHours,
+  getDayStatus,
+  pluralize
 } from "../../utils";
 import { useRerender } from "../../hooks";
+import { DAY_STATUSES } from "../../constants";
 
 // a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
@@ -85,12 +88,44 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
     userConfig
   );
 
-  const timeElapsedDoingWorkInPercentage =
-    totalTimeAvailableForWorkFromStartTime === 0
-      ? 100
-      : ((totalTimeAvailableForWorkFromStartTime - timeLeftFromThisInstant) /
-          totalTimeAvailableForWorkFromStartTime) *
-        100;
+  // const timeElapsedDoingWorkInPercentage =
+  //   totalTimeAvailableForWorkFromStartTime === 0
+  //     ? 100
+  //     : ((totalTimeAvailableForWorkFromStartTime - timeLeftFromThisInstant) /
+  //         totalTimeAvailableForWorkFromStartTime) *
+  //       100;
+
+  let Content;
+  const textProps = {
+    fontSize: [2, 4],
+    fontWeight: "bold",
+    textAlign: "center"
+  };
+
+  switch (getDayStatus(userConfig)) {
+    case DAY_STATUSES.get("NO_WORK_TODAY"):
+      Content = () => <Text {...textProps}>{pluralize`Enjoy the day!`}</Text>;
+      break;
+    case DAY_STATUSES.get("YET_TO_BEGIN"):
+      Content = () => (
+        <Text {...textProps}>{pluralize`Ready for the day! You have ${[
+          events.length,
+          "no"
+        ]} ${["meeting", "meetings"]} today`}</Text>
+      );
+      break;
+    case DAY_STATUSES.get("ENDED"):
+      Content = () => <Text {...textProps}>Hope you had a great day!</Text>;
+      break;
+    case DAY_STATUSES.get("IN_PROGRESS"):
+    default:
+      Content = () => (
+        <Text {...textProps}>
+          <Time timeInMs={timeLeftFromThisInstant} as="span" />
+          <span> left today to get work done</span>
+        </Text>
+      );
+  }
 
   return (
     <Box
@@ -102,10 +137,7 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
       `}
       {...props}
     >
-      <Text fontSize={[2, 4]} fontWeight="bold" textAlign="center">
-        <Time timeInMs={timeLeftFromThisInstant} as="span" />
-        <span> left today to get work done</span>
-      </Text>
+      <Content />
     </Box>
   );
 }

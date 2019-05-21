@@ -7,6 +7,8 @@ import getWorkHours from "./getWorkHours";
 import getUserGoogleID from "./getUserGoogleID";
 import getUserDomain from "./getUserDomain";
 import sortCollectionByKey from "./sortCollectionByKey";
+import getDayStatus from "./getDayStatus";
+import pluralize from "./pluralize";
 
 export {
   getStartOfWeekInUTC,
@@ -17,5 +19,7 @@ export {
   getWorkHours,
   getUserGoogleID,
   getUserDomain,
-  sortCollectionByKey
+  sortCollectionByKey,
+  getDayStatus,
+  pluralize
 };
