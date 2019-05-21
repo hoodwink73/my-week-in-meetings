@@ -43,7 +43,6 @@ export default function BusiestDay({ data, ...props }) {
       bg="white.0"
       boxShadow="medium"
       p={[3]}
-      mx={[0]}
       {...props}
     >
       <Flex

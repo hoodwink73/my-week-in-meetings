@@ -63,7 +63,14 @@ export default function AnalyticsCard({ type, ...props }) {
   }
 
   if (!loading & !error) {
-    return <Component data={data} {...props} />;
+    return (
+      <Component
+        data={data}
+        flex={["0 0 auto"]}
+        width={[9 / 10, "calc(50% - 8px)"]}
+        {...props}
+      />
+    );
   } else {
     return null;
   }

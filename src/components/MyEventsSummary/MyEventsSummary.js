@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Flex, Box } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import useMedia from "react-use/lib/useMedia";
 
 import {
   getStartOfWeekInUTC,
@@ -24,6 +25,7 @@ import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 export default function MyEventsSummary() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
   const { userConfigRequest } = useContext(UserConfigContext);
+  const isLarge = useMedia("(min-width: 64em)");
 
   const handleTimeRangeToggle = selectedTabIndex => {
     if (selectedTabIndex === 0) {
@@ -69,11 +71,23 @@ export default function MyEventsSummary() {
           <UpcomingMeetings />
 
           <Tips />
-          <Flex justifyContent="space-between" flexWrap="wrap">
-            <AnalyticsCard type="timeSpentInMeetings" />
-            <AnalyticsCard type="busiestDay" />
-            <AnalyticsCard type="topOrganizer" mt={[0, 3]} />
-            <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} />
+          <Flex
+            justifyContent="space-between"
+            flexWrap={["nowrap", "wrap"]}
+            paddingLeft={[2, 0]}
+            paddingTop={[2, 0]}
+            paddingRight={[2, 0]}
+            mb={4}
+            css={css`
+              overflow-x: ${isLarge ? "unset" : "scroll"};
+            `}
+          >
+            <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
+            <AnalyticsCard type="busiestDay" mr={[3, 0]} />
+            <AnalyticsCard type="topOrganizer" mt={[0, 3]} mr={[3, 0]} />
+            <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} mr={[3, 0]} />
+            {/*  Hack to prevent box shadow of last card getting clipped on mobile*/}
+            <Box p={[1, 0]} />
           </Flex>
         </Flex>
         {/* <Flex justifyContent="center">
