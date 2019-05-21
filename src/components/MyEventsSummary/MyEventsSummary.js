@@ -81,6 +81,7 @@ export default function MyEventsSummary() {
             css={css`
               overflow-x: ${isLarge ? "unset" : "scroll"};
               scroll-behavior: smooth;
+              -webkit-overflow-scrolling: smooth;
             `}
           >
             <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
