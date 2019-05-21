@@ -15,6 +15,7 @@ import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
 import Tips from "../Tips";
 import AnalyticsCard from "../AnalyticsCard";
+import CurrentMeeting from "../CurrentMeeting";
 import UpcomingMeetings from "../UpcomingMeetings";
 import UserSettings from "../UserSettings";
 import { UserConfigContext } from "../UserConfig";
@@ -63,6 +64,8 @@ export default function MyEventsSummary() {
             my={4}
             width={[1]}
           />
+
+          <CurrentMeeting />
           <UpcomingMeetings />
 
           <Tips />

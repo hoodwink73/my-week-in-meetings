@@ -18,3 +18,10 @@ export const EVENT_STATUSES = new Map([
   ["Declined", "declined"],
   ["Not Responded", "needsAction"]
 ]);
+
+export const DAY_STATUSES = new Map([
+  ["YET_TO_BEGIN", 1],
+  ["IN_PROGRESS", 2],
+  ["ENDED", 3],
+  ["NO_WORK_TODAY", 4]
+]);

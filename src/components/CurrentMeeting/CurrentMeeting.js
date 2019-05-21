@@ -4,46 +4,35 @@ import { FirestoreDataContext } from "../FirestoreData";
 import { Flex, Box, Text } from "@rebass/emotion";
 
 import { UserConfigContext } from "../UserConfig";
-import { sortEvents, getWorkHours } from "../../utils";
+import { sortEvents, getWorkHours, groupEventsByTime } from "../../utils";
 import { useRerender } from "../../hooks";
 import Events from "../Events";
 
 // a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
-export default function UpcomingMeetings() {
+export default function CurrentMeeting() {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
     FirestoreDataContext
   );
 
   const { userConfig } = useContext(UserConfigContext);
 
-  // render the component after a certain interval to get the correct time left
+  // render the component after a certain interval to get the updated data
   useRerender(REFRESH_TIMER_FREQUENCY_IN_MS);
 
   const eventsThisWeek = eventsThisWeekRequest.data;
 
-  let upcomingEvents = eventsThisWeek.filter(event => {
-    if (
-      moment(event.start.dateTime).isAfter(moment()) &&
-      moment(event.start.dateTime).isBefore(
-        getWorkHours(false, userConfig).workEndTime
-      )
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  let { happening } = groupEventsByTime(eventsThisWeek);
 
-  upcomingEvents = sortEvents(upcomingEvents);
+  happening = sortEvents(happening);
 
-  return (
+  return happening.length > 0 ? (
     <Flex flexDirection="column" my={3}>
       <Text fontSize={[3, 4]} fontWeight="bold" textAlign={["left", "center"]}>
-        Upcoming Meetings for Today
+        Current Meeting
       </Text>
-      <Events events={upcomingEvents} />
+      <Events events={happening} />
     </Flex>
-  );
+  ) : null;
 }
