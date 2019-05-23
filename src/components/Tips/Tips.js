@@ -1,11 +1,11 @@
-/** @jsx jsx */
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
+/** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { Flex, Box, Card } from "@rebass/emotion";
 import useMedia from "react-use/lib/useMedia";
 
-import DeclineMeetingTip from "./DeclineMeetingTip";
+import DeclinePolitely from "./DeclinePolitely";
 import InviteList from "./InviteList";
 import ActiveParticipation from "./ActiveParticipation";
 
@@ -24,7 +24,7 @@ export default function Tips() {
         }
       `}
     >
-      <DeclineMeetingTip />
+      <DeclinePolitely />
       <InviteList />
       <ActiveParticipation />
     </Flex>

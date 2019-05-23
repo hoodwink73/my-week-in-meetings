@@ -2,6 +2,30 @@ export default {
   breakpoints: ["40em", "52em", "64em"],
   colors: {
     blue: "blue",
+    primary: [
+      "#E6F6FF",
+      "#BAE3FF",
+      "#7CC4FA",
+      "#47A3F3",
+      "#2186EB",
+      "#0967D2",
+      "#0552B5",
+      "#03449E",
+      "#01337D",
+      "#002159"
+    ],
+    neutrals: [
+      "#F5F7FA",
+      "#E4E7EB",
+      "#CBD2D9",
+      "#9AA5B1",
+      "#7B8794",
+      "#616E7C",
+      "#52606D",
+      "#3E4C59",
+      "#323F4B",
+      "#1F2933"
+    ],
     white: ["rgb(255, 255, 255)", "#f0f3f6", "rgb(240, 240, 240)"],
     gray: [
       "rgb(221, 221, 221)",
