@@ -14,19 +14,23 @@ import AgendaResponse from "./AgendaResponse";
 
 import ResponsibilityQuestion from "./ResponsibilityQuestion";
 import ResponsibilityOptions from "./ResponsibilityOptions";
+import NotWellInformedResponse from "./NotWellInformedResponse";
+import RoleMismatchResponse from "./RoleMismatchResponse";
+import NoAuthorityResponse from "./NoAuthorityResponse";
+
+import BusyQuestion from "./BusyQuestion";
+import BusyResponse from "./BusyResponse";
+
+import AttendMeeting from "./AttendMeeting";
 
 const attendMeetingFlowchart = new Map([
   [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
-  [ResponsibilityQuestion, [ResponsibilityOptions, "BusyQuestion"]],
+  [ResponsibilityQuestion, [ResponsibilityOptions, BusyQuestion]],
   [
     ResponsibilityOptions,
-    [
-      "ScopeBeyondResponsibilityResponse",
-      "RoleMismatchResponse",
-      "AbsentAuthorityResponse"
-    ]
+    [NotWellInformedResponse, RoleMismatchResponse, NoAuthorityResponse]
   ],
-  ["BusyQuestion", ["BusyResponse", "AttendMeeting"]]
+  [BusyQuestion, [BusyResponse, AttendMeeting]]
 ]);
 
 const reducer = (state, action) => {
@@ -85,8 +89,7 @@ export default function DeclineMeetingTip() {
     dispatch({ type: "select", index });
   };
 
-  const isThisAListItem = state =>
-    attendMeetingFlowchart.get(ResponsibilityOptions).includes(state);
+  const isThisAListItem = state => ResponsibilityOptions === state;
 
   const Component = ({ ...parentProps }) => {
     const [show, set] = useState(false);

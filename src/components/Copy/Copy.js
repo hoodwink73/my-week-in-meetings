@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { Flex, Box, Text, Card, Heading, Button } from "@rebass/emotion";
 import { useClipboard } from "use-clipboard-copy";
@@ -6,7 +6,11 @@ import { useClipboard } from "use-clipboard-copy";
 import { css, jsx } from "@emotion/core";
 
 export default function Copy({ content }) {
-  const clipboard = useClipboard();
+  const clipboard = useClipboard({ copiedTimeout: 2000 });
+
+  const handleCopy = useCallback(() => {
+    clipboard.copy(content);
+  }, [clipboard.copy, content]);
 
   return (
     <Flex
@@ -40,9 +44,9 @@ export default function Copy({ content }) {
               box-shadow: 6px 6px 1px 0 #2186eb;
               cursor: pointer;
             `}
-            onClick={clipboard.copy}
+            onClick={handleCopy}
           >
-            Copy
+            {clipboard.copied ? "Copied" : "Copy"}
           </Button>
         </Flex>
       </Box>

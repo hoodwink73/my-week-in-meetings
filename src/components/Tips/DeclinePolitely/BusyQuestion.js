@@ -3,12 +3,12 @@ import PropType from "prop-types";
 
 import Question from "../../Question";
 
-const agendaQuestionText = "Is the agenda of the meeting unclear?";
+const busyQuestionText = "Are you busy with more immediate tasks?";
 
 export default function AgendaQuestion({ handleYes, handleNo }) {
   return (
     <Question
-      question={agendaQuestionText}
+      question={busyQuestionText}
       handleYes={handleYes}
       handleNo={handleNo}
     />
