@@ -1,11 +1,13 @@
-import React, { useReducer, useCallback } from "react";
-import { Flex, Box, Card, Text, Button } from "@rebass/emotion";
+import React, { useReducer, useCallback, useState, useEffect } from "react";
+import { Flex, Box, Card, Text, Button, Heading } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { useClipboard } from "use-clipboard-copy";
 import useMedia from "react-use/lib/useMedia";
+import { useTransition, animated } from "react-spring";
 
 import Modal from "../../Modal";
+import { FadeIn } from "../../Animate";
 
 import AgendaQuestion from "./AgendaQuestion";
 import AgendaResponse from "./AgendaResponse";
@@ -57,6 +59,7 @@ const reducer = (state, action) => {
   }
 };
 
+export const CARD_TITLE = "Learn when to say no to meetings, politely";
 export default function DeclineMeetingTip() {
   const [state, dispatch] = useReducer(reducer, "close");
 
@@ -85,17 +88,91 @@ export default function DeclineMeetingTip() {
   const isThisAListItem = state =>
     attendMeetingFlowchart.get(ResponsibilityOptions).includes(state);
 
-  const Component = state;
+  const Component = ({ ...parentProps }) => {
+    const [show, set] = useState(false);
+    const transitions = useTransition(show, null, {
+      from: { transform: "translate3d(0,100%,0)" },
+      enter: { transform: "translate3d(0,0px,0)" },
+      leave: { transform: "translate3d(0,-100%,0)" }
+    });
+    useEffect(() => {
+      set(true);
+
+      return () => {
+        set(false);
+      };
+    });
+    return transitions.map(
+      ({ item, key, props }) =>
+        item && (
+          <animated.div
+            key={key}
+            style={props}
+            css={css`
+              height: 100%;
+            `}
+          >
+            {state({ ...parentProps })}
+          </animated.div>
+        )
+    );
+  };
 
   return (
     <>
       <Modal isOpen={state !== "close"} onRequestClose={handleClose}>
         {state !== "close" && (
-          <Component
-            {...(isThisAListItem(state)
-              ? { selectOption }
-              : { handleYes, handleNo })}
-          />
+          <Flex
+            width={1}
+            css={css`
+               {
+                height: 100%;
+              }
+            `}
+          >
+            <Box
+              width={[0, 2 / 5]}
+              css={css`
+                 {
+                  height: calc(100% + 55px);
+                  margin-top: -55px;
+                  margin-left: -20px;
+                  overflow: hidden;
+                }
+              `}
+            >
+              <FadeIn>
+                <Card
+                  as={Flex}
+                  alignItems="center"
+                  bg="primary.1"
+                  css={css`
+                    height: 100%;
+                  `}
+                >
+                  <Heading
+                    as="h1"
+                    p={4}
+                    css={css`
+                      font-size: 64px;
+                      line-height: 1.25;
+                      font-weight: bold;
+                    `}
+                  >
+                    {CARD_TITLE}
+                  </Heading>
+                </Card>
+              </FadeIn>
+            </Box>
+
+            <Box width={[1, 3 / 5]}>
+              <Component
+                {...(isThisAListItem(state)
+                  ? { selectOption }
+                  : { handleYes, handleNo })}
+              />
+            </Box>
+          </Flex>
         )}
       </Modal>
       <Card
@@ -110,9 +187,7 @@ export default function DeclineMeetingTip() {
         mr={2}
         onClick={handleOpen}
       >
-        <Text fontWeight="bold">
-          Learn when to say no to meetings, politely
-        </Text>
+        <Text fontWeight="bold">{CARD_TITLE}</Text>
       </Card>
     </>
   );

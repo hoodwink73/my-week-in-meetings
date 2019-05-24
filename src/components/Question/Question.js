@@ -15,7 +15,7 @@ export default function Question({ question, handleYes, handleNo }) {
       `}
       flexDirection="column"
       justifyContent="center"
-      p={4}
+      p={5}
     >
       <Heading
         as="h2"
