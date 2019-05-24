@@ -7,13 +7,14 @@ import { css, jsx } from "@emotion/core";
 export default function AnswerButton({ title, onClick }) {
   return (
     <Button
-      width={2 / 7}
+      width={[4 / 5, 2 / 7]}
       onClick={onClick}
       bg="primary.5"
       color="white"
-      mr={5}
+      mr={[0, 5]}
+      mb={[4, 0]}
+      fontSize={[5, 4]}
       css={css`
-        font-size: 48px;
         font-weight: bold;
         box-shadow: 6px 6px 1px 0 #2186eb;
         cursor: pointer;

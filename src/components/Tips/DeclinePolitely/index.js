@@ -137,7 +137,7 @@ export default function DeclineMeetingTip() {
                   height: calc(100% + 55px);
                   margin-top: -55px;
                   margin-left: -20px;
-                  overflow: hidden;
+                  display: ${isLarge ? "block" : "none"};
                 }
               `}
             >
@@ -153,8 +153,8 @@ export default function DeclineMeetingTip() {
                   <Heading
                     as="h1"
                     p={4}
+                    fontSize={[6]}
                     css={css`
-                      font-size: 64px;
                       line-height: 1.25;
                       font-weight: bold;
                     `}

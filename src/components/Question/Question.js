@@ -15,21 +15,15 @@ export default function Question({ question, handleYes, handleNo }) {
       `}
       flexDirection="column"
       justifyContent="center"
-      p={5}
+      p={[3, 5]}
     >
-      <Heading
-        as="h2"
-        mb={5}
-        css={css`
-          font-size: 48px;
-        `}
-      >
+      <Heading as="h2" mb={4} fontSize={[5, 4]} textAlign={["center", "left"]}>
         {question}
       </Heading>
-      <Box>
+      <Flex width={1} flexDirection={["column", "row"]} alignItems="center">
         <AnswerButton title="Yes" onClick={handleYes} />
         <AnswerButton title="No" onClick={handleNo} />
-      </Box>
+      </Flex>
     </Flex>
   );
 }
