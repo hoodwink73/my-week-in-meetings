@@ -5,6 +5,11 @@ import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 
 import Modal from "../Modal";
+import TipTitle from "./TipTitle";
+import { SlideUp } from "../Animate";
+import ListItem from "../ListItem";
+
+const CARD_TITLE = "Be thoughtful with your invite list";
 
 export default function InviteList() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -27,44 +32,33 @@ export default function InviteList() {
 
   return (
     <>
-      <Modal
-        isOpen={isModalOpen}
-        contentFit={isLarge ? true : false}
-        onRequestClose={handleClose}
-      >
+      <Modal isOpen={isModalOpen} onRequestClose={handleClose}>
         <Flex
-          width={[1, 600]}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems={["center", "flex-start"]}
-          bg="white.0"
-          px={[4, 5]}
-          py={[0, 4]}
+          width={[1]}
+          justifyContent="space-between"
           css={css`
             height: 100%;
           `}
         >
-          <Text fontWeight="bold" mb="3" fontSize={[4, 3]}>
-            Criterias to extend invitation among your team
-          </Text>
+          <TipTitle title={CARD_TITLE} />
 
-          <Box>
-            <ul>
+          <Flex width={[1, 3 / 5]} justifyContent="center" alignItems="center">
+            <ul
+              css={css`
+                height: 100%;
+              `}
+            >
               {inviteListSuggestions.map((text, index) => (
-                <li key={index}>
-                  <Text
-                    fontSize={3}
-                    mb={[3, 2]}
-                    css={css`
-                      line-height: 1.5;
-                    `}
-                  >
-                    {text}
-                  </Text>
-                </li>
+                <SlideUp key={index}>
+                  <Box width={[1, 2 / 3]} pl={[0, 4, 0]}>
+                    <li key={index}>
+                      <ListItem mb={[3, 2]} content={text} />
+                    </li>
+                  </Box>
+                </SlideUp>
               ))}
             </ul>
-          </Box>
+          </Flex>
         </Flex>
       </Modal>
 

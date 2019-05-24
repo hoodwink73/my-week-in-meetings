@@ -5,6 +5,11 @@ import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 
 import Modal from "../Modal";
+import TipTitle from "./TipTitle";
+import { SlideUp } from "../Animate";
+import ListItem from "../ListItem";
+
+const CARD_TITLE = "Participate Actively";
 
 export default function ActiveParticipation() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -20,25 +25,50 @@ export default function ActiveParticipation() {
 
   const suggestions = [
     <Box mb={[3]}>
-      <Text fontWeight="bold" fontSize={[3]}>
+      <Text
+        fontWeight="bold"
+        fontSize={[3]}
+        css={css`
+          font-style: italic;
+        `}
+      >
         Own your perspective
       </Text>
       <Text>Perspective shapes participation</Text>
     </Box>,
     <Box mb={[3]}>
-      <Text fontWeight="bold" fontSize={[3]}>
+      <Text
+        fontWeight="bold"
+        fontSize={[3]}
+        css={css`
+          font-style: italic;
+        `}
+      >
         Focused Listening
       </Text>
       <Text>Be patient and non-judgemental</Text>
     </Box>,
     <Box mb={[3]}>
-      <Text fontWeight="bold" fontSize={[3]}>
+      <Text
+        fontWeight="bold"
+        fontSize={[3]}
+        css={css`
+          font-style: italic;
+        `}
+      >
         Focused Speaking
       </Text>
       <Text>Be clear consise and relevant</Text>
     </Box>,
     <Box mb={[3]}>
-      <Text fontWeight="bold" fontSize={[3]}>
+      <Text
+        fontWeight="bold"
+        fontSize={[3]}
+        fontStyle="italic"
+        css={css`
+          font-style: italic;
+        `}
+      >
         Be Self Aware
       </Text>
       <Text>Ask for information you need</Text>
@@ -48,34 +78,33 @@ export default function ActiveParticipation() {
 
   return (
     <>
-      <Modal
-        isOpen={isModalOpen}
-        contentFit={isLarge ? true : false}
-        onRequestClose={handleClose}
-      >
+      <Modal isOpen={isModalOpen} onRequestClose={handleClose}>
         <Flex
-          width={[1, 600]}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems={["center", "flex-start"]}
-          bg="white.0"
-          px={[4, 5]}
-          py={[0, 4]}
+          width={[1]}
+          justifyContent="space-between"
           css={css`
             height: 100%;
           `}
         >
-          <Text fontWeight="bold" mb="3" fontSize={[4, 3]}>
-            Participate actively to make the most out of the meeting
-          </Text>
+          <TipTitle title={CARD_TITLE} />
 
-          <Box width={1}>
-            <ul>
-              {suggestions.map((textEl, index) => (
-                <li key={index}>{textEl}</li>
+          <Flex width={[1, 3 / 5]} justifyContent="center" alignItems="center">
+            <ul
+              css={css`
+                height: 100%;
+              `}
+            >
+              {suggestions.map((text, index) => (
+                <Box width={1} key={index}>
+                  <SlideUp>
+                    <li key={index}>
+                      <ListItem content={text} />
+                    </li>
+                  </SlideUp>
+                </Box>
               ))}
             </ul>
-          </Box>
+          </Flex>
         </Flex>
       </Modal>
 
@@ -91,7 +120,7 @@ export default function ActiveParticipation() {
         mr={2}
         onClick={handleOpen}
       >
-        <Text fontWeight="bold">Participate Actively</Text>
+        <Text fontWeight="bold">{CARD_TITLE}</Text>
       </Card>
     </>
   );

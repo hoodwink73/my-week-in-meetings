@@ -7,7 +7,9 @@ import useMedia from "react-use/lib/useMedia";
 import { useTransition, animated } from "react-spring";
 
 import Modal from "../../Modal";
-import { FadeIn } from "../../Animate";
+import { FadeIn, SlideUp } from "../../Animate";
+
+import TipTitle from "../TipTitle";
 
 import AgendaQuestion from "./AgendaQuestion";
 import AgendaResponse from "./AgendaResponse";
@@ -92,33 +94,7 @@ export default function DeclineMeetingTip() {
   const isThisAListItem = state => ResponsibilityOptions === state;
 
   const Component = ({ ...parentProps }) => {
-    const [show, set] = useState(false);
-    const transitions = useTransition(show, null, {
-      from: { transform: "translate3d(0,100%,0)" },
-      enter: { transform: "translate3d(0,0px,0)" },
-      leave: { transform: "translate3d(0,-100%,0)" }
-    });
-    useEffect(() => {
-      set(true);
-
-      return () => {
-        set(false);
-      };
-    });
-    return transitions.map(
-      ({ item, key, props }) =>
-        item && (
-          <animated.div
-            key={key}
-            style={props}
-            css={css`
-              height: 100%;
-            `}
-          >
-            {state({ ...parentProps })}
-          </animated.div>
-        )
-    );
+    return <SlideUp>{state({ ...parentProps })}</SlideUp>;
   };
 
   return (
@@ -133,40 +109,7 @@ export default function DeclineMeetingTip() {
               }
             `}
           >
-            <Box
-              width={[0, 2 / 5]}
-              css={css`
-                 {
-                  height: calc(100% + 55px);
-                  margin-top: -55px;
-                  margin-left: -20px;
-                  display: ${isLarge ? "block" : "none"};
-                }
-              `}
-            >
-              <FadeIn>
-                <Card
-                  as={Flex}
-                  alignItems="center"
-                  bg="primary.1"
-                  css={css`
-                    height: 100%;
-                  `}
-                >
-                  <Heading
-                    as="h1"
-                    p={4}
-                    fontSize={[6]}
-                    css={css`
-                      line-height: 1.25;
-                      font-weight: bold;
-                    `}
-                  >
-                    {CARD_TITLE}
-                  </Heading>
-                </Card>
-              </FadeIn>
-            </Box>
+            <TipTitle title={CARD_TITLE} />
 
             <Box width={[1, 3 / 5]}>
               <Component
