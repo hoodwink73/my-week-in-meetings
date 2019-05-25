@@ -7,6 +7,10 @@ export default function pluralize(strings, num, [singularWord, pluralWord]) {
   let word, emptyWord;
   let result = "";
 
+  if (!num) {
+    return strings.join("");
+  }
+
   if (num.length) {
     emptyWord = num[1];
     num = num[0];
