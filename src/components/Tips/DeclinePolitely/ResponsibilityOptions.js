@@ -5,9 +5,9 @@ import { Flex, Box, Text } from "@rebass/emotion";
 import SelectFromList from "../../SelectFromList";
 
 const options = [
-  "Your role do not position you to get information",
-  "Meeting agenda exceeds the purview of your role",
-  "You do not have the authority to take a decision"
+  "You are not well informed",
+  "The meeting agenda is beyond your responsibility",
+  "You cannot make the decision"
 ];
 
 export default function ResponsibilityOptions({ selectOption }) {

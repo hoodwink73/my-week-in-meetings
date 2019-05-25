@@ -9,7 +9,7 @@ import TipTitle from "./TipTitle";
 import { SlideUp } from "../Animate";
 import ListItem from "../ListItem";
 
-const CARD_TITLE = "Be thoughtful with your invite list";
+const CARD_TITLE = "Decide who to include in the meeting";
 
 export default function InviteList() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -48,15 +48,30 @@ export default function InviteList() {
                 height: 100%;
               `}
             >
-              {inviteListSuggestions.map((text, index) => (
-                <SlideUp key={index}>
-                  <Box width={[1, 2 / 3]} pl={[0, 4, 0]}>
-                    <li key={index}>
-                      <ListItem mb={[3, 2]} content={text} />
-                    </li>
-                  </Box>
+              <Flex
+                alignItems="center"
+                css={css`
+                  height: 100%;
+                `}
+              >
+                <SlideUp>
+                  <Flex
+                    flexDirection="column"
+                    justifyContent="center"
+                    css={css`
+                      height: 100%;
+                    `}
+                  >
+                    {inviteListSuggestions.map((text, index) => (
+                      <Box width={[1]} key={index}>
+                        <li key={index}>
+                          <ListItem mb={[3, 2]} content={text} />
+                        </li>
+                      </Box>
+                    ))}
+                  </Flex>
                 </SlideUp>
-              ))}
+              </Flex>
             </ul>
           </Flex>
         </Flex>
@@ -74,7 +89,7 @@ export default function InviteList() {
         mr={2}
         onClick={handleOpen}
       >
-        <Text fontWeight="bold">Be thoughtful with your invite list</Text>
+        <Text fontWeight="bold">{CARD_TITLE}</Text>
       </Card>
     </>
   );

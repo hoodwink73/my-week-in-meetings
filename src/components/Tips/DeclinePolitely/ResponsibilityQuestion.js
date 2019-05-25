@@ -5,7 +5,7 @@ import { Flex, Box, Text } from "@rebass/emotion";
 import Question from "../../Question";
 
 const agendaQuestionText =
-  "Do you think your role in the meeting exceeds your responsibilities?";
+  "Does the scope of the meeting lie beyond your key responsibilities?";
 
 export default function AgendaQuestion({ handleYes, handleNo }) {
   return (

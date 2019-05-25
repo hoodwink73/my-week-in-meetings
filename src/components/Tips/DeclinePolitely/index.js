@@ -65,7 +65,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const CARD_TITLE = "Learn when to say no to meetings, politely";
+export const CARD_TITLE = "Learn how to say no to a meeting, politely!";
 export default function DeclineMeetingTip() {
   const [state, dispatch] = useReducer(reducer, "close");
 

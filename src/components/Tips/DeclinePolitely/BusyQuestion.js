@@ -3,7 +3,7 @@ import PropType from "prop-types";
 
 import Question from "../../Question";
 
-const busyQuestionText = "Are you busy with more immediate tasks?";
+const busyQuestionText = "Do you have other important priorities?";
 
 export default function AgendaQuestion({ handleYes, handleNo }) {
   return (

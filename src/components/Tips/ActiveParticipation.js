@@ -9,7 +9,7 @@ import TipTitle from "./TipTitle";
 import { SlideUp } from "../Animate";
 import ListItem from "../ListItem";
 
-const CARD_TITLE = "Participate Actively";
+const CARD_TITLE = "How to make most out of your meetings";
 
 export default function ActiveParticipation() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -89,21 +89,30 @@ export default function ActiveParticipation() {
           <TipTitle title={CARD_TITLE} />
 
           <Flex width={[1, 3 / 5]} justifyContent="center" alignItems="center">
-            <ul
-              css={css`
-                height: 100%;
-              `}
-            >
-              {suggestions.map((text, index) => (
-                <Box width={1} key={index}>
-                  <SlideUp>
-                    <li key={index}>
-                      <ListItem content={text} />
-                    </li>
-                  </SlideUp>
-                </Box>
-              ))}
-            </ul>
+            <SlideUp>
+              <ul
+                css={css`
+                  height: 100%;
+                `}
+              >
+                {" "}
+                <Flex
+                  flexDirection="column"
+                  justifyContent="center"
+                  css={css`
+                    height: 100%;
+                  `}
+                >
+                  {suggestions.map((text, index) => (
+                    <Box width={1} key={index}>
+                      <li key={index}>
+                        <ListItem content={text} />
+                      </li>
+                    </Box>
+                  ))}
+                </Flex>
+              </ul>
+            </SlideUp>
           </Flex>
         </Flex>
       </Modal>
