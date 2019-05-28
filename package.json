@@ -24,7 +24,8 @@
     "react-scripts": "2.1.8",
     "react-spring": "^8.0.20",
     "react-use": "^9.0.0",
-    "use-clipboard-copy": "^0.1.0"
+    "use-clipboard-copy": "^0.1.0",
+    "victory": "^32.2.3"
   },
   "scripts": {
     "start": "react-scripts start",

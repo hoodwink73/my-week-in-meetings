@@ -104,7 +104,7 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
 
   switch (getDayStatus(userConfig)) {
     case DAY_STATUSES.get("NO_WORK_TODAY"):
-      Content = () => <Text {...textProps}>{pluralize`Enjoy the day!`}</Text>;
+      Content = () => <Text {...textProps}>Enjoy the day!</Text>;
       break;
     case DAY_STATUSES.get("YET_TO_BEGIN"):
       Content = () => (
