@@ -70,6 +70,13 @@ export default {
       border: "1px solid rgb(187, 187, 187)",
       cursor: "pointer",
       padding: "0 4px"
+    },
+    small: {
+      paddingTop: "2px",
+      paddingRight: "4px",
+      paddingLeft: "4px",
+      paddingBottom: "2px",
+      textAlign: "center"
     }
   }
 };

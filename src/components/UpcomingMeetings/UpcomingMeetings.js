@@ -40,8 +40,8 @@ export default function UpcomingMeetings() {
 
   return (
     <Flex flexDirection="column" my={3}>
-      <Text fontSize={[3, 4]} fontWeight="bold" textAlign={["left", "center"]}>
-        Upcoming Meetings for Today
+      <Text fontSize={[3, 4]} fontWeight="bold" textAlign={["left"]}>
+        Today
       </Text>
       <Events events={upcomingEvents} />
     </Flex>
