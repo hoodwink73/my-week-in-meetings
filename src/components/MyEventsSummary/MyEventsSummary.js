@@ -67,7 +67,6 @@ export default function MyEventsSummary() {
             width={[1]}
           />
 
-          <CurrentMeeting />
           <UpcomingMeetings />
 
           <Tips />
