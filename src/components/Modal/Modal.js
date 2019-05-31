@@ -44,10 +44,7 @@ const CUSTOM_STYLES = {
 };
 
 export default function Modal({ children, contentFit, mobileMenu, ...props }) {
-  const isSmall = useMedia("(min-width: 40em)");
-  const isMedium = useMedia("(min-width: 52em)");
   const isLarge = useMedia("(min-width: 64em)");
-
   const [modalDimesions, setModalDimensions] = useState(null);
 
   const measuredRef = useCallback(

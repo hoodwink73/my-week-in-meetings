@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, Box, Heading } from "@rebass/emotion";
+import { Flex, Box, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
@@ -9,19 +9,17 @@ import AnswerButton from "../AnswerButton";
 export default function Question({ question, handleYes, handleNo }) {
   return (
     <Flex
-      width={1}
-      css={css`
-        height: 100%;
-      `}
+      width={9 / 10}
+      mx="auto"
+      my={3}
       flexDirection="column"
       justifyContent="center"
-      p={[3, 5]}
     >
-      <Heading as="h2" mb={4} fontSize={[5, 4]} textAlign={["center", "left"]}>
+      <Text mb={3} fontSize={3}>
         {question}
-      </Heading>
-      <Flex width={1} flexDirection={["column", "row"]} alignItems="center">
-        <AnswerButton title="Yes" onClick={handleYes} />
+      </Text>
+      <Flex width={1} mb={2} alignItems="center">
+        <AnswerButton title="Yes" onClick={handleYes} mr={2} />
         <AnswerButton title="No" onClick={handleNo} />
       </Flex>
     </Flex>
