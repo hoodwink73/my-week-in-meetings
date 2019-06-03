@@ -3,6 +3,7 @@ import PropType from "prop-types";
 import { Flex, Button as RebassButton, Box } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import delve from "dlv";
 
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 
@@ -33,7 +34,20 @@ export default function Button({ children, size, type, loading, ...props }) {
     >
       <Flex alignItems="center">
         {loading && (
-          <Box width={24} pt={1} mr={2}>
+          <Box
+            width="1em"
+            pt={1}
+            mr={2}
+            css={({ colors }) => css`
+              .primary {
+                fill: ${colors.white[0]};
+              }
+
+              .secondary {
+                fill: ${delve(colors, buttonStyles.get(type).bg)};
+              }
+            `}
+          >
             <LoadingIcon />
           </Box>
         )}
