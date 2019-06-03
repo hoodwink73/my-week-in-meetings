@@ -36,7 +36,6 @@ export default function Button({ children, size, type, loading, ...props }) {
         {loading && (
           <Box
             width="1em"
-            pt={1}
             mr={2}
             css={({ colors }) => css`
               .primary {
@@ -48,7 +47,7 @@ export default function Button({ children, size, type, loading, ...props }) {
               }
             `}
           >
-            <LoadingIcon />
+            <LoadingIcon style={{ verticalAlign: "middle" }} />
           </Box>
         )}
         <Box>{children}</Box>
