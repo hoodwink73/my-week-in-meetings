@@ -40,9 +40,17 @@ export default function Response({
           loading={loading}
           size="medium"
           type="primary"
-          onClick={() => {
+          onClick={async () => {
             setLoading(true);
-            onDeclineResponse(content);
+
+            try {
+              await onDeclineResponse(content);
+            } catch (e) {
+              setLoading(false);
+              console.error(
+                "We encountered an error while tryng to decline the response"
+              );
+            }
           }}
         >
           Decline And Send

@@ -13,10 +13,20 @@ import { Event } from "../Events";
 import { getUserGoogleID } from "../../utils";
 
 import Intro from "./Intro";
+
 import AgendaQuestion from "./AgendaQuestion";
 import AgendaResponse from "./AgendaResponse";
 
-// const declineEventCloudFn = firebase.functions().httpsCallable("declineEvent");
+import ResponsibilityQuestion from "./ResponsibilityQuestion";
+import ResponsibilityResponse from "./ResponsibilityResponse";
+
+import NotWellInformedQuestion from "./NotWellInformedQuestion";
+import NotWellInformedResponse from "./NotWellInformedResponse";
+
+import BusyQuestion from "./BusyQuestion";
+import BusyResponse from "./BusyResponse";
+
+import AttendMeeting from "./AttendMeeting";
 
 const Graphic = () => (
   <Image
@@ -40,17 +50,20 @@ const DeclineTheMeetingHeader = () => {
 
 const declineMeetingGuideProgressChart = new Map([
   [Intro, [AgendaQuestion]],
-  [AgendaQuestion, [AgendaResponse, "ResponsibilityQuestion"]],
-  ["ResponsibilityQuestion", ["ResponsibilityOptions", "BusyQuestion"]],
-  [
-    "ResponsibilityOptions",
-    ["NotWellInformedResponse", "RoleMismatchResponse", "NoAuthorityResponse"]
-  ],
-  ["BusyQuestion", ["BusyResponse", "AttendMeeting"]]
+  [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
+  [ResponsibilityQuestion, [ResponsibilityResponse, NotWellInformedQuestion]],
+  [NotWellInformedQuestion, [NotWellInformedResponse, BusyQuestion]],
+  [BusyQuestion, [BusyResponse, AttendMeeting]]
 ]);
 
 const isResponseMode = Component => {
-  const componentForResponseMode = [AgendaResponse];
+  const componentForResponseMode = [
+    AgendaResponse,
+    ResponsibilityResponse,
+    NotWellInformedResponse,
+    BusyResponse,
+    AttendMeeting
+  ];
   return componentForResponseMode.includes(Component);
 };
 
@@ -88,15 +101,18 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
     .functions()
     .httpsCallable("declineEvent");
 
-  const handleDeclineResponse = comment => {
+  const handleDeclineResponse = async comment => {
     const googleUserID = getUserGoogleID(user);
-    declineEventCloudFn({
+
+    const declineEventResponse = await declineEventCloudFn({
       userID: googleUserID,
       eventID: event.id,
       comment
-    }).then(() => {
-      onRequestClose();
     });
+
+    onRequestClose();
+
+    return declineEventResponse;
   };
 
   const handleYes = () => dispatch({ type: "yes" });

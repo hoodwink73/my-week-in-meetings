@@ -133,7 +133,7 @@ export default function Event({ data, isHappeningNow, readOnly }) {
         )}
       </Box>
 
-      {!readOnly && (
+      {!readOnly && isDeclineMeetingGuideOpen && (
         <DeclineMeetingGuide
           event={data}
           isOpen={isDeclineMeetingGuideOpen}
