@@ -65,7 +65,11 @@ export default function Event({ data, isHappeningNow, readOnly }) {
     <>
       <Box key={data.id} mb={[4, 1]} css={highlightEventStyle}>
         <Flex justifyContent="space-between" px={2} py={3}>
-          <Flex flexDirection="column" pl={2}>
+          <Flex
+            flexDirection="column"
+            justifyContent={["space-between", "flex-start"]}
+            pl={2}
+          >
             {isHappeningNow ? (
               <Text
                 fontSize={1}

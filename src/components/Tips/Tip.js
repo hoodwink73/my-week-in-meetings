@@ -6,15 +6,7 @@ import { css, jsx } from "@emotion/core";
 import Modal from "../Modal";
 import Pagination from "../Pagination";
 
-// const declineMeetingGuideProgressChart = new Map([
-//   [Intro, [AgendaQuestion]],
-//   [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
-//   [ResponsibilityQuestion, [ResponsibilityResponse, NotWellInformedQuestion]],
-//   [NotWellInformedQuestion, [NotWellInformedResponse, BusyQuestion]],
-//   [BusyQuestion, [BusyResponse, AttendMeeting]]
-// ]);
-
-export default function Tip({ title, steps, source, graphic: Graphic }) {
+export default function Tip({ title, steps, graphic: Graphic }) {
   const reducer = (state, action) => {
     switch (action.type) {
       case "reset":
@@ -122,17 +114,6 @@ export default function Tip({ title, steps, source, graphic: Graphic }) {
                   )}
                 </Flex>
               </Flex>
-
-              <Link
-                my={2}
-                p={1}
-                href={source.get("url")}
-                css={css`
-                  display: block;
-                `}
-              >
-                <Text fontSize={1}>Source - {source.get("title")}</Text>
-              </Link>
             </Box>
           </>
         </Box>
