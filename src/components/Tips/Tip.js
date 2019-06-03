@@ -1,6 +1,6 @@
 import React, { useState, useReducer } from "react";
 import PropTypes from "prop-types";
-import { Flex, Box, Text, Button, Image, Card } from "@rebass/emotion";
+import { Flex, Box, Text, Button, Image, Card, Link } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import Modal from "../Modal";
@@ -14,7 +14,7 @@ import Pagination from "../Pagination";
 //   [BusyQuestion, [BusyResponse, AttendMeeting]]
 // ]);
 
-export default function Tip({ title, steps, graphic: Graphic }) {
+export default function Tip({ title, steps, source, graphic: Graphic }) {
   const reducer = (state, action) => {
     switch (action.type) {
       case "reset":
@@ -122,6 +122,17 @@ export default function Tip({ title, steps, graphic: Graphic }) {
                   )}
                 </Flex>
               </Flex>
+
+              <Link
+                my={2}
+                p={1}
+                href={source.get("url")}
+                css={css`
+                  display: block;
+                `}
+              >
+                <Text fontSize={1}>Source - {source.get("title")}</Text>
+              </Link>
             </Box>
           </>
         </Box>

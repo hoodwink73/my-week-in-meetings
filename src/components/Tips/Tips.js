@@ -43,6 +43,13 @@ const TIPS_CONTENT = new Map([
         [MostKnowledge, Implementation],
         [Implementation, Impacted],
         [Impacted, Participation]
+      ]),
+      source: new Map([
+        [
+          "url",
+          "https://hbr.org/2018/06/the-most-productive-meetings-have-fewer-than-8-people"
+        ],
+        ["title", "HBR"]
       ])
     }
   ],
@@ -58,6 +65,13 @@ const TIPS_CONTENT = new Map([
         [Perspective, Listening],
         [Listening, Speaking],
         [Speaking, SelfAware]
+      ]),
+      source: new Map([
+        [
+          "url",
+          "https://hbr.org/2018/06/the-most-productive-meetings-have-fewer-than-8-people"
+        ],
+        ["title", "HBR"]
       ])
     }
   ]
@@ -70,6 +84,7 @@ for (let tipDetails of TIPS_CONTENT.values()) {
     <Tip
       key={tipDetails.title}
       title={tipDetails.title}
+      source={tipDetails.source}
       graphic={tipDetails.graphic}
       steps={tipDetails.steps}
     />
