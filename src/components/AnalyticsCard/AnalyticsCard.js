@@ -4,7 +4,7 @@ import delve from "dlv";
 
 import TimeSpentInMeetings from "./TimeSpentInMeetings";
 import BusiestDay from "./BusiestDay";
-import TopOrganizer from "./TopOrganizer";
+import TopCollaborator from "./TopCollaborator";
 import MeetingsByDomains from "./MeetingsByDomains";
 
 import { FirestoreDataContext } from "../FirestoreData";
@@ -31,7 +31,7 @@ export default function AnalyticsCard({ type, ...props }) {
   switch (type) {
     case "timeSpentInMeetings":
     case "busiestDay":
-    case "topOrganizer":
+    case "topCollaborator":
     case "meetingsByDomains":
       loading = areDataForLastWeeksLoading;
       data = [dataForThisWeek, ...dataForLastWeeks];
@@ -48,8 +48,8 @@ export default function AnalyticsCard({ type, ...props }) {
     case "busiestDay":
       Component = BusiestDay;
       break;
-    case "topOrganizer":
-      Component = TopOrganizer;
+    case "topCollaborator":
+      Component = TopCollaborator;
       break;
     case "meetingsByDomains":
       Component = MeetingsByDomains;
@@ -80,7 +80,7 @@ AnalyticsCard.propTypes = {
   type: PropTypes.oneOf([
     "timeSpentInMeetings",
     "busiestDay",
-    "topOrganizer",
+    "topCollaborator",
     "meetingsByDomains"
   ])
 };
