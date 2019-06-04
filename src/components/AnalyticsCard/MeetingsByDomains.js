@@ -13,6 +13,91 @@ import { sortCollectionByKey, getUserDomain } from "../../utils";
 
 const KEY_FOR_AGGREGATED_DATA = "eventCreatorByDomainsFrequency";
 
+const CardIcon = ({ width, ...props }) => (
+  <Box
+    width={width}
+    bg="primary.1"
+    css={css`
+      text-align: center;
+      height: ${width}px;
+      border-radius: 50%;
+      padding: 8px;
+    `}
+    {...props}
+  >
+    <MeetingIcon
+      css={theme => css`
+        path {
+          fill: ${theme.colors.primary[5]};
+        }
+      `}
+    />
+  </Box>
+);
+
+const CardTitle = ({ ...props }) => (
+  <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
+    Internal vs External Meetings
+  </Text>
+);
+
+const Explain = ({ ...props }) => (
+  <Text
+    width={3 / 4}
+    mt={1}
+    fontSize={1}
+    fontWeight="bold"
+    color="neutrals.5"
+    {...props}
+  >
+    How many meetings were organised within your company and how many without
+  </Text>
+);
+
+const NoDataAvailable = ({ ...props }) => (
+  <Text mt="auto" fontSize={2} fontWeight="bold" color="neutrals.4" {...props}>
+    No Data
+  </Text>
+);
+
+const MeetingsInsideVersusOutside = ({ data, ...props }) => (
+  <Flex justifyContent="space-between" {...props}>
+    <Box>
+      <Text
+        fontSize={5}
+        color="neutrals.7"
+        fontWeight="bold"
+        textAlign="center"
+      >
+        {data.internal}
+      </Text>
+      <Text color="neutrals.5" fontSize={1} fontWeight="bold">
+        Internal
+      </Text>
+    </Box>
+
+    <Box alignSelf="center">
+      <Text fontSize={1} fontWeight="bold" color="neutrals.5">
+        vs
+      </Text>
+    </Box>
+
+    <Box>
+      <Text
+        color="neutrals.7"
+        fontSize={5}
+        fontWeight="bold"
+        textAlign="center"
+      >
+        {data.external}
+      </Text>
+      <Text color="neutrals.5" fontSize={1} fontWeight="bold">
+        External
+      </Text>
+    </Box>
+  </Flex>
+);
+
 export default function MeetingsByDomains({ data, ...props }) {
   const { user } = useAuthState(firebase.auth());
   const userDomain = getUserDomain(user);
@@ -59,49 +144,20 @@ export default function MeetingsByDomains({ data, ...props }) {
       boxShadow="medium"
       {...props}
     >
-      <Flex
-        flexDirection="column"
-        css={css`
-          height: 300px;
-        `}
-      >
-        <Box
-          width={50}
-          bg="red.0"
-          css={css`
-            text-align: center;
-            height: 50px;
-            border-radius: 50%;
-          `}
-        >
-          <MeetingIcon
-            css={theme => css`
-              padding-top: 10px;
-              width: 30px;
-              path {
-                fill: ${theme.colors.red[2]};
-              }
-            `}
+      <CardIcon width={64} />
+
+      <Flex flexDirection="column" justifyContent="space-evenly">
+        <CardTitle mt={4} />
+        {noDataAvailable ? (
+          <NoDataAvailable mt={4} />
+        ) : (
+          <MeetingsInsideVersusOutside
+            width={3 / 4}
+            mt={4}
+            data={internalVsExternal}
           />
-        </Box>
-        <Text mt={4} fontSize={3} fontWeight="bold">
-          Inside/Outside the Organisation
-        </Text>
-
-        <Text mt={3} fontSize={1} fontWeight="bold" color="gray.2">
-          Meetings from organisers inside versus outside the organisation
-        </Text>
-
-        <Text mt="auto" fontSize={6} fontWeight="bold" color="gray.4">
-          {noDataAvailable ? (
-            "No Data"
-          ) : (
-            <Flex>
-              <Text color="">{internalVsExternal.external}</Text> /{" "}
-              <Text color="">{internalVsExternal.internal}</Text>
-            </Flex>
-          )}
-        </Text>
+        )}
+        <Explain mt={4} />
       </Flex>
     </Card>
   );
