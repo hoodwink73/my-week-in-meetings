@@ -1,34 +1,48 @@
 import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Flex, Box, Text, Button } from "@rebass/emotion";
+import { Flex, Box, Text, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 import leftPad from "left-pad";
 
+import { useUser } from "../../hooks";
 import { UserConfigContext } from "../UserConfig";
 import Modal from "../Modal";
+import Button from "../Button";
 
-const Input = ({ value, onChange, timeUnit }) => (
-  <input
-    type="number"
-    min="0"
-    max={timeUnit === "hours" ? "23" : "59"}
-    steps={timeUnit === "minutes" ? "15" : "1"}
-    required
-    value={value}
-    onChange={onChange}
-    css={css`
-      font-size: 24px;
-      padding: 4px;
-    `}
-  />
-);
+const Select = ({ value, onChange, timeUnit }) => {
+  let optionValues = [];
+  if (timeUnit === "hours") {
+    optionValues = [...Array(24).keys()];
+  } else if (timeUnit === "minutes") {
+    optionValues = [...Array(60).keys()].filter(n => n % 15 === 0);
+  }
+
+  return (
+    <select
+      onChange={onChange}
+      value={value}
+      css={css`
+        font-size: 18px;
+        padding: 4px;
+      `}
+    >
+      {optionValues.map(v => (
+        <option key={v} value={v}>
+          {leftPad(v, 2, 0)}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 export default function SettingsDetails({ isOpen, onToggle }) {
   const { userConfig, setUserConfig, userConfigRequest } = useContext(
     UserConfigContext
   );
+
+  const { user, logout } = useUser();
 
   const [workingTime, setWorkingTime] = useState(userConfig);
 
@@ -68,6 +82,113 @@ export default function SettingsDetails({ isOpen, onToggle }) {
     onToggle();
   };
 
+  const handleDeleteAccount = () => {
+    const choice = window.confirm(
+      "Are you sure you want to delete the account"
+    );
+
+    if (choice) {
+      onToggle();
+      logout();
+    }
+  };
+
+  const WordDaysInfo = ({ ...props }) => {
+    return (
+      <Card bg="primary.0" borderRadius={10} p={3} {...props}>
+        <Text fontSize={1} fontWeight="bold">
+          We consider Monday to Friday as working days
+        </Text>
+      </Card>
+    );
+  };
+
+  const WorkTimeSettings = ({ ...props }) => (
+    <Box {...props}>
+      <Flex justifyContent="space-between" mb={2} alignItems="center">
+        <Text fontWeight="bold" fontSize={2}>
+          Work Day Begins At
+        </Text>
+        <Flex>
+          <Box>
+            <Select
+              value={workingTime.workStartTime.hours}
+              onChange={changeWorkStartTimeHours}
+              timeUnit="hours"
+            />
+          </Box>
+          <Text px={2}>:</Text>
+          <Box>
+            <Select
+              value={workingTime.workStartTime.minutes}
+              onChange={changeWorkStartTimeMinutes}
+              timeUnit="minutes"
+            />
+          </Box>
+        </Flex>
+      </Flex>
+
+      <Flex justifyContent="space-between" alignItems="center" mb={3}>
+        <Text fontWeight="bold" fontSize={2}>
+          Work Day Ends At
+        </Text>
+        <Flex>
+          <Box>
+            <Select
+              value={workingTime.workEndTime.hours}
+              onChange={changeWorkEndTimeHours}
+              timeUnit="hours"
+            />
+          </Box>
+          <Text px={2} alignSelf="center">
+            :
+          </Text>
+          <Box>
+            <Select
+              value={workingTime.workEndTime.minutes}
+              onChange={changeWorkEndTimeMinutes}
+              timeUnit="minutes"
+            />
+          </Box>
+        </Flex>
+      </Flex>
+
+      <Button
+        type="primary"
+        size="medium"
+        alignSelf="flex-start"
+        mt={2}
+        onClick={handleSavingUserConfig}
+      >
+        Save
+      </Button>
+    </Box>
+  );
+
+  const AccountSettings = ({ ...props }) => {
+    return (
+      <Box {...props}>
+        <Text fontWeight="bold" fontSize={2} mb={3}>
+          Account Settings
+        </Text>
+
+        <Text fontSize={1}>You are currently logged in via</Text>
+        <Text fontSize={2} fontWeight="bold" mt={2}>
+          {user.email}
+        </Text>
+
+        <Button
+          type="primary"
+          size="medium"
+          mt={3}
+          onClick={handleDeleteAccount}
+        >
+          Delete Account
+        </Button>
+      </Box>
+    );
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -85,68 +206,9 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         >
           Settings
         </Text>
-
-        <Flex justifyContent="space-between" mb={2} alignItems="center">
-          <Text fontWeight="bold" fontSize={2}>
-            Work Day Begins At
-          </Text>
-          <Flex>
-            <Box>
-              <Input
-                value={leftPad(workingTime.workStartTime.hours, 2, 0)}
-                onChange={changeWorkStartTimeHours}
-                timeUnit="hours"
-              />
-            </Box>
-            <Text px={2}>:</Text>
-            <Box>
-              <Input
-                value={leftPad(workingTime.workStartTime.minutes, 2, 0)}
-                onChange={changeWorkStartTimeMinutes}
-                timeUnit="minutes"
-              />
-            </Box>
-          </Flex>
-        </Flex>
-
-        <Flex justifyContent="space-between" alignItems="center" mb={3}>
-          <Text fontWeight="bold" fontSize={2}>
-            Work Day Ends At
-          </Text>
-          <Flex>
-            <Box>
-              <Input
-                value={leftPad(workingTime.workEndTime.hours, 2, 0)}
-                onChange={changeWorkEndTimeHours}
-                timeUnit="hours"
-              />
-            </Box>
-            <Text px={2} alignSelf="center">
-              :
-            </Text>
-            <Box>
-              <Input
-                value={leftPad(workingTime.workEndTime.minutes, 2, 0)}
-                onChange={changeWorkEndTimeMinutes}
-                timeUnit="minutes"
-              />
-            </Box>
-          </Flex>
-        </Flex>
-
-        <Button
-          bg="gray.3"
-          mt={4}
-          mx={["auto", 0]}
-          my={3}
-          width={[3 / 4, 1 / 4]}
-          onClick={handleSavingUserConfig}
-          css={css`
-            cursor: pointer;
-          `}
-        >
-          Save
-        </Button>
+        <WordDaysInfo mt={3} />
+        <WorkTimeSettings mt={4} />
+        <AccountSettings mt={4} mb={4} />
       </Flex>
     </Modal>
   );
