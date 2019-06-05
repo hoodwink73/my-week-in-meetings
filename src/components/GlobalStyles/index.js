@@ -43,6 +43,11 @@ export default function() {
           animation-iteration-count: infinite;
           animation-direction: alternate;
         }
+
+        ${"" /* When the modal is open the actual app shouldn't scroll */}
+        .ReactModal__Body--open {
+          overflow: hidden;
+        }
       `}
     />
   );
