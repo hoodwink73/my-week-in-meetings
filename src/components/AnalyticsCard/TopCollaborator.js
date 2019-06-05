@@ -37,7 +37,7 @@ const CardIcon = ({ width, ...props }) => (
 
 const CardTitle = ({ ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
-    Your Top Collaborators
+    Top Collaborators
   </Text>
 );
 
@@ -123,19 +123,28 @@ export default function TopCollaborator({ data, ...props }) {
     >
       <CardIcon width={64} />
 
-      <Flex flexDirection="column" justifyContent="space-evenly">
+      <Flex flexDirection="column">
         <CardTitle mt={4} />
         {noDataAvailable ? (
           <NoDataAvailable mt={4} />
         ) : (
-          <Collaborators
-            count={3}
-            data={sortedMeetingTimeByOrganizers}
-            pr={3}
-            mt={4}
-          />
+          <Flex
+            width={1}
+            flexWrap="wrap"
+            css={css`
+              height: 250px;
+            `}
+          >
+            <Explain mt={4} />
+            <Collaborators
+              width={1}
+              alignSelf="flex-end"
+              mt={4}
+              count={3}
+              data={sortedMeetingTimeByOrganizers}
+            />
+          </Flex>
         )}
-        <Explain mt={4} />
       </Flex>
     </Card>
   );

@@ -37,7 +37,7 @@ const CardIcon = ({ width, ...props }) => (
 
 const CardTitle = ({ ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
-    Internal vs External Meetings
+    Internal vs External
   </Text>
 );
 
@@ -61,41 +61,25 @@ const NoDataAvailable = ({ ...props }) => (
 );
 
 const MeetingsInsideVersusOutside = ({ data, ...props }) => (
-  <Flex justifyContent="space-between" {...props}>
+  <Box {...props}>
     <Box>
-      <Text
-        fontSize={5}
-        color="neutrals.7"
-        fontWeight="bold"
-        textAlign="center"
-      >
-        {data.internal}
-      </Text>
       <Text color="neutrals.5" fontSize={1} fontWeight="bold">
         Internal
       </Text>
-    </Box>
-
-    <Box alignSelf="center">
-      <Text fontSize={1} fontWeight="bold" color="neutrals.5">
-        vs
+      <Text fontSize={5} color="neutrals.7" fontWeight="bold">
+        {data.internal}
       </Text>
     </Box>
 
-    <Box>
-      <Text
-        color="neutrals.7"
-        fontSize={5}
-        fontWeight="bold"
-        textAlign="center"
-      >
-        {data.external}
-      </Text>
+    <Box mt={3}>
       <Text color="neutrals.5" fontSize={1} fontWeight="bold">
         External
       </Text>
+      <Text color="neutrals.7" fontSize={5} fontWeight="bold">
+        {data.external}
+      </Text>
     </Box>
-  </Flex>
+  </Box>
 );
 
 export default function MeetingsByDomains({ data, ...props }) {
@@ -151,13 +135,22 @@ export default function MeetingsByDomains({ data, ...props }) {
         {noDataAvailable ? (
           <NoDataAvailable mt={4} />
         ) : (
-          <MeetingsInsideVersusOutside
-            width={3 / 4}
-            mt={4}
-            data={internalVsExternal}
-          />
+          <Flex
+            width={1}
+            flexWrap="wrap"
+            css={css`
+              height: 250px;
+            `}
+          >
+            <Explain mt={4} />
+            <MeetingsInsideVersusOutside
+              width={1}
+              alignSelf="flex-end"
+              mt={4}
+              data={internalVsExternal}
+            />
+          </Flex>
         )}
-        <Explain mt={4} />
       </Flex>
     </Card>
   );

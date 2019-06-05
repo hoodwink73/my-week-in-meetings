@@ -64,37 +64,28 @@ const CardTitle = ({ ...props }) => (
 );
 
 const TotalTimeSpentInMeetings = ({ metric, ...props }) => (
-  <Flex flexDirection="column" {...props}>
-    <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.7">
-      {metric} hrs
-    </Text>
-    <Text
-      mt={1}
-      width={3 / 4}
-      fontSize={1}
-      fontWeight="bold"
-      color="neutrals.5"
-    >
-      Total time spent in meetings over last four weeks
-    </Text>
-  </Flex>
+  <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.7" {...props}>
+    {metric} hrs
+  </Text>
 );
 
 const TimeInMeetinsRelativeToWorkInPercent = ({ metric, ...props }) => (
-  <Flex flexDirection="column" {...props}>
-    <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.7">
-      {metric}%
-    </Text>
-    <Text
-      width={3 / 4}
-      mt={1}
-      fontSize={1}
-      fontWeight="bold"
-      color="neutrals.5"
-    >
-      Time spent in meetings relative to available work time
-    </Text>
-  </Flex>
+  <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.7" {...props}>
+    {metric}%
+  </Text>
+);
+
+const Explain = ({ ...props }) => (
+  <Text
+    width={3 / 4}
+    mt={1}
+    fontSize={1}
+    fontWeight="bold"
+    color="neutrals.5"
+    {...props}
+  >
+    Total time spent in meetings over last four weeks
+  </Text>
 );
 
 export default function TimeSpentInMeetings({ data, ...props }) {
@@ -143,15 +134,25 @@ export default function TimeSpentInMeetings({ data, ...props }) {
       <Box>
         <CardTitle mt={4} />
 
-        <TotalTimeSpentInMeetings
-          metric={totalTimeSpentInMeetingsInHours}
-          mt={4}
-        />
+        <Flex
+          width={1}
+          flexWrap="wrap"
+          css={css`
+            height: 250px;
+          `}
+        >
+          <Explain mt={4} />
+          <Box width={1} justifyContent="space-between" alignSelf="flex-end">
+            <TotalTimeSpentInMeetings
+              metric={totalTimeSpentInMeetingsInHours}
+            />
 
-        <TimeInMeetinsRelativeToWorkInPercent
-          metric={timeSpentInMeetingsAsPercent}
-          mt={3}
-        />
+            <TimeInMeetinsRelativeToWorkInPercent
+              mt={3}
+              metric={timeSpentInMeetingsAsPercent}
+            />
+          </Box>
+        </Flex>
       </Box>
     </Card>
   );

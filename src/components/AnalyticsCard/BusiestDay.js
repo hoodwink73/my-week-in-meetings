@@ -4,13 +4,7 @@ import { Flex, Box, Text, Card } from "@rebass/emotion";
 import { ReactComponent as MeetingIcon } from "../../icons/meeting.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryAxis,
-  VictoryArea,
-  VictoryGroup
-} from "victory";
+import { VictoryChart, VictoryAxis, VictoryArea } from "victory";
 
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { sortCollectionByKey } from "../../utils";
@@ -30,6 +24,90 @@ const getDataForChart = sortedData => {
 
   return result;
 };
+
+const CardIcon = ({ width, ...props }) => (
+  <Box
+    width={width}
+    bg="primary.1"
+    css={css`
+      text-align: center;
+      height: ${width}px;
+      border-radius: 50%;
+      padding: 8px;
+    `}
+    {...props}
+  >
+    <MeetingIcon
+      css={theme => css`
+        path {
+          fill: ${theme.colors.primary[5]};
+        }
+      `}
+    />
+  </Box>
+);
+
+const CardTitle = ({ ...props }) => (
+  <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
+    Busiest Day of the Week
+  </Text>
+);
+
+const Chart = ({ data, upperLimitRange, ...props }) => (
+  <Box width={1} {...props}>
+    <VictoryChart
+      height={150}
+      padding={{ top: 0, bottom: 20, left: 10, right: 10 }}
+      domainPadding={{ x: 5 }}
+    >
+      <VictoryAxis
+        style={{
+          axis: { stroke: "#fff" },
+          tickLabels: {
+            fontSize: 15,
+            padding: 5
+          }
+        }}
+        tickFormat={tick => {
+          return DAYS_OF_WEEKS[Number(tick)][0];
+        }}
+      />
+      <VictoryArea
+        style={{ data: { fill: "#47A3F3" } }}
+        domain={{ y: [0, upperLimitRange] }}
+        interpolation="natural"
+        data={data}
+        x="day"
+        y="duration"
+      />
+    </VictoryChart>
+  </Box>
+);
+
+const Explain = ({ ...props }) => (
+  <Text
+    width={3 / 4}
+    mt={1}
+    fontSize={1}
+    fontWeight="bold"
+    color="neutrals.5"
+    {...props}
+  >
+    The day you spend most of your time in meetings
+  </Text>
+);
+
+const Day = ({ day, ...props }) => (
+  <Text mt={4} fontSize={5} fontWeight="bold" color="neutrals.7" {...props}>
+    {day}
+  </Text>
+);
+
+const NoDataAvailable = ({ ...props }) => (
+  <Text mt="auto" fontSize={2} fontWeight="bold" color="neutrals.4" {...props}>
+    No Data
+  </Text>
+);
 
 export default function BusiestDay({ data, ...props }) {
   let noDataAvailable = false;
@@ -73,63 +151,41 @@ export default function BusiestDay({ data, ...props }) {
       bg="white.0"
       boxShadow="medium"
       p={[3]}
+      css={css`
+        position: relative;
+      `}
       {...props}
     >
-      <Flex flexDirection="column">
-        <Box
-          width={50}
-          bg="red.0"
+      <CardIcon width={64} />
+
+      <Box>
+        <CardTitle mt={4} />
+
+        <Flex
+          width={1}
+          flexWrap="wrap"
           css={css`
-            text-align: center;
-            height: 50px;
-            border-radius: 50%;
+            height: 250px;
           `}
         >
-          <MeetingIcon
-            css={theme => css`
-              padding-top: 10px;
-              width: 30px;
-              path {
-                fill: ${theme.colors.red[2]};
-              }
-            `}
-          />
-        </Box>
-        <Text mt={4} fontSize={3} fontWeight="bold">
-          Busiest Day of The Week
-        </Text>
+          <Explain mt={4} />
 
-        <Text mt={3} fontSize={1} fontWeight="bold" color="gray.2">
-          On which day of the week you have the most number of meetings
-        </Text>
+          {noDataAvailable ? (
+            <NoDataAvailable mt={4} />
+          ) : (
+            <Day mt={4} day={busiestDay} />
+          )}
 
-        <Text mt={4} fontSize={5} fontWeight="bold" color="gray.4">
-          {noDataAvailable ? "No Data" : busiestDay}
-        </Text>
-
-        {dataForChart && (
-          <VictoryChart
-            height={250}
-            padding={{ top: 40, bottom: 40, left: 0, right: 20 }}
-            domainPadding={{ x: [10, 0] }}
-          >
-            <VictoryAxis
-              style={{ axis: { stroke: "#fff" } }}
-              tickFormat={tick => {
-                return DAYS_OF_WEEKS[Number(tick)][0];
-              }}
-            />
-            <VictoryArea
-              style={{ data: { fill: "#c43a31" } }}
-              domain={{ y: [0, upperLimitRange] }}
-              interpolation="natural"
+          {dataForChart && (
+            <Chart
+              width={1}
+              mt={4}
               data={dataForChart}
-              x="day"
-              y="duration"
+              upperLimitRange={upperLimitRange}
             />
-          </VictoryChart>
-        )}
-      </Flex>
+          )}
+        </Flex>
+      </Box>
     </Card>
   );
 }
