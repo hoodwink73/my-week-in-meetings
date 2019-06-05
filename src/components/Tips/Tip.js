@@ -137,6 +137,9 @@ export default function Tip({ title, steps, graphic: Graphic }) {
           mx="auto"
           css={css`
             display: block;
+            ${"" /*  hack for Safari to get set the height of the image*/}
+            ${"" /*  otherwise the tips appear elongated*/}
+            height: intrinsic;
           `}
         />
         <Text width={1} mt={3} fontWeight="bold" alignSelf="flex-end">
@@ -150,5 +153,5 @@ export default function Tip({ title, steps, graphic: Graphic }) {
 Tip.propTypes = {
   title: PropTypes.string.isRequired,
   steps: PropTypes.object.isRequired,
-  graphic: PropTypes.node.isRequired
+  graphic: PropTypes.func.isRequired
 };

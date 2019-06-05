@@ -101,6 +101,8 @@ export default function Tips() {
       width={1}
       css={css`
         overflow-x: scroll;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
         & > div {
           flex-shrink: ${isLarge ? 1 : 0};
         }
