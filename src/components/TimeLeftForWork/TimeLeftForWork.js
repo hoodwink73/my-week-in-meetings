@@ -88,16 +88,17 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
     userConfig
   );
 
-  // const timeElapsedDoingWorkInPercentage =
-  //   totalTimeAvailableForWorkFromStartTime === 0
-  //     ? 100
-  //     : ((totalTimeAvailableForWorkFromStartTime - timeLeftFromThisInstant) /
-  //         totalTimeAvailableForWorkFromStartTime) *
-  //       100;
+  const timeElapsedDoingWorkInPercentage =
+    totalTimeAvailableForWorkFromStartTime === 0
+      ? 100
+      : ((totalTimeAvailableForWorkFromStartTime - timeLeftFromThisInstant) /
+          totalTimeAvailableForWorkFromStartTime) *
+        100;
 
   let Content;
   const textProps = {
-    fontSize: [2, 4],
+    fontSize: [1, 4],
+    color: "primary.7",
     fontWeight: "bold",
     textAlign: "center"
   };
@@ -129,7 +130,7 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
 
   return (
     <Box
-      bg="white.1"
+      bg="primary.0"
       px={2}
       py={3}
       css={css`
@@ -137,7 +138,15 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
       `}
       {...props}
     >
-      <Content />
+      <Flex justifyContent="center" alignItems={["center", "flex-start"]}>
+        <Progress
+          percent={timeElapsedDoingWorkInPercentage}
+          width={[16, 32]}
+          mt={[1, 0]}
+          mr={[2, 3]}
+        />
+        <Content />
+      </Flex>
     </Box>
   );
 }

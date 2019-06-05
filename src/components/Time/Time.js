@@ -19,9 +19,9 @@ export default function Time({ timeInMs, as: Component, ...props }) {
 
   return (
     <Component {...props}>
-      {`${roundOffTimeUnit(duration.asHours(), "hours")} hrs ${
+      {`${roundOffTimeUnit(duration.asHours(), "hours")}:${
         duration.minutes()
-          ? `${roundOffTimeUnit(duration.minutes(), "minutes")} mins`
+          ? `${roundOffTimeUnit(duration.minutes(), "minutes")}`
           : ""
       }`}
     </Component>
