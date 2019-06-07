@@ -1,5 +1,6 @@
 import React from "react";
 import { Global, css } from "@emotion/core";
+import "@reach/tooltip/styles.css";
 
 export default function() {
   return (

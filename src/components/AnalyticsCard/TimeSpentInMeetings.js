@@ -3,36 +3,23 @@ import PropTypes from "prop-types";
 import { Flex, Box, Text, Card } from "@rebass/emotion";
 import delve from "dlv";
 import moment from "moment";
+import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
 
 import { getWorkHours } from "../../utils";
 import { UserConfigContext } from "../UserConfig";
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { ReactComponent as MeetingIcon } from "../../icons/meeting.svg";
+import { ReactComponent as InfoIcon } from "../../icons/icon-information.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
 const WEEKS_TO_AGGREGATE_OVER = 4;
 const KEY_FOR_AGGREGATED_DATA = "aggregateTotalMeetingTime";
 
-const CardInfo = () => (
-  <Box
-    width={16}
-    bg="white.1"
-    css={css`
-      text-align: center;
-      height: 16px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    `}
-  >
-    <MeetingIcon
-      css={theme => css`
-        path {
-          fill: ${theme.colors.red[2]};
-        }
-      `}
-    />
-  </Box>
+const CardInfo = ({ ...props }) => (
+  <Tooltip label="This data is calculated over last four weeks">
+    <InfoIcon width={16} {...props} />
+  </Tooltip>
 );
 
 const CardIcon = ({ width, ...props }) => (
@@ -76,16 +63,24 @@ const TimeInMeetinsRelativeToWorkInPercent = ({ metric, ...props }) => (
 );
 
 const Explain = ({ ...props }) => (
-  <Text
-    width={3 / 4}
-    mt={1}
-    fontSize={1}
-    fontWeight="bold"
-    color="neutrals.5"
-    {...props}
-  >
-    Total time spent in meetings over last four weeks
-  </Text>
+  <>
+    <Text
+      width={3 / 4}
+      mt={1}
+      fontSize={1}
+      fontWeight="bold"
+      color="neutrals.5"
+      {...props}
+    >
+      Total time spent in meetings over last four weeks
+      <CardInfo
+        css={css`
+          padding-left: 5px;
+          vertical-align: bottom;
+        `}
+      />
+    </Text>
+  </>
 );
 
 export default function TimeSpentInMeetings({ data, ...props }) {
