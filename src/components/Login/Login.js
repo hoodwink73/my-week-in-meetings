@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@rebass/emotion";
 import ASQ from "asynquence";
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/functions";
+import firebase from "@firebase/app";
+import "@firebase/auth";
+import "@firebase/firestore";
+import "@firebase/functions";
 import { Flex, Box, Text } from "@rebass/emotion";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { ReactComponent as Logo } from "../../icons/logo.svg";
@@ -11,50 +12,106 @@ import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
+// this is a simple sign in with google without wanting
+// any offline access token
+// this will suffice for all the other times after the user has *signed up*
+// and provided the access token
+const signInWithGoogle = setLoaderStatus => {
+  const auth2 = window.gapi.auth2.getAuthInstance();
+
+  return ASQ().then(done => {
+    const auth2 = window.gapi.auth2.getAuthInstance();
+    setLoaderStatus(true);
+    auth2.signIn().then(function(googleUser) {
+      const googleID = googleUser.getBasicProfile().getId();
+      const idToken = googleUser.getAuthResponse().id_token;
+      done({ googleID, idToken });
+    });
+  });
+};
+
+const doesUserExistInFirebase = googleID => {
+  const googleCloudFn = firebase
+    .functions()
+    .httpsCallable("doesUserExistInFirebase");
+
+  return ASQ()
+    .promise(googleCloudFn({ userGoogleID: googleID }))
+    .then((done, answer) => done(answer.data));
+};
+
+// offilne access token will allow us sync calendar events for the user
+const getOfflineAccessToken = () => {
+  const auth2 = window.gapi.auth2.getAuthInstance();
+  return ASQ()
+    .promise(auth2.grantOfflineAccess())
+    .then((done, { code }) => {
+      auth2.currentUser.listen(user => {
+        done({
+          authorizationCode: code,
+          googleID: user.getId()
+        });
+      });
+    });
+};
+
+const signInWithFirebase = ({ idToken }) => {
+  const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+
+  return ASQ().promise(
+    firebase.auth().signInAndRetrieveDataWithCredential(credential)
+  );
+};
+
+const persistOfflineAccessToken = ({ authorizationCode, googleID }) => {
+  const googleCloudFn = firebase
+    .functions()
+    .httpsCallable("getAndStoreOfflineAccessToken");
+
+  return ASQ().promise(googleCloudFn({ code: authorizationCode, googleID }));
+};
+
 export default function Login() {
   const [isAuthenticationInProgress, setAuthenticationInProgress] = useState(
     false
   );
 
   const handleSignIn = () => {
-    const auth2 = window.gapi.auth2.getAuthInstance();
-
-    const persistOfflineAccessToken = ({ authorizationCode, googleID }) => {
-      const googleCloudFn = firebase
-        .functions()
-        .httpsCallable("getAndStoreOfflineAccessToken");
-
-      return ASQ().promise(
-        googleCloudFn({ code: authorizationCode, googleID })
-      );
-    };
-
-    const signInWithFirebase = ({ idToken }) => {
-      const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
-
-      return ASQ().promise(
-        firebase.auth().signInAndRetrieveDataWithCredential(credential)
-      );
-    };
-
+    // Sign the user in, and then retrieve their ID.
     ASQ()
-      .promise(auth2.grantOfflineAccess())
-      .then((done, { code }) => {
-        setAuthenticationInProgress(true);
-        auth2.currentUser.listen(user => {
-          done({
-            authorizationCode: code,
-            googleID: user.getId()
-          });
-        });
+      .then(done => {
+        let googleID, idToken;
+
+        ASQ().seq(
+          signInWithGoogle(setAuthenticationInProgress),
+          userDetails => {
+            googleID = userDetails.googleID;
+            idToken = userDetails.idToken;
+
+            return ASQ()
+              .seq(doesUserExistInFirebase(googleID))
+              .val(doesUserExistInFirebase => {
+                done({
+                  googleID,
+                  idToken,
+                  doesUserExistInFirebase
+                });
+              });
+          }
+        );
       })
-      .seq(persistOfflineAccessToken)
-      .val(({ data: idToken }) => ({ idToken }))
+      .then((done, { idToken, doesUserExistInFirebase }) => {
+        if (!doesUserExistInFirebase) {
+          ASQ()
+            .seq(getOfflineAccessToken, persistOfflineAccessToken)
+            .val(({ data: idToken }) => done({ idToken }));
+        } else {
+          done({ idToken });
+        }
+      })
       .seq(signInWithFirebase)
-      .val(
-        () => setAuthenticationInProgress && setAuthenticationInProgress(false)
-      )
       .or(error => {
+        setAuthenticationInProgress(false);
         console.error(error);
       });
   };
