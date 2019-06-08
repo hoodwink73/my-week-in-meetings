@@ -69,7 +69,7 @@ const Chart = ({ data, upperLimitRange, ...props }) => (
           }
         }}
         tickFormat={tick => {
-          return DAYS_OF_WEEKS[Number(tick)][0];
+          return DAYS_OF_WEEKS[Number(tick)] && DAYS_OF_WEEKS[Number(tick)][0];
         }}
       />
       <VictoryArea
