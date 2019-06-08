@@ -62,6 +62,7 @@ function App() {
               </Box>
             </Flex>
           )}
+
           {user ? (
             <FirestoreData googleID={getUserGoogleID(user)}>
               <UserConfig>

@@ -1,8 +1,10 @@
 import React, { useState, useContext } from "react";
-import { Flex, Box } from "@rebass/emotion";
+import { Flex, Box, Card, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
+import useTimeout from "react-use/lib/useTimeout";
+import delve from "dlv";
 
 import {
   getStartOfWeekInUTC,
@@ -11,31 +13,39 @@ import {
 } from "../../utils";
 
 import Greeting from "../Greeting";
-import SelectTimeRange from "../SelectTimeRange";
 import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
 import Tips from "../Tips";
 import AnalyticsCard from "../AnalyticsCard";
-import CurrentMeeting from "../CurrentMeeting";
 import UpcomingMeetings from "../UpcomingMeetings";
 import UserSettings from "../UserSettings";
-import { UserConfigContext } from "../UserConfig";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
+
+import { useThisWeekAggregateData } from "../../hooks";
 
 export default function MyEventsSummary() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
-  const { userConfigRequest } = useContext(UserConfigContext);
+  const {
+    value: aggregateDataForThisWeek,
+    loading,
+    error
+  } = useThisWeekAggregateData();
+  const changeLoaderMessage = useTimeout(2000);
+
   const isLarge = useMedia("(min-width: 64em)");
 
-  const handleTimeRangeToggle = selectedTabIndex => {
-    if (selectedTabIndex === 0) {
-      setSelectedTimeRange("today");
-    } else if (selectedTabIndex === 1) {
-      setSelectedTimeRange("week");
-    }
-  };
+  // for the first time when user signs up
+  // they will not have any events and as we fetch events
+  // for past four weeks, it might take a bit more time
+  // but a user may not have any events this week
+  // so the only way to figure out that firebase has fetched
+  // the events via calendar API is rely on the fact that for a new user
+  // aggregation will be followed by fetching of events
+  // so we wait for aggregation data to calculated for the present week
+  const hasEventsBeenFetchedForUser =
+    loading || (!loading && aggregateDataForThisWeek.exists);
 
-  if (userConfigRequest.loading) {
+  if (!hasEventsBeenFetchedForUser) {
     return (
       <Flex
         justifyContent="center"
@@ -44,9 +54,23 @@ export default function MyEventsSummary() {
           height: 100vh;
         `}
       >
-        <Box width={64} pt={1} mr={2}>
-          <LoadingIcon />
-        </Box>
+        <Card
+          as={Flex}
+          width={changeLoaderMessage ? 400 : "auto"}
+          borderRadius={10}
+          bg={changeLoaderMessage ? "primary.0" : "transparent"}
+          p={4}
+        >
+          <Box width={64} pt={1} mr={2} flex="0 0 auto">
+            <LoadingIcon />
+          </Box>
+          {changeLoaderMessage ? (
+            <Text fontSize={2} fontWeight="bold" flex="0 1 auto">
+              If you are signing up for the first time, we are getting your
+              calendar events. Usually it takes a few seconds.
+            </Text>
+          ) : null}
+        </Card>
       </Flex>
     );
   } else {
@@ -91,14 +115,6 @@ export default function MyEventsSummary() {
             <Box p={[1, 0]} />
           </Flex>
         </Flex>
-        {/* <Flex justifyContent="center">
-          <Box m={4}>
-            <Tips
-              title="Do you say no to meetings if they are not important?"
-              details={["Saying no to meetings might be challenging"]}
-            />
-          </Box>
-        </Flex> */}
       </>
     );
   }
