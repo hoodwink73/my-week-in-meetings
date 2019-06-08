@@ -7,6 +7,8 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { getUserGoogleID } from "../../utils";
+// there is a default working time constant inside the firebase app too
+// both of these need to be in sync
 import { DEFAULT_WORKING_TIME } from "../../constants";
 
 export const UserConfigContext = createContext();
@@ -15,11 +17,11 @@ export default function UserConfig({ children }) {
   const { user } = useAuthState(firebase.auth());
   const googleUserID = getUserGoogleID(user);
 
-  const userConfigDocRef = firebase.firestore().doc(`users/${googleUserID}`);
-  const { error, loading, value } = useDocument(userConfigDocRef);
+  const userDocRef = firebase.firestore().doc(`users/${googleUserID}`);
+  const { error, loading, value } = useDocument(userDocRef);
 
   const setUserConfigInFirestore = workingTime => {
-    userConfigDocRef.set(
+    userDocRef.set(
       {
         userConfig: { workingTime }
       },
@@ -29,13 +31,10 @@ export default function UserConfig({ children }) {
 
   let userConfig;
 
-  if (loading) {
-    userConfig = null;
-  } else if (!loading && error) {
-    userConfig = null;
-  } else if (!value.data().userConfig) {
-    // this is useful unless the user change
-    // the settings
+  const resolvedToError = !loading && error;
+  const dataNotReadyYet = !(value && value.exists);
+
+  if (loading || resolvedToError || dataNotReadyYet) {
     userConfig = DEFAULT_WORKING_TIME;
   } else {
     userConfig = value.data().userConfig.workingTime;
