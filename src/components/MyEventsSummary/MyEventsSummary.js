@@ -22,17 +22,18 @@ import UserSettings from "../UserSettings";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 
 import { useThisWeekAggregateData } from "../../hooks";
+import { FirestoreDataContext } from "../FirestoreData";
 
 export default function MyEventsSummary() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState("today");
   const {
     value: aggregateDataForThisWeek,
-    loading,
-    error
+    loading
   } = useThisWeekAggregateData();
   const changeLoaderMessage = useTimeout(2000);
 
   const isLarge = useMedia("(min-width: 64em)");
+
+  const { aggregatedEvents, eventsThisWeek } = useContext(FirestoreDataContext);
 
   // for the first time when user signs up
   // they will not have any events and as we fetch events
@@ -44,6 +45,17 @@ export default function MyEventsSummary() {
   // so we wait for aggregation data to calculated for the present week
   const hasEventsBeenFetchedForUser =
     loading || (!loading && aggregateDataForThisWeek.exists);
+
+  // our aggregated events data gets resolved in two parts
+  // data for this week
+  // and then data for rest of the week
+  // the element in the loading array represents data loading state for
+  // the this week and the next element represents data loading for the
+  // last four weeks
+  const hasAggregatedEventsLoaded =
+    aggregatedEvents.loading.length > 0 &&
+    !aggregatedEvents.loading[0] &&
+    !aggregatedEvents.loading[1];
 
   if (!hasEventsBeenFetchedForUser) {
     return (
@@ -83,37 +95,39 @@ export default function MyEventsSummary() {
             <UserSettings ml="auto" mr={2} alignSelf="center" />
             <LogoutLink alignSelf="center" />
           </Flex>
-          {/* <SelectTimeRange handleTimeRangeToggle={handleTimeRangeToggle} my={3}>
-            </SelectTimeRange> */}
-          <TimeLeftForWork
-            selectedTimeRange={selectedTimeRange}
-            my={4}
-            width={[1]}
-          />
 
-          <UpcomingMeetings />
+          {!eventsThisWeek.loading ? (
+            <>
+              <TimeLeftForWork selectedTimeRange="today" my={4} width={[1]} />
 
-          <Tips />
-          <Flex
-            justifyContent="space-between"
-            flexWrap={["nowrap", "wrap"]}
-            paddingLeft={[2, 0]}
-            paddingTop={[2, 0]}
-            paddingRight={[2, 0]}
-            mb={4}
-            css={css`
-              overflow-x: ${isLarge ? "unset" : "scroll"};
-              scroll-behavior: smooth;
-              -webkit-overflow-scrolling: touch;
-            `}
-          >
-            <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
-            <AnalyticsCard type="busiestDay" mr={[3, 0]} />
-            <AnalyticsCard type="topCollaborator" mt={[0, 3]} mr={[3, 0]} />
-            <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} mr={[3, 0]} />
-            {/*  Hack to prevent box shadow of last card getting clipped on mobile*/}
-            <Box p={[1, 0]} />
-          </Flex>
+              <UpcomingMeetings />
+
+              <Tips />
+            </>
+          ) : null}
+
+          {hasAggregatedEventsLoaded ? (
+            <Flex
+              justifyContent="space-between"
+              flexWrap={["nowrap", "wrap"]}
+              paddingLeft={[2, 0]}
+              paddingTop={[2, 0]}
+              paddingRight={[2, 0]}
+              mb={4}
+              css={css`
+                overflow-x: ${isLarge ? "unset" : "scroll"};
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+              `}
+            >
+              <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
+              <AnalyticsCard type="busiestDay" mr={[3, 0]} />
+              <AnalyticsCard type="topCollaborator" mt={[0, 3]} mr={[3, 0]} />
+              <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} mr={[3, 0]} />
+              {/*  Hack to prevent box shadow of last card getting clipped on mobile*/}
+              <Box p={[1, 0]} />
+            </Flex>
+          ) : null}
         </Flex>
       </>
     );
