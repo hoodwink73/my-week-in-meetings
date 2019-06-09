@@ -1,16 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Flex, Box, Card, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 import useTimeout from "react-use/lib/useTimeout";
 import delve from "dlv";
-
-import {
-  getStartOfWeekInUTC,
-  filterEventsForToday,
-  sortEvents
-} from "../../utils";
 
 import Greeting from "../Greeting";
 import TimeLeftForWork from "../TimeLeftForWork";
@@ -21,30 +15,33 @@ import UpcomingMeetings from "../UpcomingMeetings";
 import UserSettings from "../UserSettings";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 
-import { useThisWeekAggregateData } from "../../hooks";
+import { useDoesUserHaveAggregatedData } from "../../hooks";
 import { FirestoreDataContext } from "../FirestoreData";
 
 export default function MyEventsSummary() {
   const {
-    value: aggregateDataForThisWeek,
+    value: aggregatedDataForUser,
     loading
-  } = useThisWeekAggregateData();
+  } = useDoesUserHaveAggregatedData();
   const changeLoaderMessage = useTimeout(2000);
 
   const isLarge = useMedia("(min-width: 64em)");
 
   const { aggregatedEvents, eventsThisWeek } = useContext(FirestoreDataContext);
 
-  // for the first time when user signs up
+  // when user signs up for the first time
   // they will not have any events and as we fetch events
   // for past four weeks, it might take a bit more time
-  // but a user may not have any events this week
+  // **hence we want a special message along with the loader**
+  // but a user may not have any events during the time
+  // for which we are fetching the data
   // so the only way to figure out that firebase has fetched
-  // the events via calendar API is rely on the fact that for a new user
-  // aggregation will be followed by fetching of events
-  // so we wait for aggregation data to calculated for the present week
+  // the events via calendar API is rely on the fact
+  // **we aggregate data for every new user after we fetch the events**
+  // so we wait for the signal that data aggregation has been performed for
+  // the user
   const hasEventsBeenFetchedForUser =
-    loading || (!loading && aggregateDataForThisWeek.exists);
+    loading || (!loading && delve(aggregatedDataForUser, "size", false));
 
   // our aggregated events data gets resolved in two parts
   // data for this week
