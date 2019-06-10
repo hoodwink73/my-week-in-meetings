@@ -46,6 +46,10 @@ export default function SettingsDetails({ isOpen, onToggle }) {
 
   const [workingTime, setWorkingTime] = useState(userConfig);
 
+  useEffect(() => {
+    setWorkingTime(userConfig);
+  }, [userConfig]);
+
   const isLarge = useMedia("(min-width: 64em)");
 
   if (userConfigRequest.error) {
@@ -56,25 +60,31 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   const changeWorkStartTimeHours = ({ target: { value } }) =>
     setWorkingTime({
       ...workingTime,
-      workStartTime: { ...workingTime.workStartTime, hours: value }
+      workStartTime: {
+        ...workingTime.workStartTime,
+        hours: parseInt(value, 10)
+      }
     });
 
   const changeWorkStartTimeMinutes = ({ target: { value } }) =>
     setWorkingTime({
       ...workingTime,
-      workStartTime: { ...workingTime.workStartTime, minutes: value }
+      workStartTime: {
+        ...workingTime.workStartTime,
+        minutes: parseInt(value, 10)
+      }
     });
 
   const changeWorkEndTimeHours = ({ target: { value } }) =>
     setWorkingTime({
       ...workingTime,
-      workEndTime: { ...workingTime.workEndTime, hours: value }
+      workEndTime: { ...workingTime.workEndTime, hours: parseInt(value, 10) }
     });
 
   const changeWorkEndTimeMinutes = ({ target: { value } }) =>
     setWorkingTime({
       ...workingTime,
-      workEndTime: { ...workingTime.workEndTime, minutes: value }
+      workEndTime: { ...workingTime.workEndTime, minutes: parseInt(value, 10) }
     });
 
   const handleSavingUserConfig = () => {
