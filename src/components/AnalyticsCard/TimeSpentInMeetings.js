@@ -109,10 +109,10 @@ export default function TimeSpentInMeetings({ data, ...props }) {
     .asHours()
     .toFixed(1);
 
-  const timeSpentInMeetingsAsPercent = parseInt(
-    (totalTimeSpentInMeetingsInMs / totalWorkTimeAvailableInMs) * 100,
-    10
-  );
+  const timeSpentInMeetingsAsPercent = (
+    (totalTimeSpentInMeetingsInMs / totalWorkTimeAvailableInMs) *
+    100
+  ).toFixed(1);
 
   return (
     <Card
