@@ -32,7 +32,14 @@ export default function(week = 0, googleID) {
             attendee => !attendee.self
           ).length;
 
-          if (attendeeMe.responseStatus !== EVENT_STATUSES.get("Declined")) {
+          // sometimes you can organise an event (hence the event will be in your calendar)
+          // but choose to opt-out of the attendee list
+          // so we need to check whether the attendee list includes you
+          // before we can check your response status to the event
+          if (
+            attendeeMe &&
+            attendeeMe.responseStatus !== EVENT_STATUSES.get("Declined")
+          ) {
             if (areThereOtherAttendees) {
               data.push(event);
             }
