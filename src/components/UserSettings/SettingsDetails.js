@@ -5,6 +5,8 @@ import { Flex, Box, Text, Card } from "@rebass/emotion";
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 import leftPad from "left-pad";
+import firebase from "@firebase/app";
+import "@firebase/functions";
 
 import { useUser } from "../../hooks";
 import { UserConfigContext } from "../UserConfig";
@@ -51,6 +53,10 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   }, [userConfig]);
 
   const isLarge = useMedia("(min-width: 64em)");
+
+  const requestDeleteUserCloudFn = firebase
+    .functions()
+    .httpsCallable("onDeleteUserRequest");
 
   if (userConfigRequest.error) {
     console.error(userConfigRequest.error);
@@ -99,7 +105,16 @@ export default function SettingsDetails({ isOpen, onToggle }) {
 
     if (choice) {
       onToggle();
-      logout();
+      requestDeleteUserCloudFn().then(() => {
+        try {
+          const auth2 = window.gapi.auth2.getAuthInstance();
+          // Revokes all of the scopes that the user granted
+          auth2.disconnect();
+        } catch (e) {
+          console.error("Could not revoke access", e);
+        }
+        logout();
+      });
     }
   };
 
