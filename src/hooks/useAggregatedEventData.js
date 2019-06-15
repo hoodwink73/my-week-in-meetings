@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ASQ from "asynquence";
 import firebase from "@firebase/app";
 import "@firebase/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
 
 import { getStartOfWeekInUTC } from "../utils";
 
@@ -39,6 +40,16 @@ export default function useAggregatedEventData(googleID) {
     // for last few weeks
     data: []
   });
+
+  const {
+    value: thisWeekAggregate,
+    loading: thisWeekLoading,
+    error: thisWeekError
+  } = useDocument(
+    firebase
+      .firestore()
+      .doc(`users/${googleID}/aggregates/${getStartOfWeekInUTC()}`)
+  );
 
   // these are timestamp representing the beginning of the week
   // expressed as ISO stings
@@ -82,6 +93,8 @@ export default function useAggregatedEventData(googleID) {
 
         return thisWeekAggregate;
       })
+
+      .val()
       .seq(aggregateDataForLastThreeWeeksReq)
       .val(([currentWeekData, ...lastWeeksDataResponse]) => {
         var dataForLastThreeWeeks = lastWeeksDataResponse.map(result => {

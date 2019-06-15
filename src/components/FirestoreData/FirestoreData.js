@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import PropTypes from "prop-types";
 
-import { userAggregatedEventData, useEventsForWeek } from "../../hooks";
+import { useAggregatedEventData, useEventsForWeek } from "../../hooks";
 
 export const FirestoreDataContext = createContext({
   eventsThisWeek: null,
@@ -9,7 +9,7 @@ export const FirestoreDataContext = createContext({
 });
 
 export default function FirestoreData({ children, googleID }) {
-  const aggregatedEvents = userAggregatedEventData(googleID);
+  const aggregatedEvents = useAggregatedEventData(googleID);
   const eventsThisWeek = useEventsForWeek(0, googleID);
   return (
     <FirestoreDataContext.Provider value={{ aggregatedEvents, eventsThisWeek }}>
