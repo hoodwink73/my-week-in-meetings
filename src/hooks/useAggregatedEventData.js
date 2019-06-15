@@ -41,11 +41,7 @@ export default function useAggregatedEventData(googleID) {
     data: []
   });
 
-  const {
-    value: thisWeekAggregate,
-    loading: thisWeekLoading,
-    error: thisWeekError
-  } = useDocument(
+  const { value: thisWeekAggregateLive } = useDocument(
     firebase
       .firestore()
       .doc(`users/${googleID}/aggregates/${getStartOfWeekInUTC()}`)
@@ -125,5 +121,14 @@ export default function useAggregatedEventData(googleID) {
       });
   }, []);
 
+  useEffect(() => {
+    // update aggregate value for this week
+    if (results.data.length === LAST_WEEKS_TO_FETCH + 1) {
+      setResults({
+        ...results,
+        data: [thisWeekAggregateLive.data(), ...results.data.slice(1)]
+      });
+    }
+  }, [thisWeekAggregateLive]);
   return results;
 }
