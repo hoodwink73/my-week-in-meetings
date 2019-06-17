@@ -74,11 +74,16 @@ function App() {
           )}
         </div>
       </ThemeProvider>
-
+      {/* we are appending the current time stamp to script source to burst cache.
+          iOS Safari is not executing the google sign in script onLoad handler
+          if the script is loaded from disk cache
+          this breaks subsequent sign in and sign out experience
+          as the google auth was never initialized
+        */}
       {!hasGoogleSignInScriptLoaded && (
         <Helmet>
           <script
-            src="https://apis.google.com/js/client:platform.js?onload=onGoogleSignInScriptLoad"
+            src={`https://apis.google.com/js/client:platform.js?onload=onGoogleSignInScriptLoad&time=${Date.now()}`}
             async
             defer
           />
