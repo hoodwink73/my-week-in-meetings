@@ -18,6 +18,8 @@
     { "src": "/asset-manifest.json", "dest": "/asset-manifest.json" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/precache-manifest.(.*)", "dest": "/precache-manifest.$1" },
+    { "src": "/privacy-policy", "dest": "/privacy-policy.html" },
+    { "src": "/toc", "dest": "/toc.html" },
     {
       "src": "/service-worker.js",
       "headers": { "cache-control": "s-maxage=0" },
