@@ -25,7 +25,6 @@
     "react-scripts": "2.1.8",
     "react-spring": "^8.0.20",
     "react-use": "^9.0.0",
-    "use-clipboard-copy": "^0.1.0",
     "victory": "^32.2.3"
   },
   "scripts": {
@@ -36,7 +35,9 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "now-dev": "react-scripts start",
-    "now-build": "env-cmd .env.dev.build npm run build"
+    "now-build": "env-cmd .env.production.build react-scripts build",
+    "deploy-to-dev": "env-cmd .env.dev.build now",
+    "deploy-to-prod": "now --target production"
   },
   "eslintConfig": {
     "extends": "react-app"

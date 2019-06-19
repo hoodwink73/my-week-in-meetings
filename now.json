@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "my-week-in-meetings",
+  "alias": "deepwork.today",
   "builds": [
     {
       "src": "package.json",
