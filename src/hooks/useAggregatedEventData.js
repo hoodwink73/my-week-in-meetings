@@ -89,8 +89,6 @@ export default function useAggregatedEventData(googleID) {
 
         return thisWeekAggregate;
       })
-
-      .val()
       .seq(aggregateDataForLastThreeWeeksReq)
       .val(([currentWeekData, ...lastWeeksDataResponse]) => {
         var dataForLastThreeWeeks = lastWeeksDataResponse.map(result => {

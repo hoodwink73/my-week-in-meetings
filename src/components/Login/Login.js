@@ -12,13 +12,13 @@ import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
+const CALENDAR_EVENTS_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+
 // this is a simple sign in with google without wanting
 // any offline access token
 // this will suffice for all the other times after the user has *signed up*
 // and provided the access token
 const signInWithGoogle = setLoaderStatus => {
-  const auth2 = window.gapi.auth2.getAuthInstance();
-
   return ASQ().then(done => {
     const auth2 = window.gapi.auth2.getAuthInstance();
     setLoaderStatus(true);
@@ -30,21 +30,20 @@ const signInWithGoogle = setLoaderStatus => {
   });
 };
 
-const doesUserExistInFirebase = googleID => {
-  const googleCloudFn = firebase
-    .functions()
-    .httpsCallable("doesUserExistInFirebase");
-
-  return ASQ()
-    .promise(googleCloudFn({ userGoogleID: googleID }))
-    .then((done, answer) => done(answer.data));
+const hasUserProvidedEventsPermission = () => {
+  const currentUser = window.gapi.auth2.getAuthInstance().currentUser.get();
+  return currentUser && currentUser.hasGrantedScopes(CALENDAR_EVENTS_SCOPE);
 };
 
 // offilne access token will allow us sync calendar events for the user
 const getOfflineAccessToken = () => {
   const auth2 = window.gapi.auth2.getAuthInstance();
   return ASQ()
-    .promise(auth2.grantOfflineAccess())
+    .promise(
+      auth2.currentUser.get().grantOfflineAccess({
+        scope: CALENDAR_EVENTS_SCOPE
+      })
+    )
     .then((done, { code }) => {
       auth2.currentUser.listen(user => {
         done({
@@ -88,20 +87,19 @@ export default function Login() {
             googleID = userDetails.googleID;
             idToken = userDetails.idToken;
 
-            return ASQ()
-              .seq(doesUserExistInFirebase(googleID))
-              .val(doesUserExistInFirebase => {
-                done({
-                  googleID,
-                  idToken,
-                  doesUserExistInFirebase
-                });
+            return ASQ().val(() => {
+              const hasCalendarEventsPermission = hasUserProvidedEventsPermission();
+              done({
+                googleID,
+                idToken,
+                hasCalendarEventsPermission
               });
+            });
           }
         );
       })
-      .then((done, { idToken, doesUserExistInFirebase }) => {
-        if (!doesUserExistInFirebase) {
+      .then((done, { idToken, hasCalendarEventsPermission }) => {
+        if (!hasCalendarEventsPermission) {
           ASQ()
             .seq(getOfflineAccessToken, persistOfflineAccessToken)
             .val(({ data: idToken }) => done({ idToken }));

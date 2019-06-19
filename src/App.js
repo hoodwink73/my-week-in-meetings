@@ -17,8 +17,7 @@ import UserConfig from "./components/UserConfig";
 import { getUserGoogleID } from "./utils";
 import { ReactComponent as LoadingIcon } from "./icons/icon-refresh.svg";
 
-const GOOGLE_SIGN_IN_OAUTH_SCOPE =
-  "profile email openid https://www.googleapis.com/auth/calendar";
+const GOOGLE_SIGN_IN_OAUTH_SCOPE = "profile email openid";
 
 function App() {
   const [hasGoogleSignInScriptLoaded, setGoogleSignInScriptToLoaded] = useState(
