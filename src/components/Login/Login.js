@@ -5,7 +5,7 @@ import firebase from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
 import "@firebase/functions";
-import { Flex, Box, Text } from "@rebass/emotion";
+import { Flex, Box, Text, Link } from "@rebass/emotion";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { ReactComponent as Logo } from "../../icons/logo.svg";
 import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
@@ -115,64 +115,123 @@ export default function Login() {
   };
 
   return (
-    <Flex
-      width="100vw"
-      style={{ height: "100vh" }}
-      bg="gray.0"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Flex flexDirection="column">
-        <Flex
-          width={["60vw", 300]}
-          mb={5}
-          alignSelf="center"
-          flexWrap="wrap"
-          css={css`
-            position: relative;
-          `}
-        >
-          <Box width={1}>
-            <Logo />
-          </Box>
-          <Text
-            width={1 / 2}
-            color="gray.4"
-            fontWeight="bold"
-            fontSize={[5, 6]}
+    <Box bg="gray.0">
+      <Flex
+        width="100vw"
+        style={{ height: "100%", minHeight: "100vh" }}
+        flexDirection={["column", "row"]}
+        justifyContent="center"
+        alignItems="flex-start"
+        pt={[4, 6]}
+      >
+        <Flex flexDirection="column" mx={["auto", 3]}>
+          <Flex
+            width={["80vw", 300]}
+            mb={5}
+            alignSelf="center"
+            flexWrap="wrap"
             css={css`
-              position: absolute;
-              top: calc(40%);
+              position: relative;
             `}
           >
-            My week in meetings
-          </Text>
-        </Flex>
-        <Button
-          bg={isAuthenticationInProgress ? "white.1" : "gray.4"}
-          color={isAuthenticationInProgress ? "gray.4" : "white.1"}
-          onClick={handleSignIn}
-          style={{ cursor: "pointer" }}
-          disabled={isAuthenticationInProgress}
-        >
-          <Flex justifyContent="center" alignItems="center" p={3}>
-            {isAuthenticationInProgress && (
-              <Box width={24} pt={1} mr={2}>
-                <LoadingIcon />
-              </Box>
-            )}
-
-            <Box width={18} mr={2}>
-              <GoogleLogo />
+            <Box width={1}>
+              <Logo />
             </Box>
-            <Text alignSelf="flex-start">
-              {isAuthenticationInProgress
-                ? "Signing In"
-                : "Sign In With Google"}
+            <Text
+              width={1 / 2}
+              color="gray.4"
+              fontWeight="bold"
+              fontSize={[6]}
+              css={css`
+                position: absolute;
+                top: calc(70%);
+              `}
+            >
+              Deepwork Today
             </Text>
           </Flex>
-        </Button>
+          <Button
+            bg={isAuthenticationInProgress ? "white.1" : "gray.4"}
+            color={isAuthenticationInProgress ? "gray.4" : "white.1"}
+            onClick={handleSignIn}
+            style={{ cursor: "pointer" }}
+            disabled={isAuthenticationInProgress}
+          >
+            <Flex justifyContent="center" alignItems="center" p={3}>
+              {isAuthenticationInProgress && (
+                <Box width={24} pt={1} mr={2}>
+                  <LoadingIcon />
+                </Box>
+              )}
+
+              <Box width={18} mr={2}>
+                <GoogleLogo />
+              </Box>
+              <Text alignSelf="flex-start">
+                {isAuthenticationInProgress
+                  ? "Signing In"
+                  : "Sign In With Google"}
+              </Text>
+            </Flex>
+          </Button>
+        </Flex>
+        <Box width={["80vw", 300]} mx={["auto", 4]} my={[5, 0]}>
+          <Box mb={5}>
+            <Text fontWeight="bold" fontSize={[6]} color="gray.4">
+              Time is finite. Spend it well, everyday.
+            </Text>
+          </Box>
+
+          <Box mb={4}>
+            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
+              Seperate work and distractions
+            </Text>
+            <Text fontSize={2} color="gray.4">
+              Always be aware about the potential time you have to get work
+              done.
+            </Text>
+          </Box>
+
+          <Box mb={4}>
+            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
+              Spend time on things that matter
+            </Text>
+            <Text fontSize={2} color="gray.4">
+              We help you to say no to unnecessary meetings and save time for
+              you.
+            </Text>
+          </Box>
+
+          <Box mb={4}>
+            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
+              Collaboration thrives on agency
+            </Text>
+            <Text fontSize={2} color="gray.4">
+              We provide tips to help you better organise and participate in
+              meetings.
+            </Text>
+          </Box>
+
+          <Box mb={4}>
+            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
+              The big picture
+            </Text>
+            <Text fontSize={2} color="gray.4">
+              We summarise your collaborations. Know relative time spent between
+              meetings and work. And much more.
+            </Text>
+          </Box>
+        </Box>
       </Flex>
-    </Flex>
+
+      <Flex width={["80vw", 300]} mx="auto" py={4} justifyContent="center">
+        <Link fontSize={1} href="/privacy-policy" color="gray.4">
+          Privacy Policy
+        </Link>
+        <Link fontSize={1} ml={2} href="/toc" color="gray.4">
+          Terms And Conditions
+        </Link>
+      </Flex>
+    </Box>
   );
 }
