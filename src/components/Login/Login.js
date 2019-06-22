@@ -21,11 +21,16 @@ import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
 const signInWithGoogle = () => {
   return ASQ().then(done => {
     const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signIn().then(function(googleUser) {
-      const googleID = googleUser.getBasicProfile().getId();
-      const idToken = googleUser.getAuthResponse().id_token;
-      done({ googleID, idToken });
-    });
+    auth2.signIn().then(
+      function(googleUser) {
+        const googleID = googleUser.getBasicProfile().getId();
+        const idToken = googleUser.getAuthResponse().id_token;
+        done({ googleID, idToken });
+      },
+      err => {
+        done.fail(err);
+      }
+    );
   });
 };
 
