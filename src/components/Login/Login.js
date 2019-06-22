@@ -6,22 +6,21 @@ import "@firebase/auth";
 import "@firebase/firestore";
 import "@firebase/functions";
 import { Flex, Box, Text, Link } from "@rebass/emotion";
-import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
-import { ReactComponent as Logo } from "../../icons/logo.svg";
-import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
-const CALENDAR_EVENTS_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+import { CALENDAR_EVENTS_PERMISSION_SCOPE } from "../../constants";
+import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
+import { ReactComponent as Logo } from "../../icons/logo.svg";
+import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
 
 // this is a simple sign in with google without wanting
 // any offline access token
 // this will suffice for all the other times after the user has *signed up*
 // and provided the access token
-const signInWithGoogle = setLoaderStatus => {
+const signInWithGoogle = () => {
   return ASQ().then(done => {
     const auth2 = window.gapi.auth2.getAuthInstance();
-    setLoaderStatus(true);
     auth2.signIn().then(function(googleUser) {
       const googleID = googleUser.getBasicProfile().getId();
       const idToken = googleUser.getAuthResponse().id_token;
@@ -30,18 +29,36 @@ const signInWithGoogle = setLoaderStatus => {
   });
 };
 
-const hasUserProvidedEventsPermission = () => {
-  const currentUser = window.gapi.auth2.getAuthInstance().currentUser.get();
-  return currentUser && currentUser.hasGrantedScopes(CALENDAR_EVENTS_SCOPE);
+const hasUserProvidedEventsPermission = ({ googleID, idToken }) => {
+  const auth2 = window.gapi.auth2.getAuthInstance();
+  return ASQ().val(() => {
+    const currentUser = auth2.currentUser.get();
+    if (currentUser.hasGrantedScopes(CALENDAR_EVENTS_PERMISSION_SCOPE)) {
+      return { googleID, idToken };
+    } else {
+      throw new Error({
+        internal_message: "USER_SCOPE_INADEQUATE"
+      });
+    }
+  });
 };
 
 // offilne access token will allow us sync calendar events for the user
 const getOfflineAccessToken = () => {
+  if (
+    !window.gapi ||
+    !window.gapi.auth2 ||
+    !window.gapi.auth2.getAuthInstance()
+  ) {
+    throw new Error({
+      internal_message: "GOOGLE_AUTH_INSTANCE_NOT_READY"
+    });
+  }
   const auth2 = window.gapi.auth2.getAuthInstance();
   return ASQ()
     .promise(
-      auth2.currentUser.get().grantOfflineAccess({
-        scope: CALENDAR_EVENTS_SCOPE
+      auth2.grantOfflineAccess({
+        scope: CALENDAR_EVENTS_PERMISSION_SCOPE
       })
     )
     .then((done, { code }) => {
@@ -75,38 +92,24 @@ export default function Login() {
     false
   );
 
+  const handleSignUp = () => {
+    setAuthenticationInProgress(true);
+    return ASQ()
+      .seq(getOfflineAccessToken, persistOfflineAccessToken)
+      .val(({ data: idToken }) => ({ idToken }))
+      .seq(signInWithFirebase)
+      .or(error => {
+        setAuthenticationInProgress(false);
+        console.error(error);
+      });
+  };
+
   const handleSignIn = () => {
     // Sign the user in, and then retrieve their ID.
-    ASQ()
-      .then(done => {
-        let googleID, idToken;
-
-        ASQ().seq(
-          signInWithGoogle(setAuthenticationInProgress),
-          userDetails => {
-            googleID = userDetails.googleID;
-            idToken = userDetails.idToken;
-
-            return ASQ().val(() => {
-              const hasCalendarEventsPermission = hasUserProvidedEventsPermission();
-              done({
-                googleID,
-                idToken,
-                hasCalendarEventsPermission
-              });
-            });
-          }
-        );
-      })
-      .then((done, { idToken, hasCalendarEventsPermission }) => {
-        if (!hasCalendarEventsPermission) {
-          ASQ()
-            .seq(getOfflineAccessToken, persistOfflineAccessToken)
-            .val(({ data: idToken }) => done({ idToken }));
-        } else {
-          done({ idToken });
-        }
-      })
+    setAuthenticationInProgress(true);
+    return ASQ()
+      .seq(signInWithGoogle)
+      .seq(hasUserProvidedEventsPermission)
       .seq(signInWithFirebase)
       .or(error => {
         setAuthenticationInProgress(false);
@@ -127,7 +130,7 @@ export default function Login() {
         <Flex flexDirection="column" mx={["auto", 3]}>
           <Flex
             width={["80vw", 300]}
-            mb={5}
+            mb={4}
             alignSelf="center"
             flexWrap="wrap"
             css={css`
@@ -153,11 +156,11 @@ export default function Login() {
           <Button
             bg={isAuthenticationInProgress ? "white.1" : "gray.4"}
             color={isAuthenticationInProgress ? "gray.4" : "white.1"}
-            onClick={handleSignIn}
+            onClick={handleSignUp}
             style={{ cursor: "pointer" }}
             disabled={isAuthenticationInProgress}
           >
-            <Flex justifyContent="center" alignItems="center" p={3}>
+            <Flex justifyContent="center" alignItems="center" p={2}>
               {isAuthenticationInProgress && (
                 <Box width={24} pt={1} mr={2}>
                   <LoadingIcon />
@@ -170,10 +173,23 @@ export default function Login() {
               <Text alignSelf="flex-start">
                 {isAuthenticationInProgress
                   ? "Signing In"
-                  : "Sign In With Google"}
+                  : "Sign Up With Google"}
               </Text>
             </Flex>
           </Button>
+          <Text mt={3} textAlign="center">
+            Already have an account?{" "}
+            <Link
+              css={css`
+                cursor: pointer;
+                text-decoration: underline;
+              `}
+              color="gray.4"
+              onClick={handleSignIn}
+            >
+              Login
+            </Link>
+          </Text>
         </Flex>
         <Box width={["80vw", 300]} mx={["auto", 4]} my={[5, 0]}>
           <Box mb={5}>
@@ -187,7 +203,7 @@ export default function Login() {
               Seperate work and distractions
             </Text>
             <Text fontSize={2} color="gray.4">
-              Always be aware about the potential time you have to get work
+              Always be aware about the potential time you have left to get work
               done.
             </Text>
           </Box>
@@ -197,8 +213,7 @@ export default function Login() {
               Spend time on things that matter
             </Text>
             <Text fontSize={2} color="gray.4">
-              We help you to say no to unnecessary meetings and save time for
-              you.
+              We help you say no to unnecessary meetings and save time.
             </Text>
           </Box>
 
@@ -224,7 +239,7 @@ export default function Login() {
         </Box>
       </Flex>
 
-      <Flex width={["80vw", 300]} mx="auto" py={4} justifyContent="center">
+      <Flex width={["80vw", 300]} mx="auto" py={5} justifyContent="center">
         <Link fontSize={1} href="/privacy-policy" color="gray.4">
           Privacy Policy
         </Link>

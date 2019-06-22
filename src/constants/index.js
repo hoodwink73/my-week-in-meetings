@@ -12,6 +12,9 @@ export const DEFAULT_WORKING_TIME = {
   workingDays: [1, 2, 3, 4, 5]
 };
 
+export const CALENDAR_EVENTS_PERMISSION_SCOPE =
+  "https://www.googleapis.com/auth/calendar.events";
+
 export const EVENT_STATUSES = new Map([
   ["Accepted", "accepted"],
   ["Maybe", "tentative"],
