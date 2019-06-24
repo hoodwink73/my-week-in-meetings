@@ -47,6 +47,7 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   const { user, logout } = useUser();
 
   const [workingTime, setWorkingTime] = useState(userConfig);
+  const [isDeletingAccount, setDeleteAccount] = useState(false);
 
   useEffect(() => {
     setWorkingTime(userConfig);
@@ -106,7 +107,7 @@ export default function SettingsDetails({ isOpen, onToggle }) {
     );
 
     if (choice) {
-      onToggle();
+      setDeleteAccount(true);
       requestDeleteUserCloudFn().then(() => {
         try {
           const auth2 = window.gapi.auth2.getAuthInstance();
@@ -116,6 +117,7 @@ export default function SettingsDetails({ isOpen, onToggle }) {
           console.error("Could not revoke access", e);
         }
         logout();
+        onToggle();
       });
     }
   };
@@ -205,6 +207,7 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         </Text>
 
         <Button
+          loading={isDeletingAccount}
           type="primary"
           size="medium"
           mt={3}
