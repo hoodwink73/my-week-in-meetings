@@ -9,6 +9,7 @@ import { Flex, Box, Text, Link } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
+import FAQ from "../FAQ";
 import { CALENDAR_EVENTS_PERMISSION_SCOPE } from "../../constants";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { ReactComponent as Logo } from "../../icons/logo.svg";
@@ -123,14 +124,16 @@ export default function Login() {
   };
 
   return (
-    <Box bg="gray.0">
+    <Box>
       <Flex
         width="100vw"
         style={{ height: "100%", minHeight: "100vh" }}
+        bg="gray.0"
         flexDirection={["column", "row"]}
         justifyContent="center"
         alignItems="flex-start"
         pt={[4, 6]}
+        pb={[4, 6]}
       >
         <Flex flexDirection="column" mx={["auto", 3]}>
           <Flex
@@ -246,6 +249,10 @@ export default function Login() {
             </Text>
           </Box>
         </Box>
+      </Flex>
+
+      <Flex width={["80vw", 600]} mx="auto" justifyContent="center">
+        <FAQ />
       </Flex>
 
       <Flex width={["80vw", 300]} mx="auto" py={5} justifyContent="center">
