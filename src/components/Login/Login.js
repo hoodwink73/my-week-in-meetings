@@ -172,10 +172,14 @@ export default function Login() {
                 </Box>
               )}
 
-              <Box width={18} mr={2}>
-                <GoogleLogo />
-              </Box>
-              <Text alignSelf="flex-start">
+              {!isAuthenticationInProgress && (
+                <Box width={18} mr={2}>
+                  <GoogleLogo />
+                </Box>
+              )}
+              <Text
+                alignSelf={isAuthenticationInProgress ? "center" : "flex-start"}
+              >
                 {isAuthenticationInProgress
                   ? "Signing In"
                   : "Sign Up With Google"}
