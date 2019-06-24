@@ -6,6 +6,7 @@ import useMedia from "react-use/lib/useMedia";
 import useTimeout from "react-use/lib/useTimeout";
 import delve from "dlv";
 
+import LoadingContainer from "../LoadingContainer";
 import Greeting from "../Greeting";
 import TimeLeftForWork from "../TimeLeftForWork";
 import LogoutLink from "../LogoutLink";
@@ -93,38 +94,40 @@ export default function MyEventsSummary() {
             <LogoutLink alignSelf="center" />
           </Flex>
 
-          {!eventsThisWeek.loading ? (
-            <>
-              <TimeLeftForWork selectedTimeRange="today" my={4} width={[1]} />
+          <LoadingContainer isLoading={eventsThisWeek.loading}>
+            <TimeLeftForWork selectedTimeRange="today" my={4} width={[1]} />
 
-              <UpcomingMeetings />
+            <UpcomingMeetings />
 
-              <Tips />
-            </>
-          ) : null}
+            <Tips />
 
-          {hasAggregatedEventsLoaded ? (
-            <Flex
-              justifyContent="space-between"
-              flexWrap={["nowrap", "wrap"]}
-              paddingLeft={[2, 0]}
-              paddingTop={[2, 0]}
-              paddingRight={[2, 0]}
-              mb={4}
-              css={css`
-                overflow-x: ${isLarge ? "unset" : "scroll"};
-                scroll-behavior: smooth;
-                -webkit-overflow-scrolling: touch;
-              `}
-            >
-              <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
-              <AnalyticsCard type="busiestDay" mr={[3, 0]} />
-              <AnalyticsCard type="topCollaborator" mt={[0, 3]} mr={[3, 0]} />
-              <AnalyticsCard type="meetingsByDomains" mt={[0, 3]} mr={[3, 0]} />
-              {/*  Hack to prevent box shadow of last card getting clipped on mobile*/}
-              <Box p={[1, 0]} />
-            </Flex>
-          ) : null}
+            <LoadingContainer isLoading={!hasAggregatedEventsLoaded}>
+              <Flex
+                justifyContent="space-between"
+                flexWrap={["nowrap", "wrap"]}
+                paddingLeft={[2, 0]}
+                paddingTop={[2, 0]}
+                paddingRight={[2, 0]}
+                mb={4}
+                css={css`
+                  overflow-x: ${isLarge ? "unset" : "scroll"};
+                  scroll-behavior: smooth;
+                  -webkit-overflow-scrolling: touch;
+                `}
+              >
+                <AnalyticsCard type="timeSpentInMeetings" mr={[3, 0]} />
+                <AnalyticsCard type="busiestDay" mr={[3, 0]} />
+                <AnalyticsCard type="topCollaborator" mt={[0, 3]} mr={[3, 0]} />
+                <AnalyticsCard
+                  type="meetingsByDomains"
+                  mt={[0, 3]}
+                  mr={[3, 0]}
+                />
+                {/*  Hack to prevent box shadow of last card getting clipped on mobile*/}
+                <Box p={[1, 0]} />
+              </Flex>
+            </LoadingContainer>
+          </LoadingContainer>
         </Flex>
       </>
     );
