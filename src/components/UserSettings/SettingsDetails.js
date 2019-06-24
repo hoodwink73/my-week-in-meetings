@@ -100,7 +100,9 @@ export default function SettingsDetails({ isOpen, onToggle }) {
 
   const handleDeleteAccount = () => {
     const choice = window.confirm(
-      "Are you sure you want to delete the account"
+      `Are you sure you want to delete the account?
+      We delete all your data once you delete the account.
+      It cannot be recovered.`
     );
 
     if (choice) {
