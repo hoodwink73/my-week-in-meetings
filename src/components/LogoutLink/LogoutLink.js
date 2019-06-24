@@ -11,9 +11,13 @@ import { ReactComponent as LogoutIcon } from "../../icons/icon-door-enter.svg";
 export default function LogoutLink(props) {
   const { user } = useAuthState(firebase.auth());
   const handleLogout = () => {
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signOut();
-    firebase.auth().signOut();
+    const choice = window.confirm("Are you sure you want to logout?");
+
+    if (choice) {
+      const auth2 = window.gapi.auth2.getAuthInstance();
+      auth2.signOut();
+      firebase.auth().signOut();
+    }
   };
 
   if (user) {
