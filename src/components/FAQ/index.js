@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text, Heading } from "@rebass/emotion";
+import { Box, Text, Heading, Link } from "@rebass/emotion";
 
 export default function FAQ() {
   return (
@@ -84,6 +84,17 @@ export default function FAQ() {
 
       <Text as="p" lineHeight={1.5}>
         We <strong>do not</strong> share your data with anybody.
+      </Text>
+
+      <Text>
+        App’s use of information received from Google Calendar API will adhere
+        to{" "}
+        <Link
+          color="gray.4"
+          href="https://developers.google.com/terms/api-services-user-data-policy"
+        >
+          Google API Services: User Data Policy
+        </Link>
       </Text>
     </Box>
   );
