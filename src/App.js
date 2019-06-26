@@ -10,6 +10,7 @@ import "@firebase/auth";
 
 import theme from "./theme";
 import Login from "./components/Login";
+import { Errors, ErrorManagerContextProvider } from "./components/Errors";
 import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
 import FirestoreData from "./components/FirestoreData";
@@ -46,32 +47,36 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <div className="App">
-          <GlobalStyles />
-          {initialisingUser && (
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              css={css`
-                height: 100vh;
-              `}
-            >
-              <Box width={64} pt={1} mr={2}>
-                <LoadingIcon />
-              </Box>
-            </Flex>
-          )}
+        <ErrorManagerContextProvider>
+          <div className="App">
+            <GlobalStyles />
+            {initialisingUser && (
+              <Flex
+                justifyContent="center"
+                alignItems="center"
+                css={css`
+                  height: 100vh;
+                `}
+              >
+                <Box width={64} pt={1} mr={2}>
+                  <LoadingIcon />
+                </Box>
+              </Flex>
+            )}
 
-          {user ? (
-            <FirestoreData googleID={getUserGoogleID(user)}>
-              <UserConfig>
-                <MyEventsSummary />
-              </UserConfig>
-            </FirestoreData>
-          ) : (
-            !initialisingUser && <Login />
-          )}
-        </div>
+            {user ? (
+              <FirestoreData googleID={getUserGoogleID(user)}>
+                <UserConfig>
+                  <MyEventsSummary />
+                </UserConfig>
+              </FirestoreData>
+            ) : (
+              !initialisingUser && <Login />
+            )}
+          </div>
+
+          <Errors />
+        </ErrorManagerContextProvider>
       </ThemeProvider>
       {/* we are appending the current time stamp to script source to burst cache.
           iOS Safari is not executing the google sign in script onLoad handler
@@ -88,6 +93,12 @@ function App() {
           />
         </Helmet>
       )}
+
+      {/* React Portal to render errors */}
+      <div
+        style={{ position: "fixed", left: "20px", bottom: "20px" }}
+        id="errors-container"
+      />
     </>
   );
 }
