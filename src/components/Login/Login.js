@@ -13,7 +13,8 @@ import FAQ from "../FAQ";
 import { CALENDAR_EVENTS_PERMISSION_SCOPE } from "../../constants";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { ReactComponent as Logo } from "../../icons/logo.svg";
-import { ReactComponent as GoogleLogo } from "../../icons/google-logo.svg";
+import { ReactComponent as GoogleLogoNormal } from "../../icons/btn_google_dark_normal.svg";
+import { ReactComponent as GoogleLogoDisabled } from "../../icons/btn_google_dark_disabled.svg";
 
 // this is a simple sign in with google without wanting
 // any offline access token
@@ -135,7 +136,13 @@ export default function Login() {
         pt={[4, 6]}
         pb={[4, 6]}
       >
-        <Flex flexDirection="column" mx={["auto", 3]}>
+        <Flex
+          flexDirection="column"
+          mx={["auto", 3]}
+          css={css`
+            width: min-content;
+          `}
+        >
           <Flex
             width={["80vw", 300]}
             mb={4}
@@ -162,30 +169,45 @@ export default function Login() {
             </Text>
           </Flex>
           <Button
-            bg={isAuthenticationInProgress ? "white.1" : "gray.4"}
+            width={[1]}
+            bg={
+              isAuthenticationInProgress ? "googleButton.2" : "googleButton.0"
+            }
             color={isAuthenticationInProgress ? "gray.4" : "white.1"}
             onClick={handleSignUp}
             style={{ cursor: "pointer" }}
             disabled={isAuthenticationInProgress}
+            px={1}
+            py={1}
+            borderderRadius={1}
+            alignSelf="center"
+            css={({ colors }) => css`
+              &:active {
+                background-color: ${colors.googleButton[1]};
+              }
+            `}
           >
-            <Flex justifyContent="center" alignItems="center" p={2}>
+            <Flex>
               {isAuthenticationInProgress && (
-                <Box width={24} pt={1} mr={2}>
-                  <LoadingIcon />
+                <Box width={1 / 5} bg="transparent">
+                  <GoogleLogoDisabled />
                 </Box>
               )}
 
               {!isAuthenticationInProgress && (
-                <Box width={18} mr={2}>
-                  <GoogleLogo />
+                <Box width={1 / 5} bg="white.0">
+                  <GoogleLogoNormal />
                 </Box>
               )}
               <Text
-                alignSelf={isAuthenticationInProgress ? "center" : "flex-start"}
+                width={4 / 5}
+                alignSelf="center"
+                css={css`
+                  font-family: "Roboto", sans-serif;
+                  font-size: 18px;
+                `}
               >
-                {isAuthenticationInProgress
-                  ? "Signing In"
-                  : "Sign Up With Google"}
+                Sign Up With Google
               </Text>
             </Flex>
           </Button>

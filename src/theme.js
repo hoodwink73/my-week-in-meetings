@@ -44,7 +44,8 @@ const colors = {
     "#3525E6",
     "#1D0EBE",
     "#0C008C"
-  ]
+  ],
+  googleButton: ["#4285F4", "#3367D6", "#EBEBEB"]
 };
 export default {
   breakpoints: ["40em", "52em", "64em"],
