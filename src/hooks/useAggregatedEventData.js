@@ -6,6 +6,8 @@ import { useDocument } from "react-firebase-hooks/firestore";
 
 import { getStartOfWeekInUTC } from "../utils";
 
+import useAggregationCompleteEvent from "./useAggregationCompleteEvent";
+
 const getAggregatedDataForWeek = (week, googleID) => {
   return firebase
     .firestore()
@@ -41,6 +43,10 @@ export default function useAggregatedEventData(googleID) {
     data: []
   });
 
+  const {
+    value: hasFirstAggregationCompletedForUser
+  } = useAggregationCompleteEvent();
+
   const { value: thisWeekAggregateLive } = useDocument(
     firebase
       .firestore()
@@ -54,70 +60,81 @@ export default function useAggregatedEventData(googleID) {
     .map(getStartOfWeekInUTC);
 
   useEffect(() => {
-    const aggregateDataForLastThreeWeeksReq = currentWeekData =>
-      ASQ()
-        .all(
-          ...lastWeeks.map(week =>
-            ASQ().promise(getAggregatedDataForWeek(week, googleID))
+    // we only want start fetching the aggregated data once we are
+    // sure that we have completed the aggregation for the user for the first time
+    // this is for new users who otherwise will see incomplete aggregated data
+    // becuase the cloud functions haven't finished crunching them
+    if (hasFirstAggregationCompletedForUser) {
+      const aggregateDataForLastThreeWeeksReq = currentWeekData =>
+        ASQ()
+          .then(done => {
+            if (hasFirstAggregationCompletedForUser) {
+              done();
+            }
+          })
+          .all(
+            ...lastWeeks.map(week =>
+              ASQ().promise(getAggregatedDataForWeek(week, googleID))
+            )
           )
-        )
-        .val(function(...lastThreeWeeksAggregate) {
-          return [currentWeekData, ...lastThreeWeeksAggregate];
-        });
-
-    ASQ()
-      .val(() => {
-        setResults({ ...results, loading: [true, true] });
-      })
-      .promise(getAggregatedDataForWeek(getStartOfWeekInUTC(), googleID))
-      .val(doc => {
-        let thisWeekAggregate = null;
-        if (doc.exists) {
-          thisWeekAggregate = doc.data();
-          setResults({
-            ...results,
-            loading: [false, true],
-            data: [thisWeekAggregate]
+          .val(function(...lastThreeWeeksAggregate) {
+            return [currentWeekData, ...lastThreeWeeksAggregate];
           });
-        } else {
-          setResults({
-            ...results,
-            loading: [false, true],
-            data: [thisWeekAggregate]
-          });
-        }
 
-        return thisWeekAggregate;
-      })
-      .seq(aggregateDataForLastThreeWeeksReq)
-      .val(([currentWeekData, ...lastWeeksDataResponse]) => {
-        var dataForLastThreeWeeks = lastWeeksDataResponse.map(result => {
-          if (result.exists) {
-            return result.data();
+      ASQ()
+        .val(() => {
+          setResults({ ...results, loading: [true, true] });
+        })
+        .promise(getAggregatedDataForWeek(getStartOfWeekInUTC(), googleID))
+        .val(doc => {
+          let thisWeekAggregate = null;
+          if (doc.exists) {
+            thisWeekAggregate = doc.data();
+            setResults({
+              ...results,
+              loading: [false, true],
+              data: [thisWeekAggregate]
+            });
           } else {
-            return null;
+            setResults({
+              ...results,
+              loading: [false, true],
+              data: [thisWeekAggregate]
+            });
           }
-        });
 
-        setResults(() => {
-          return {
-            error: null,
+          return thisWeekAggregate;
+        })
+        .seq(aggregateDataForLastThreeWeeksReq)
+        .val(([currentWeekData, ...lastWeeksDataResponse]) => {
+          var dataForLastThreeWeeks = lastWeeksDataResponse.map(result => {
+            if (result.exists) {
+              return result.data();
+            } else {
+              return null;
+            }
+          });
+
+          setResults(() => {
+            return {
+              error: null,
+              loading: [false, false],
+              data: [currentWeekData, ...dataForLastThreeWeeks]
+            };
+          });
+        })
+        .or(err => {
+          setResults({
+            ...results,
             loading: [false, false],
-            data: [currentWeekData, ...dataForLastThreeWeeks]
-          };
+            error: {
+              status: true,
+              message: err
+            }
+          });
         });
-      })
-      .or(err => {
-        setResults({
-          ...results,
-          loading: [false, false],
-          error: {
-            status: true,
-            message: err
-          }
-        });
-      });
-  }, []);
+    }
+  }, [hasFirstAggregationCompletedForUser]);
 
   useEffect(() => {
     // update aggregate value for this week
