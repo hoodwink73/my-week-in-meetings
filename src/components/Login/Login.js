@@ -10,7 +10,12 @@ import { Flex, Box, Text, Link } from "@rebass/emotion";
 import { css, jsx } from "@emotion/core";
 
 import FAQ from "../FAQ";
-import { CALENDAR_EVENTS_PERMISSION_SCOPE } from "../../constants";
+import { useErrorManager } from "../Errors";
+import {
+  CALENDAR_EVENTS_PERMISSION_SCOPE,
+  GOOGLE_SIGN_IN_ERRORS
+} from "../../constants";
+import { AppError } from "../../utils";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { ReactComponent as Logo } from "../../icons/logo.svg";
 import { ReactComponent as GoogleLogoNormal } from "../../icons/btn_google_dark_normal.svg";
@@ -30,7 +35,11 @@ const signInWithGoogle = () => {
         done({ googleID, idToken });
       },
       err => {
-        done.fail(err);
+        if (err.error && err.error === "popup_closed_by_user") {
+          done.fail(new AppError("USER_SUSPENDED_GOOGLE_SIGN_IN_POPUP"));
+        } else {
+          done.fail(err);
+        }
       }
     );
   });
@@ -43,9 +52,7 @@ const hasUserProvidedEventsPermission = ({ googleID, idToken }) => {
     if (currentUser.hasGrantedScopes(CALENDAR_EVENTS_PERMISSION_SCOPE)) {
       return { googleID, idToken };
     } else {
-      throw new Error({
-        internal_message: "USER_SCOPE_INADEQUATE"
-      });
+      throw new AppError("USER_SCOPE_INADEQUATE");
     }
   });
 };
@@ -57,18 +64,24 @@ const getOfflineAccessToken = () => {
     !window.gapi.auth2 ||
     !window.gapi.auth2.getAuthInstance()
   ) {
-    throw new Error({
-      internal_message: "GOOGLE_AUTH_INSTANCE_NOT_READY"
-    });
+    throw new AppError("GOOGLE_AUTH_INSTANCE_NOT_READY");
   }
+
   const auth2 = window.gapi.auth2.getAuthInstance();
   return ASQ()
     .promise(
-      auth2.grantOfflineAccess({
-        scope: CALENDAR_EVENTS_PERMISSION_SCOPE
-      })
+      auth2
+        .grantOfflineAccess({
+          scope: CALENDAR_EVENTS_PERMISSION_SCOPE
+        })
+        .catch(() => {
+          throw new AppError("USER_DENIED_PERMISSION");
+        })
     )
     .then((done, { code }) => {
+      if (!code) {
+        done.fail(new AppError("USER_DENIED_PERMISSION"));
+      }
       auth2.currentUser.listen(user => {
         done({
           authorizationCode: code,
@@ -99,6 +112,8 @@ export default function Login() {
     false
   );
 
+  const { registerError } = useErrorManager();
+
   const handleSignUp = () => {
     setAuthenticationInProgress(true);
     return ASQ()
@@ -107,6 +122,13 @@ export default function Login() {
       .seq(signInWithFirebase)
       .or(error => {
         setAuthenticationInProgress(false);
+        debugger;
+        if (error instanceof AppError) {
+          registerError({
+            message: error.message
+          });
+        }
+
         console.error(error);
       });
   };
@@ -120,6 +142,13 @@ export default function Login() {
       .seq(signInWithFirebase)
       .or(error => {
         setAuthenticationInProgress(false);
+
+        if (error instanceof AppError) {
+          registerError({
+            message: error.message
+          });
+        }
+
         console.error(error);
       });
   };

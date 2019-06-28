@@ -28,3 +28,24 @@ export const DAY_STATUSES = new Map([
   ["ENDED", 3],
   ["NO_WORK_TODAY", 4]
 ]);
+
+export const ERRORS = new Map([
+  [
+    "USER_SCOPE_INADEQUATE",
+    "You haven't signed up with the selected Google account. Sign up before you log in"
+  ],
+  [
+    "GOOGLE_AUTH_INSTANCE_NOT_READY",
+    "The Google Sign-In is experiencing a problem."
+  ],
+  [
+    "USER_DENIED_PERMISSION",
+    "You did not provide us adequate permission to create an account"
+  ],
+  [
+    "USER_SUSPENDED_GOOGLE_SIGN_IN_POPUP",
+    "Signing into your google account was interrupted"
+  ]
+]);
+
+export const GOOGLE_SIGN_IN_ERRORS = ["popup_closed_by_user", "access_denied"];

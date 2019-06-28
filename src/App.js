@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Flex, Box } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -19,6 +19,18 @@ import { getUserGoogleID } from "./utils";
 import { ReactComponent as LoadingIcon } from "./icons/icon-refresh.svg";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE = "profile email openid";
+
+// we do not want our script tag to be re-rendered
+// hence we memo this
+const GoogleSignInScript = memo(() => (
+  <Helmet>
+    <script
+      src={`https://apis.google.com/js/client:platform.js?onload=onGoogleSignInScriptLoad&time=${Date.now()}`}
+      async
+      defer
+    />
+  </Helmet>
+));
 
 function App() {
   const [hasGoogleSignInScriptLoaded, setGoogleSignInScriptToLoaded] = useState(
@@ -84,15 +96,7 @@ function App() {
           this breaks subsequent sign in and sign out experience
           as the google auth was never initialized
         */}
-      {!hasGoogleSignInScriptLoaded && (
-        <Helmet>
-          <script
-            src={`https://apis.google.com/js/client:platform.js?onload=onGoogleSignInScriptLoad&time=${Date.now()}`}
-            async
-            defer
-          />
-        </Helmet>
-      )}
+      {!hasGoogleSignInScriptLoaded && <GoogleSignInScript />}
 
       {/* React Portal to render errors */}
       <div

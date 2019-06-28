@@ -9,6 +9,7 @@ import getUserDomain from "./getUserDomain";
 import sortCollectionByKey from "./sortCollectionByKey";
 import getDayStatus from "./getDayStatus";
 import pluralize from "./pluralize";
+import AppError from "./AppError";
 
 export {
   getStartOfWeekInUTC,
@@ -21,5 +22,6 @@ export {
   getUserDomain,
   sortCollectionByKey,
   getDayStatus,
-  pluralize
+  pluralize,
+  AppError
 };
