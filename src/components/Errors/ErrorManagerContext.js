@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, useContext } from "react";
 
 export const ErrorManagerContext = createContext();
+export const ErrorDispatcherContext = createContext();
 
 const DISMISS_ERROR_AFTER_MS = 5000;
 
@@ -19,17 +20,19 @@ const manageErrorsReducer = (errors, action) => {
 export function ErrorManagerContextProvider({ children }) {
   const [errorsState, dispatch] = useReducer(manageErrorsReducer, []);
   return (
-    <ErrorManagerContext.Provider value={{ errorsState, dispatch }}>
-      {children}
+    <ErrorManagerContext.Provider value={{ errorsState }}>
+      <ErrorDispatcherContext.Provider value={{ dispatch }}>
+        {children}
+      </ErrorDispatcherContext.Provider>
     </ErrorManagerContext.Provider>
   );
 }
 
 export function useErrorManager() {
-  const { dispatch } = useContext(ErrorManagerContext);
+  const { dispatch } = useContext(ErrorDispatcherContext);
 
   return {
-    registerError(error) {
+    registerError({ message, canDismiss = true, disappear = true }) {
       // enforce errors to br registered at 2 ms apart
       // so we get unique ids
       setTimeout(() => {
@@ -38,11 +41,12 @@ export function useErrorManager() {
           type: "ADD",
           error: {
             id: uniqueID,
-            ...error
+            message,
+            canDismiss
           }
         });
 
-        if (error.disappear) {
+        if (disappear) {
           setTimeout(
             () =>
               dispatch({

@@ -3,12 +3,16 @@ import { createPortal } from "react-dom";
 import Alert from "@reach/alert";
 import { Flex, Box, Card, Text } from "@rebass/emotion";
 
-import { ErrorManagerContext } from "./ErrorManagerContext";
+import {
+  ErrorManagerContext,
+  ErrorDispatcherContext
+} from "./ErrorManagerContext";
 import { ReactComponent as CloseIcon } from "../../icons/icon-close.svg";
 
 export default function Errors() {
   const portalParentRef = useRef(null);
-  const { errorsState, dispatch } = useContext(ErrorManagerContext);
+  const { errorsState } = useContext(ErrorManagerContext);
+  const { dispatch } = useContext(ErrorDispatcherContext);
 
   useEffect(() => {
     portalParentRef.current = document.getElementById("errors-container");
