@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, lazy } from "react";
 import { Flex, Box, Text, Image, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -6,8 +6,14 @@ import firebase from "@firebase/app";
 import "@firebase/functions";
 import "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useMedia from "react-use/lib/useMedia";
 
-import TipsGuideImage from "../../images/image-placeholder.jpg";
+import IntroImage from "../../images/decline-meeting-intro.png";
+import AgendaUnClearImage from "../../images/decline-meeting-agenda-unclear.png";
+import ResponsibilityImage from "../../images/decline-meeting-responsibility.png";
+import NotWellInformedImage from "../../images/decline-meeting-not-well-informed.png";
+import BusyImage from "../../images/decline-meeting-busy.png";
+
 import Modal from "../Modal";
 import { Event } from "../Events";
 import { getUserGoogleID } from "../../utils";
@@ -28,15 +34,37 @@ import BusyResponse from "./BusyResponse";
 
 import AttendMeeting from "./AttendMeeting";
 
-const Graphic = () => (
-  <Image
-    width={1}
-    src={TipsGuideImage}
-    css={css`
-      height: 278px;
-    `}
-  />
-);
+const declineMeetingGuideProgressChart = new Map([
+  [Intro, [AgendaQuestion]],
+  [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
+  [ResponsibilityQuestion, [ResponsibilityResponse, NotWellInformedQuestion]],
+  [NotWellInformedQuestion, [NotWellInformedResponse, BusyQuestion]],
+  [BusyQuestion, [BusyResponse, AttendMeeting]]
+]);
+
+const IMAGES_FOR_STEP = new Map([
+  [Intro, IntroImage],
+  [AgendaQuestion, AgendaUnClearImage],
+  [ResponsibilityQuestion, ResponsibilityImage],
+  [NotWellInformedQuestion, NotWellInformedImage],
+  [BusyQuestion, BusyImage]
+]);
+
+const Graphic = ({ currentStep }) => {
+  const isLarge = useMedia("(min-width: 64em)");
+
+  return (
+    <Flex bg={Intro ? "primary.0" : "white"} justifyContent="center">
+      <Image
+        width="auto"
+        src={IMAGES_FOR_STEP.get(currentStep)}
+        css={css`
+          height: ${isLarge ? "366px" : "25vh"};
+        `}
+      />
+    </Flex>
+  );
+};
 
 const DeclineTheMeetingHeader = () => {
   return (
@@ -48,21 +76,12 @@ const DeclineTheMeetingHeader = () => {
   );
 };
 
-const declineMeetingGuideProgressChart = new Map([
-  [Intro, [AgendaQuestion]],
-  [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
-  [ResponsibilityQuestion, [ResponsibilityResponse, NotWellInformedQuestion]],
-  [NotWellInformedQuestion, [NotWellInformedResponse, BusyQuestion]],
-  [BusyQuestion, [BusyResponse, AttendMeeting]]
-]);
-
 const isResponseMode = Component => {
   const componentForResponseMode = [
     AgendaResponse,
     ResponsibilityResponse,
     NotWellInformedResponse,
-    BusyResponse,
-    AttendMeeting
+    BusyResponse
   ];
   return componentForResponseMode.includes(Component);
 };
@@ -147,9 +166,9 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
               onDeclineResponse={handleDeclineResponse}
             />
           </>
-        ) : (
+        ) : CurrentStep !== AttendMeeting ? (
           <>
-            <Graphic />
+            <Graphic currentStep={CurrentStep} />
             <Box>
               <Text
                 width={9 / 10}
@@ -163,6 +182,8 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
               <CurrentStep handleYes={handleYes} handleNo={handleNo} />
             </Box>
           </>
+        ) : (
+          <CurrentStep />
         )}
       </Box>
     </Modal>

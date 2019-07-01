@@ -51,6 +51,9 @@ export default function Modal({ children, contentFit, mobileMenu, ...props }) {
     node => {
       if (node !== null) {
         setModalDimensions(node.getBoundingClientRect());
+        // the height of attend meeting slide was not getting set properly
+        // so had to revert back to his hack
+        setTimeout(() => setModalDimensions(node.getBoundingClientRect()), 5);
       }
     },
     [children]
@@ -61,7 +64,7 @@ export default function Modal({ children, contentFit, mobileMenu, ...props }) {
   if (contentFit) {
     // this is a fix to get the correct width of the
     // modal content for the first time
-    let styles = { right: "auto" };
+    let styles = { top: "auto", right: "auto" };
     if (modalDimesions) {
       const { width, height } = modalDimesions;
       styles = {
