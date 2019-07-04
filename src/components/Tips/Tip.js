@@ -5,6 +5,7 @@ import { Flex, Box, Text, Button, Image, Card, Link } from "@rebass/emotion";
 import { css, jsx } from "@emotion/core";
 import Modal from "../Modal";
 import Pagination from "../Pagination";
+import useMedia from "react-use/lib/useMedia";
 
 export default function Tip({ title, steps, graphic: Graphic }) {
   const reducer = (state, action) => {
@@ -21,6 +22,8 @@ export default function Tip({ title, steps, graphic: Graphic }) {
   const [CurrentStep, dispatch] = useReducer(reducer, steps.get("intro"));
   const [isModalOpen, setModalOpen] = useState(false);
   const [stepCount, setStepCount] = useState(0);
+
+  const isLarge = useMedia("(min-width: 64em)");
 
   let isIntroStep = CurrentStep === steps.get("intro");
   let isLastStep = CurrentStep === steps.get("finish");
@@ -49,12 +52,15 @@ export default function Tip({ title, steps, graphic: Graphic }) {
       <Modal isOpen={isModalOpen} onRequestClose={handleModalClose} contentFit>
         <Box width={["calc(90vw)", 600]}>
           <>
-            <Graphic
-              bg="primary.2"
-              css={css`
-                height: 278px;
-              `}
-            />
+            <Flex width={1} bg="primary.0" justifyContent="center">
+              <Graphic
+                css={css`
+                  width: auto;
+                  margin: auto;
+                  height: ${isLarge ? "278px" : "20vh"};
+                `}
+              />
+            </Flex>
             <Box width={9 / 10} mx="auto">
               <Text fontSize={2} fontWeight="bold" mx="auto" my={2}>
                 {title}
@@ -133,16 +139,23 @@ export default function Tip({ title, steps, graphic: Graphic }) {
         onClick={handleModalOpen}
       >
         <Graphic
-          width={1 / 3}
+          width={3 / 4}
+          alignSelf="center"
           mx="auto"
           css={css`
             display: block;
-            ${"" /*  hack for Safari to get set the height of the image*/}
+            ${"" /*  hack for Safari to set the height of the image*/}
             ${"" /*  otherwise the tips appear elongated*/}
             height: intrinsic;
           `}
         />
-        <Text width={1} mt={3} fontWeight="bold" alignSelf="flex-end">
+        <Text
+          width={1}
+          mt={3}
+          fontWeight="bold"
+          textAlign="center"
+          alignSelf="flex-end"
+        >
           {title}
         </Text>
       </Card>

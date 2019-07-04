@@ -5,8 +5,8 @@ import { css, jsx } from "@emotion/core";
 import { Text, Flex, Box, Card, Image } from "@rebass/emotion";
 import useMedia from "react-use/lib/useMedia";
 
-import InviteListTipImage from "../../images/invite-list-tip.svg";
-import ActiveParticipationTipImage from "../../images/active-participation-tip.svg";
+import InviteListTipImage from "../../images/tips-invite-list.png";
+import ActiveParticipationTipImage from "../../images/tips-participate-better.png";
 
 import Tip from "./Tip";
 
