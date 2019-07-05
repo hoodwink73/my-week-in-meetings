@@ -3,12 +3,13 @@ import { useTransition, animated, config } from "react-spring";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
-export default function FadeIn({ children }) {
+export default function SlideUp({ children, config = config.slow }) {
   const [show, set] = useState(false);
   const transitions = useTransition(show, null, {
     from: { transform: "translate3d(0,100%,0)" },
     enter: { transform: "translate3d(0,0px,0)" },
-    leave: { transform: "translate3d(0,-100%,0)" }
+    leave: { transform: "translate3d(0,-100%,0)" },
+    config
   });
   useEffect(() => {
     set(true);

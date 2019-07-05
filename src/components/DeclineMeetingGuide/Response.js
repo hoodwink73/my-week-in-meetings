@@ -18,7 +18,7 @@ export default function Response({
   };
 
   return (
-    <Box width={1}>
+    <Box width={1} p={1}>
       <textarea
         value={content}
         onChange={handleChange}

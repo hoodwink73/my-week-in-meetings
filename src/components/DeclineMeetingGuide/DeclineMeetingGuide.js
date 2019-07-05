@@ -1,4 +1,4 @@
-import React, { useReducer, lazy } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import { Flex, Box, Text, Image, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -7,6 +7,7 @@ import "@firebase/functions";
 import "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useMedia from "react-use/lib/useMedia";
+import { useTransition, animated } from "react-spring";
 
 import IntroImage from "../../images/decline-meeting-intro.png";
 import AgendaUnClearImage from "../../images/decline-meeting-agenda-unclear.png";
@@ -15,6 +16,7 @@ import NotWellInformedImage from "../../images/decline-meeting-not-well-informed
 import BusyImage from "../../images/decline-meeting-busy.png";
 
 import Modal from "../Modal";
+import { FadeIn, SlideUp } from "../Animate";
 import { Event } from "../Events";
 import { getUserGoogleID } from "../../utils";
 
@@ -34,6 +36,11 @@ import BusyResponse from "./BusyResponse";
 
 import AttendMeeting from "./AttendMeeting";
 
+const ANIMATION_CONFIG = {
+  mass: 1.1,
+  tension: 200
+};
+
 const declineMeetingGuideProgressChart = new Map([
   [Intro, [AgendaQuestion]],
   [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
@@ -50,19 +57,153 @@ const IMAGES_FOR_STEP = new Map([
   [BusyQuestion, BusyImage]
 ]);
 
+const getComponentByName = componentName => {
+  for (let [
+    currentStep,
+    possibleNextSteps
+  ] of declineMeetingGuideProgressChart.entries()) {
+    if (currentStep.name === componentName) {
+      return currentStep;
+    } else {
+      for (let step of possibleNextSteps) {
+        if (step.name === componentName) {
+          return step;
+        }
+      }
+    }
+  }
+};
+
+const getPreviousStep = currentStep => {
+  for (let [
+    step,
+    possibleNextSteps
+  ] of declineMeetingGuideProgressChart.entries()) {
+    if (possibleNextSteps.includes(currentStep)) {
+      return step;
+    }
+  }
+};
+
 const Graphic = ({ currentStep }) => {
   const isLarge = useMedia("(min-width: 64em)");
+  const [show, set] = useState(false);
+
+  const shouldShowGraphic = () =>
+    !isResponseMode(currentStep) && currentStep.name !== "AttendMeeting";
+
+  useEffect(() => {
+    if (!shouldShowGraphic()) {
+      set(false);
+    } else {
+      set(IMAGES_FOR_STEP.get(currentStep));
+    }
+  }, [currentStep]);
+
+  let transitions;
+
+  const slideLeftTransitions = useTransition(show, null, {
+    from: { transform: "translateX(50%)" },
+    enter: { transform: "translateX(0%)" },
+    leave: { transform: "translateX(-50%)" },
+    config: ANIMATION_CONFIG
+  });
+
+  const slideUpTransitions = useTransition(show, null, {
+    from: { transform: "translateY(100%)" },
+    enter: { transform: "translateY(0%)" },
+    leave: { transform: "translateY(-100%)" },
+    config: ANIMATION_CONFIG
+  });
+
+  const opacityTransitions = useTransition(show, null, {
+    from: { transform: "opacity: 0" },
+    enter: { transform: "opacity: 1" },
+    leave: { transform: "opacity: 0" },
+    config: ANIMATION_CONFIG
+  });
+
+  if (currentStep.name === "Intro") {
+    transitions = opacityTransitions;
+  } else if (!shouldShowGraphic()) {
+    transitions = slideUpTransitions;
+  } else {
+    transitions = slideLeftTransitions;
+  }
 
   return (
-    <Flex bg={Intro ? "primary.0" : "white"} justifyContent="center">
-      <Image
-        width="auto"
-        src={IMAGES_FOR_STEP.get(currentStep)}
-        css={css`
-          height: ${isLarge ? "366px" : "25vh"};
-        `}
-      />
-    </Flex>
+    <Box
+      css={css`
+        position: relative;
+        height: ${!shouldShowGraphic() ? 0 : `${isLarge ? "366px" : "25vh"}`};
+      `}
+    >
+      {transitions.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div
+              key={key}
+              style={props}
+              css={css`
+                position: absolute;
+                top: 0;
+                left: 0;
+              `}
+            >
+              <Flex bg={Intro ? "primary.0" : "white"} justifyContent="center">
+                {/* we need `alignSelf=start for Safari` otherwise it stretches
+                 * it stretches the image
+                 */}
+                <Image width="auto" src={item} alignSelf="start" />
+              </Flex>
+            </animated.div>
+          )
+      )}
+    </Box>
+  );
+};
+
+const DeclineMeetingWithResponse = ({ handleDeclineResponse }) => {};
+
+const Animate = ({ currentStep, children }) => {
+  const [show, set] = useState(false);
+
+  useEffect(() => {
+    set(currentStep.name);
+  }, [currentStep]);
+
+  const transitions = useTransition(show, null, {
+    from: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      transform: "translateY(100%)",
+      opacity: 0
+    },
+    enter: { transform: "translateY(-0%)", opacity: 1 },
+    leave: { transform: "translateY(0%)", opacity: 0 },
+    config: ANIMATION_CONFIG
+  });
+
+  return (
+    <Box
+      css={css`
+        position: relative;
+        height: 150px;
+      `}
+    >
+      {transitions.map(({ item, key, props }) => {
+        let Component = getComponentByName(item);
+
+        return (
+          item && (
+            <animated.div key={key} style={props}>
+              <Component {...children.props} />
+            </animated.div>
+          )
+        );
+      })}
+    </Box>
   );
 };
 
@@ -147,9 +288,9 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentFit>
       <Box width={["calc(90vw)", 600]}>
+        <Graphic currentStep={CurrentStep} />
         {isResponseMode(CurrentStep) ? (
-          <>
-            <DeclineTheMeetingHeader />
+          <SlideUp config={ANIMATION_CONFIG}>
             <Card
               width={9 / 10}
               mx="auto"
@@ -160,15 +301,10 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
               <Event data={event} readOnly />
             </Card>
 
-            <CurrentStep
-              handleYes={handleYes}
-              handleNo={handleNo}
-              onDeclineResponse={handleDeclineResponse}
-            />
-          </>
+            <CurrentStep onDeclineResponse={handleDeclineResponse} />
+          </SlideUp>
         ) : CurrentStep !== AttendMeeting ? (
           <>
-            <Graphic currentStep={CurrentStep} />
             <Box>
               <Text
                 width={9 / 10}
@@ -179,7 +315,14 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
               >
                 Learn how to say no to meetings politely
               </Text>
-              <CurrentStep handleYes={handleYes} handleNo={handleNo} />
+
+              {/* <Animate /> do not directly render its children
+                  so the behavior in place is unexpected
+                  please, review the
+                 */}
+              <Animate currentStep={CurrentStep}>
+                <CurrentStep handleYes={handleYes} handleNo={handleNo} />
+              </Animate>
             </Box>
           </>
         ) : (
