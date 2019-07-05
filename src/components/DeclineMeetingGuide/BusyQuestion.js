@@ -5,7 +5,7 @@ import Question from "../Question";
 
 const busyQuestionText = "Do you have other important priorities?";
 
-export default function AgendaQuestion({ handleYes, handleNo }) {
+export default function BusyQuestion({ handleYes, handleNo }) {
   return (
     <Question
       question={busyQuestionText}
@@ -15,7 +15,7 @@ export default function AgendaQuestion({ handleYes, handleNo }) {
   );
 }
 
-AgendaQuestion.propTypes = {
+BusyQuestion.propTypes = {
   handleYes: PropType.func.isRequired,
   handleNo: PropType.func.isRequired
 };
