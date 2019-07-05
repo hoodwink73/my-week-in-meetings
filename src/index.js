@@ -7,6 +7,12 @@ import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 import App from "./App";
 
+import IntroImage from "./images/decline-meeting-intro.png";
+import AgendaUnclearImage from "./images/decline-meeting-agenda-unclear.png";
+import ResponsibilityImage from "./images/decline-meeting-responsibility.png";
+import NotWellInformedImage from "./images/decline-meeting-not-well-informed.png";
+import BusyImage from "./images/decline-meeting-busy.png";
+
 // import * as MockDate from "mockdate";
 // MockDate.set("2019-05-21T20:42:00");
 
@@ -22,6 +28,21 @@ const config = {
 firebase.initializeApp(config);
 
 ReactDOM.render(<App />, document.getElementById("root"));
+
+(function preloadImages() {
+  const imagesToPreload = [
+    IntroImage,
+    AgendaUnclearImage,
+    ResponsibilityImage,
+    NotWellInformedImage,
+    BusyImage
+  ];
+
+  for (let imageUrl of imagesToPreload) {
+    const img = new Image();
+    img.src = imageUrl;
+  }
+})();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
