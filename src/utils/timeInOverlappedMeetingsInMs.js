@@ -4,7 +4,9 @@ import sortEvents from "./sortEvents";
 
 export default function timeInOverlappedMeetingsInMs(events) {
   const timeOverlappedBy = [];
-  const sortedEvents = sortEvents(events);
+  const sortedEvents = sortEvents(events, {
+    secondaryKey: "enrichedData.durationInMs"
+  });
 
   sortedEvents.reduce((prevEvent, event) => {
     const prevEventEndTime = moment(prevEvent.end.dateTime);
