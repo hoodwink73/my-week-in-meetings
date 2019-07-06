@@ -15,13 +15,13 @@ function timeLeftForWorkTodayInMs(
     now = fromTime;
   }
 
-  let { happening, willHappen } = groupEventsByTime(events, now);
-
   // if the workday hasn't begun, we should only start counting from beginning
   // of the work day
   if (now.isBefore(workStartTime, "minutes")) {
     now = workStartTime;
   }
+
+  let { happening, willHappen } = groupEventsByTime(events, now);
 
   // if the current instant is beyond worday end
   // no time left for work today
