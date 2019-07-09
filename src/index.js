@@ -35,7 +35,8 @@ ReactDOM.render(<App />, document.getElementById("root"));
     AgendaUnclearImage,
     ResponsibilityImage,
     NotWellInformedImage,
-    BusyImage
+    BusyImage,
+    AttendMeetingImage
   ];
 
   for (let imageUrl of imagesToPreload) {

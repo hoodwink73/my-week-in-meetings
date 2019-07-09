@@ -22,6 +22,12 @@ const buttonStyles = new Map([
     {
       fontSize: 2
     }
+  ],
+  [
+    "small",
+    {
+      fontSize: 1
+    }
   ]
 ]);
 

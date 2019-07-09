@@ -3,20 +3,22 @@ import { Flex, Box, Text, Image } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
-import AttendMeetingImage from "../../images/attend-meeting-alt.png";
+import Button from "../Button";
 
-export default function AttendMeeting() {
+export default function AttendMeeting({ handleYes }) {
   const isLarge = useMedia("(min-width: 64em)");
 
   return (
-    <Flex justifyContent="center">
-      <Image
-        width="auto"
-        src={AttendMeetingImage}
-        css={css`
-          height: ${isLarge ? "366px" : "25vh"};
-        `}
-      />
+    <Flex flexDirection="column" justifyContent="center" mx="auto" my={3}>
+      <Text mb={3} fontSize={3}>
+        The meeting looks reasonable. Maybe you should attend it.
+      </Text>
+
+      <Box width={[1 / 2, 1 / 3]}>
+        <Button mb={2} type="primary" size="small" onClick={handleYes}>
+          See you later!
+        </Button>
+      </Box>
     </Flex>
   );
 }

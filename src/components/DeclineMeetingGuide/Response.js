@@ -35,7 +35,7 @@ export default function Response({
         `}
       />
 
-      <Flex width={9 / 10} mx="auto" justifyContent="flex-end" my={3}>
+      <Flex width={1} mx="auto" justifyContent="flex-end" my={3}>
         <Button
           loading={loading}
           size="medium"

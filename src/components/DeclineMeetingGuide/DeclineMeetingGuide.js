@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useRef } from "react";
 import { Flex, Box, Text, Image, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -7,16 +7,17 @@ import "@firebase/functions";
 import "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useMedia from "react-use/lib/useMedia";
-import { useTransition, animated } from "react-spring";
+import { useTransition, useSpring, animated } from "react-spring";
 
 import IntroImage from "../../images/decline-meeting-intro.png";
 import AgendaUnClearImage from "../../images/decline-meeting-agenda-unclear.png";
 import ResponsibilityImage from "../../images/decline-meeting-responsibility.png";
 import NotWellInformedImage from "../../images/decline-meeting-not-well-informed.png";
 import BusyImage from "../../images/decline-meeting-busy.png";
+import AttendMeetingImage from "../../images/attend-meeting-alt.png";
 
-import Modal from "../Modal";
 import { FadeIn, SlideUp } from "../Animate";
+import Modal from "../Modal";
 import { Event } from "../Events";
 import { getUserGoogleID } from "../../utils";
 
@@ -54,7 +55,8 @@ const IMAGES_FOR_STEP = new Map([
   [AgendaQuestion, AgendaUnClearImage],
   [ResponsibilityQuestion, ResponsibilityImage],
   [NotWellInformedQuestion, NotWellInformedImage],
-  [BusyQuestion, BusyImage]
+  [BusyQuestion, BusyImage],
+  [AttendMeeting, AttendMeetingImage]
 ]);
 
 const getComponentByName = componentName => {
@@ -89,8 +91,7 @@ const Graphic = ({ currentStep }) => {
   const isLarge = useMedia("(min-width: 64em)");
   const [show, set] = useState(false);
 
-  const shouldShowGraphic = () =>
-    !isResponseMode(currentStep) && currentStep.name !== "AttendMeeting";
+  const shouldShowGraphic = () => !isResponseMode(currentStep);
 
   useEffect(() => {
     if (!shouldShowGraphic()) {
@@ -103,9 +104,9 @@ const Graphic = ({ currentStep }) => {
   let transitions;
 
   const slideLeftTransitions = useTransition(show, null, {
-    from: { transform: "translateX(50%)" },
+    from: { transform: "translateX(100%)" },
     enter: { transform: "translateX(0%)" },
-    leave: { transform: "translateX(-50%)" },
+    leave: { transform: "translateX(-100%)" },
     config: ANIMATION_CONFIG
   });
 
@@ -119,11 +120,11 @@ const Graphic = ({ currentStep }) => {
   const opacityTransitions = useTransition(show, null, {
     from: { transform: "opacity: 0" },
     enter: { transform: "opacity: 1" },
-    leave: { transform: "opacity: 0" },
+    leave: { transform: "opacity: 0", transform: "translateX(-100%)" },
     config: ANIMATION_CONFIG
   });
 
-  if (currentStep.name === "Intro") {
+  if (currentStep === Intro) {
     transitions = opacityTransitions;
   } else if (!shouldShowGraphic()) {
     transitions = slideUpTransitions;
@@ -135,7 +136,11 @@ const Graphic = ({ currentStep }) => {
     <Box
       css={css`
         position: relative;
-        height: ${!shouldShowGraphic() ? 0 : `${isLarge ? "366px" : "25vh"}`};
+        overflow: hidden;
+      ${
+        "" /*  54.9vw is mentioned to maintain aspect ratio of the image without it getting cut*/
+      }
+        height: ${!shouldShowGraphic() ? 0 : `${isLarge ? "366px" : "54.9vw"}`};
       `}
     >
       {transitions.map(
@@ -163,10 +168,9 @@ const Graphic = ({ currentStep }) => {
   );
 };
 
-const DeclineMeetingWithResponse = ({ handleDeclineResponse }) => {};
-
 const Animate = ({ currentStep, children }) => {
   const [show, set] = useState(false);
+  const isLarge = useMedia("(min-width: 64em)");
 
   useEffect(() => {
     set(currentStep.name);
@@ -177,19 +181,39 @@ const Animate = ({ currentStep, children }) => {
       position: "absolute",
       left: 0,
       right: 0,
-      transform: "translateY(100%)",
-      opacity: 0
+      transform: "translateY(100%)"
     },
-    enter: { transform: "translateY(-0%)", opacity: 1 },
-    leave: { transform: "translateY(0%)", opacity: 0 },
-    config: ANIMATION_CONFIG
+    enter: { transform: "translateY(0%)", opacity: 1 },
+    leave: { opacity: 0 },
+    config: ANIMATION_CONFIG,
+    onRest: () => {
+      const element = document.querySelector('[role="dialog"]');
+      // when we switch from Intro to Questions or Responses
+      // the height of the step significantly reduces, so we
+      // animate the height of Modal while it reduces
+      if (currentStep === Intro) {
+        element.classList.add("animate-height");
+      } else {
+        element.classList.remove("animate-height");
+      }
+    }
   });
+
+  const MAX_HEIGHT = `${isLarge ? 210 : 265}`;
+
+  const INTRO_STEP_HEIGHT = `${MAX_HEIGHT}px`;
+
+  const QUESTIONS_STEP_HEIGHT = `${MAX_HEIGHT - 80}px`;
+
+  const HEIGHT =
+    currentStep === Intro ? INTRO_STEP_HEIGHT : QUESTIONS_STEP_HEIGHT;
 
   return (
     <Box
       css={css`
         position: relative;
-        height: 150px;
+        width: 100%;
+        height: ${HEIGHT};
       `}
     >
       {transitions.map(({ item, key, props }) => {
@@ -204,16 +228,6 @@ const Animate = ({ currentStep, children }) => {
         );
       })}
     </Box>
-  );
-};
-
-const DeclineTheMeetingHeader = () => {
-  return (
-    <Card bg="primary.2" px={3} pt={2} pb={3}>
-      <Text fontSize={2} fontWeight="bold">
-        Decline This Meeting
-      </Text>
-    </Card>
   );
 };
 
@@ -256,6 +270,7 @@ const reducer = (state, action) => {
 function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
   const [CurrentStep, dispatch] = useReducer(reducer, Intro);
   const { user } = useAuthState(firebase.auth());
+  const isLarge = useMedia("(min-width: 64em)");
 
   const declineEventCloudFn = firebase
     .functions()
@@ -275,7 +290,13 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
     return declineEventResponse;
   };
 
-  const handleYes = () => dispatch({ type: "yes" });
+  const handleYes = () => {
+    if (CurrentStep === AttendMeeting) {
+      onRequestClose();
+    } else {
+      dispatch({ type: "yes" });
+    }
+  };
 
   let handleNo;
 
@@ -287,7 +308,13 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentFit>
-      <Box width={["calc(90vw)", 600]}>
+      <Box
+        width={["calc(90vw)", 600]}
+        css={css`
+          height: 100%;
+          overflow: hidden;
+        `}
+      >
         <Graphic currentStep={CurrentStep} />
         {isResponseMode(CurrentStep) ? (
           <SlideUp config={ANIMATION_CONFIG}>
@@ -303,30 +330,18 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
 
             <CurrentStep onDeclineResponse={handleDeclineResponse} />
           </SlideUp>
-        ) : CurrentStep !== AttendMeeting ? (
+        ) : (
           <>
-            <Box>
-              <Text
-                width={9 / 10}
-                fontSize={2}
-                fontWeight="bold"
-                mx="auto"
-                my={2}
-              >
+            <Box width={8 / 10} mx="auto">
+              <Text fontSize={2} fontWeight="bold" mx="auto" my={3}>
                 Learn how to say no to meetings politely
               </Text>
 
-              {/* <Animate /> do not directly render its children
-                  so the behavior in place is unexpected
-                  please, review the
-                 */}
               <Animate currentStep={CurrentStep}>
                 <CurrentStep handleYes={handleYes} handleNo={handleNo} />
               </Animate>
             </Box>
           </>
-        ) : (
-          <CurrentStep />
         )}
       </Box>
     </Modal>

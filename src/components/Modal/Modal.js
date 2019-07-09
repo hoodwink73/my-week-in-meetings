@@ -123,9 +123,20 @@ export default function Modal({ children, contentFit, mobileMenu, ...props }) {
         }
       >
         {!mobileMenu && (
-          <Box alignSelf="flex-end">
+          <Box
+            bg="primary.1"
+            alignSelf="flex-end"
+            css={css`
+              position: absolute;
+              top: 4px;
+              right: 4px;
+              z-index: 9;
+              height: 24px;
+              border-radius: 50%;
+            `}
+          >
             <CloseIcon
-              width="32"
+              width="24"
               onClick={props.onRequestClose}
               style={{ cursor: "pointer" }}
             />

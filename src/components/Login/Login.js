@@ -122,7 +122,6 @@ export default function Login() {
       .seq(signInWithFirebase)
       .or(error => {
         setAuthenticationInProgress(false);
-        debugger;
         if (error instanceof AppError) {
           registerError({
             message: error.message

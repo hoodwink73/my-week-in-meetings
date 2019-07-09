@@ -59,6 +59,10 @@ export default function() {
           opacity: 1;
         }
 
+        .ReactModal__Content--after-open.animate-height {
+          transition: height 300ms 200ms;
+        }
+
         .ReactModal__Overlay--before-close {
           opacity: 0;
         }

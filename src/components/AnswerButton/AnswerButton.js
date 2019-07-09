@@ -15,7 +15,9 @@ export default function AnswerButton({ title, onClick, ...props }) {
       onClick={onClick}
       {...props}
     >
-      <Text>{title}</Text>
+      <Text width={1} fontSize={1}>
+        {title}
+      </Text>
     </Button>
   );
 }

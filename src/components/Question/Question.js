@@ -9,7 +9,7 @@ import AnswerButton from "../AnswerButton";
 export default function Question({ question, handleYes, handleNo }) {
   return (
     <Flex
-      width={9 / 10}
+      width={1}
       mx="auto"
       my={3}
       flexDirection="column"
