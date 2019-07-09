@@ -43,7 +43,13 @@ const CUSTOM_STYLES = {
   }
 };
 
-export default function Modal({ children, contentFit, mobileMenu, ...props }) {
+export default function Modal({
+  children,
+  contentFit,
+  mobileMenu,
+  doNotPadContent,
+  ...props
+}) {
   const isLarge = useMedia("(min-width: 64em)");
   const [modalDimesions, setModalDimensions] = useState(null);
 
@@ -106,6 +112,13 @@ export default function Modal({ children, contentFit, mobileMenu, ...props }) {
     customStyles = CUSTOM_STYLES.large;
   } else {
     customStyles = CUSTOM_STYLES.small;
+  }
+
+  if (doNotPadContent) {
+    customStyles.content = {
+      ...customStyles.content,
+      padding: 0
+    };
   }
 
   return (
