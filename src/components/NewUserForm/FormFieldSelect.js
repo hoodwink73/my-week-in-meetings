@@ -21,6 +21,7 @@ export default function FormFieldSelect({
   label,
   placeholder = "Choose from list",
   options,
+  projectValueFn,
   ...props
 }) {
   const areOptionsGrouped = options instanceof Map;
@@ -33,7 +34,9 @@ export default function FormFieldSelect({
         <optgroup label={groupLabel} key={groupLabel}>
           {groupOptions.map(option => (
             <option value={option} key={option}>
-              {option}
+              {typeof projectValueFn === "function"
+                ? projectValueFn(option)
+                : option}
             </option>
           ))}
         </optgroup>
@@ -42,7 +45,7 @@ export default function FormFieldSelect({
   } else {
     Options = options.map(option => (
       <option value={option} key={option}>
-        {option}
+        {typeof projectValueFn === "function" ? projectValueFn(option) : option}
       </option>
     ));
   }
@@ -113,5 +116,6 @@ FormFieldSelect.propTypes = {
     ),
     PropTypes.instanceOf(Map)
   ]).isRequired,
+  projectValueFn: PropTypes.func,
   ...Box.propTypes
 };

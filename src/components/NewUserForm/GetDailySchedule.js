@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Formik, Form, Field } from "formik";
 import { Flex, Box, Text } from "@rebass/emotion";
 import { useTrail, animated } from "react-spring";
+import leftPad from "left-pad";
 
 import Button from "../Button";
 import FormFieldSelect from "./FormFieldSelect";
@@ -36,11 +37,13 @@ export default function GetDailySchedule({ onFormSubmit, ...props }) {
         <FormFieldSelect
           name="workStartTime.hours"
           options={OPTIONS_FOR_CHOOSING_HOUR}
+          projectValueFn={value => leftPad(value, 2, 0)}
           mr={3}
         />
         <FormFieldSelect
           name="workStartTime.minutes"
           options={OPTIONS_FOR_CHOOSING_MINUTES}
+          projectValueFn={value => leftPad(value, 2, 0)}
         />
       </Flex>
     </Box>,
@@ -53,11 +56,13 @@ export default function GetDailySchedule({ onFormSubmit, ...props }) {
         <FormFieldSelect
           name="workEndTime.hours"
           options={OPTIONS_FOR_CHOOSING_HOUR}
+          projectValueFn={value => leftPad(value, 2, 0)}
           mr={3}
         />
         <FormFieldSelect
           name="workEndTime.minutes"
           options={OPTIONS_FOR_CHOOSING_MINUTES}
+          projectValueFn={value => leftPad(value, 2, 0)}
         />
       </Flex>
     </Box>,
