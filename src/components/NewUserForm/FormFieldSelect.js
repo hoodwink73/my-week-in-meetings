@@ -58,7 +58,7 @@ export default function FormFieldSelect({
 
   return (
     <Field name={name} key={name}>
-      {({ field }) => {
+      {({ field, form: { errors, touched } }) => {
         return (
           <Flex flexDirection="column" {...props}>
             {label && (
@@ -92,6 +92,11 @@ export default function FormFieldSelect({
                 >
                   {Options}
                 </select>
+                {touched[field.name] && errors[field.name] && (
+                  <Text m={1} fontSize={1} color="red.2">
+                    {errors[field.name]}
+                  </Text>
+                )}
               </Box>
             </Flex>
           </Flex>
