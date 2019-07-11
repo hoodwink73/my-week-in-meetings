@@ -57,8 +57,10 @@ export default function NewUserForm() {
     cache.current = value;
   };
 
+  const isLarge = useMedia("(min-width: 64em)");
+
   return (
-    <Modal isOpen={isModalOpen} contentFit>
+    <Modal isOpen={isModalOpen} doNotAllowToClose contentFit={isLarge}>
       <Flex
         width={[1, 600]}
         flexDirection={["column"]}

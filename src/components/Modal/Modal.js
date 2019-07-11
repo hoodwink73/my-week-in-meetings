@@ -47,6 +47,7 @@ export default function Modal({
   children,
   contentFit,
   mobileMenu,
+  doNotAllowToClose,
   doNotPadContent,
   ...props
 }) {
@@ -135,7 +136,7 @@ export default function Modal({
               `
         }
       >
-        {!mobileMenu && (
+        {!(mobileMenu || doNotAllowToClose) && (
           <Box
             bg="primary.1"
             alignSelf="flex-end"
