@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import firebase from "firebase/app";
-import moment from "moment";
 import * as serviceWorker from "./serviceWorker";
 
 import "./index.css";
@@ -15,7 +14,7 @@ import BusyImage from "./images/decline-meeting-busy.png";
 import AttendMeetingImage from "./images/attend-meeting-alt.png";
 
 // import * as MockDate from "mockdate";
-// MockDate.set("2019-07-05T08:00:00");
+// MockDate.set("2019-06-25T17:50:00");
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_API_KEY,

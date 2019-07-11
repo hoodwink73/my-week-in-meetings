@@ -100,3 +100,6 @@ export const USER_JOB_ROLES = new Map([
   ["Marketing", ["Growth Hacker", "Marketing Manager", "Content Creator"]],
   ["Management", ["CEO", "CFO", "CMO", "COO", "CTO"]]
 ]);
+
+export const INCLUDE_COOL_OFF_TIME = true;
+export const COOL_OFF_TIME_IN_MINUTES = 10;

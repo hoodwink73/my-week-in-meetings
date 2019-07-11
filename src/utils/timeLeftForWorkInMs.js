@@ -3,6 +3,7 @@ import moment from "moment";
 import groupEventsByTime from "./groupEventsByTime";
 import sortEvents from "./sortEvents";
 import timeInOverlappedMeetingsInMs from "./timeInOverlappedMeetingsInMs";
+import { INCLUDE_COOL_OFF_TIME, COOL_OFF_TIME_IN_MINUTES } from "../constants";
 
 function timeLeftForWorkTodayInMs(
   events,
@@ -10,6 +11,11 @@ function timeLeftForWorkTodayInMs(
   userConfig
 ) {
   let now = moment();
+  // if the cool off time setting is enabled
+  // we will stretch every event time by the set cool-off time
+  // we do not want to mutate the original events
+  // so clone, stretch and store them here
+  let extendedEvents = [];
 
   if (moment.isMoment(fromTime)) {
     now = fromTime;
@@ -21,7 +27,30 @@ function timeLeftForWorkTodayInMs(
     now = workStartTime;
   }
 
-  let { happening, willHappen } = groupEventsByTime(events, now);
+  if (INCLUDE_COOL_OFF_TIME) {
+    extendedEvents = events.map(event => ({
+      ...event,
+      start: {
+        ...event.start,
+        dateTime: moment(event.start.dateTime).subtract(
+          COOL_OFF_TIME_IN_MINUTES,
+          "minutes"
+        )
+      },
+      end: {
+        ...event.end,
+        dateTime: moment(event.end.dateTime).add(
+          COOL_OFF_TIME_IN_MINUTES,
+          "minutes"
+        )
+      }
+    }));
+  }
+
+  let { happening, willHappen } = groupEventsByTime(
+    INCLUDE_COOL_OFF_TIME ? extendedEvents : events,
+    now
+  );
 
   // if the current instant is beyond worday end
   // no time left for work today
