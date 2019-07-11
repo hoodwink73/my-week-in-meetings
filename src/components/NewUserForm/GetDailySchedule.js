@@ -15,21 +15,21 @@ const OPTIONS_FOR_CHOOSING_MINUTES = [...Array(60).keys()].filter(
 );
 
 const ANIMATION_CONFIG = {
-  mass: 1.1,
-  tension: 400
+  mass: 0.5,
+  tension: 200
 };
 
 export default function GetDailySchedule({ onFormSubmit, ...props }) {
   const { userConfig } = useContext(UserConfigContext);
 
   const trail = useTrail(3, {
-    from: { transform: "translateY(-50%)" },
+    from: { transform: "translateY(100%)" },
     to: { transform: "translateY(0%)" },
     config: ANIMATION_CONFIG
   });
 
   const FormRows = [
-    <Box>
+    <Box mt={3}>
       <Text fontWeight="bold" mb={3}>
         What time do you start your work?
       </Text>
@@ -73,7 +73,7 @@ export default function GetDailySchedule({ onFormSubmit, ...props }) {
           type="primary"
           formType="submit"
           size="medium"
-          mt={4}
+          mt={5}
         >
           Let's Get Started
         </Button>

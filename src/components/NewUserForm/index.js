@@ -4,6 +4,7 @@ import Modal from "../Modal";
 import { css, jsx } from "@emotion/core";
 import { Flex, Box, Text } from "@rebass/emotion";
 import { useTransition, animated } from "react-spring";
+import useMedia from "react-use/lib/useMedia";
 
 import Illustration from "./Illustration";
 import GetUserDetailsForm from "./GetUserDetailsForm";
@@ -24,8 +25,8 @@ const reducer = (state, action) => {
 };
 
 const ANIMATION_CONFIG = {
-  mass: 1.1,
-  tension: 100
+  mass: 6,
+  tension: 50
 };
 
 export default function NewUserForm() {
@@ -43,7 +44,9 @@ export default function NewUserForm() {
   const [assumedFirstName] = user.displayName.split(" ");
 
   const transitions = useTransition(step === "INITIAL", null, {
-    leave: { transform: "translateX(-10%)", opacity: 0 },
+    from: { position: "absolute", opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
     config: ANIMATION_CONFIG
   });
 
@@ -59,63 +62,52 @@ export default function NewUserForm() {
 
   const isLarge = useMedia("(min-width: 64em)");
 
-  return (
-    <Modal isOpen={isModalOpen} doNotAllowToClose contentFit={isLarge}>
-      <Flex
-        width={[1, 600]}
-        flexDirection={["column"]}
-        css={css`
-          height: 540px;
-        `}
-      >
-        <Illustration width={[1]} p={4} />
-
-        <Box px={4} pt={4}>
-          <Text fontWeight="bold" fontSize={3}>
-            Hello, {assumedFirstName}!
-          </Text>
-
-          <Text mt={2} fontSize={1}>
-            {step === "INITIAL"
-              ? "Tell us about yourself"
-              : "Tell us about your daily schedule"}
-          </Text>
-        </Box>
-
-        <Box
+  if (userConfigRequest.loading) {
+    return null;
+  } else {
+    return (
+      <Modal isOpen={isModalOpen} doNotAllowToClose contentFit={isLarge}>
+        <Flex
+          width={[1, 600]}
+          flexDirection={["column"]}
           css={css`
-            position: relative;
+            height: 540px;
           `}
         >
-          {transitions.map(({ item, key, props }) => {
-            return (
-              <animated.div
-                style={props}
-                key={key}
-                css={css`
-                  position: absolute;
-                `}
-              >
-                {item && (
-                  <GetUserDetailsForm
-                    width={[1, 600]}
-                    p={4}
-                    onFormSubmit={values => {
-                      cacheData({ userDetails: values });
-                      dispatch({
-                        type: "NEXT"
-                      });
-                    }}
-                  />
+          <Illustration width={[1]} p={4} />
+
+          <Box px={4} pt={4}>
+            <Text fontWeight="bold" fontSize={3}>
+              Hello, {assumedFirstName}!
+            </Text>
+
+            {transitions.map(({ item, key, props }) => (
+              <animated.div key={key} style={props}>
+                {item ? (
+                  <Text mt={2} fontSize={1}>
+                    Tell us about yourself
+                  </Text>
+                ) : (
+                  <Text mt={2} fontSize={1}>
+                    Tell us about your daily schedule
+                  </Text>
                 )}
               </animated.div>
-            );
-          })}
-          <Box
-            css={css`
-              position: absolute;
-            `}
-          />
+            ))}
+          </Box>
+
+          {step === "INITIAL" && (
+            <GetUserDetailsForm
+              width={[1, 600]}
+              p={4}
+              onFormSubmit={values => {
+                cacheData({ userDetails: values });
+                dispatch({
+                  type: "NEXT"
+                });
+              }}
+            />
+          )}
           {step === "CONFIGURE_DAILY_SCHEDULE" && (
             <GetDailySchedule
               width={[1, 600]}
@@ -138,8 +130,8 @@ export default function NewUserForm() {
               }}
             />
           )}
-        </Box>
-      </Flex>
-    </Modal>
-  );
+        </Flex>
+      </Modal>
+    );
+  }
 }

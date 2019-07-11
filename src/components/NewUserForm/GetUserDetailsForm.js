@@ -8,13 +8,12 @@ import { useUser } from "../../hooks";
 import Button from "../Button";
 import FormField from "./FormField";
 import FormFieldSelect from "./FormFieldSelect";
-import { UserConfigContext } from "../UserConfig";
-import { useErrorManager } from "../Errors";
+
 import { USER_JOB_ROLES } from "../../constants";
 
 const ANIMATION_CONFIG = {
-  mass: 1.1,
-  tension: 400
+  mass: 0.5,
+  tension: 200
 };
 
 export default function GetUserDetailsForm({ onFormSubmit, ...props }) {
@@ -26,7 +25,7 @@ export default function GetUserDetailsForm({ onFormSubmit, ...props }) {
   // the first argument is the number of items
   // we will stagger
   const trail = useTrail(3, {
-    from: { transform: "translateY(-50%)" },
+    from: { transform: "translateY(-100%)" },
     to: { transform: "translateY(0%)" },
     config: ANIMATION_CONFIG
   });
@@ -39,6 +38,14 @@ export default function GetUserDetailsForm({ onFormSubmit, ...props }) {
           lastName: assumedLastName,
           role: "none"
         }}
+        validate={values => {
+          let errors = {};
+          if (values.role === "none") {
+            errors.role = "Please let us know about your role";
+          }
+
+          return errors;
+        }}
         onSubmit={(values, actions) => {
           actions.setSubmitting(false);
           onFormSubmit(values);
@@ -46,8 +53,13 @@ export default function GetUserDetailsForm({ onFormSubmit, ...props }) {
       >
         {() => {
           let FormRows = [
-            <Flex mt={3}>
-              <FormField name="firstName" label="First Name" mr={3} />
+            <Flex flexDirection={["column", "row"]} mt={3}>
+              <FormField
+                name="firstName"
+                label="First Name"
+                mr={[0, 3]}
+                mb={[3, 0]}
+              />
               <FormField name="lastName" label="Last Name" />
             </Flex>,
             <FormFieldSelect
@@ -59,11 +71,12 @@ export default function GetUserDetailsForm({ onFormSubmit, ...props }) {
             <Field>
               {({ form }) => (
                 <Button
+                  disabled={Object.keys(form.errors).length > 0}
                   loading={form.isSubmitting}
                   type="primary"
                   formType="submit"
                   size="medium"
-                  mt={4}
+                  mt={5}
                 >
                   Save
                 </Button>
