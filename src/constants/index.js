@@ -49,3 +49,54 @@ export const ERRORS = new Map([
 ]);
 
 export const GOOGLE_SIGN_IN_ERRORS = ["popup_closed_by_user", "access_denied"];
+
+export const USER_JOB_ROLES = new Map([
+  [
+    "Software Engineer",
+    [
+      "Mobile Developer",
+      "Frontend Developer",
+      "Backend Developer",
+      "Full-Stack Developer",
+      "Engineering Manager",
+      "QA Engineer",
+      "DevOps",
+      "Software Architect",
+      "Designer",
+      "UI/UX Designer",
+      "User Researcher",
+      "Visual Designer",
+      "Creative Director"
+    ]
+  ],
+  [
+    "Engineering",
+    ["Hardware Engineer", "Mechanical Engineer", "Systems Engineer"]
+  ],
+  ["Product", ["Data Scientist", "Product Manager", "Project Manager"]],
+  ["Bussiness", ["Attorney", "Business Analyst"]],
+  [
+    "Operations",
+    [
+      "Finance/Accounting",
+      "H.R.",
+      "Office Manager",
+      "Recruiter",
+      "Customer Service",
+      "Operations Manager"
+    ]
+  ],
+  [
+    "Sales",
+    [
+      "Business Development",
+      "Sales Development",
+      "Account Executive",
+      "BD Manager",
+      "Account Manager",
+      "Sales Manager"
+    ]
+  ],
+  ["Marketing", ["Growth Hacker", "Marketing Manager", "Content Creator"]],
+  ["Management", ["CEO", "CFO", "CMO", "COO", "CTO"]]
+]);

@@ -21,7 +21,7 @@ export default function UserConfig({ children }) {
   const { error, loading, value } = useDocument(userDocRef);
 
   const setUserConfigInFirestore = workingTime => {
-    userDocRef.set(
+    return userDocRef.set(
       {
         userConfig: { workingTime }
       },
@@ -29,7 +29,16 @@ export default function UserConfig({ children }) {
     );
   };
 
-  let userConfig;
+  const setUserDetailsInFirestore = userDetails => {
+    return userDocRef.set(
+      {
+        userDetails: { ...userDetails }
+      },
+      { merge: true }
+    );
+  };
+
+  let userConfig, userDetails;
 
   const resolvedToError = !loading && error;
   const dataNotReadyYet = !(value && value.exists);
@@ -38,11 +47,14 @@ export default function UserConfig({ children }) {
     userConfig = DEFAULT_WORKING_TIME;
   } else {
     userConfig = value.data().userConfig.workingTime;
+    userDetails = value.data().userDetails;
   }
 
   const userConfigStateAndHelpers = {
     userConfig,
+    userDetails,
     setUserConfig: setUserConfigInFirestore,
+    setUserDetails: setUserDetailsInFirestore,
     userConfigRequest: { error, loading }
   };
 

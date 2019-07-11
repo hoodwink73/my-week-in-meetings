@@ -12,9 +12,10 @@ import AgendaUnclearImage from "./images/decline-meeting-agenda-unclear.png";
 import ResponsibilityImage from "./images/decline-meeting-responsibility.png";
 import NotWellInformedImage from "./images/decline-meeting-not-well-informed.png";
 import BusyImage from "./images/decline-meeting-busy.png";
+import AttendMeetingImage from "./images/attend-meeting-alt.png";
 
 // import * as MockDate from "mockdate";
-// MockDate.set("2019-05-21T20:42:00");
+// MockDate.set("2019-07-05T08:00:00");
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_API_KEY,

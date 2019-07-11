@@ -7,7 +7,7 @@ import "@firebase/functions";
 import "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useMedia from "react-use/lib/useMedia";
-import { useTransition, useSpring, animated } from "react-spring";
+import { useTransition, animated } from "react-spring";
 
 import IntroImage from "../../images/decline-meeting-intro.png";
 import AgendaUnClearImage from "../../images/decline-meeting-agenda-unclear.png";
@@ -93,13 +93,16 @@ const Graphic = ({ currentStep }) => {
 
   const shouldShowGraphic = () => !isResponseMode(currentStep);
 
-  useEffect(() => {
-    if (!shouldShowGraphic()) {
-      set(false);
-    } else {
-      set(IMAGES_FOR_STEP.get(currentStep));
-    }
-  }, [currentStep]);
+  useEffect(
+    () => {
+      if (!shouldShowGraphic()) {
+        set(false);
+      } else {
+        set(IMAGES_FOR_STEP.get(currentStep));
+      }
+    },
+    [currentStep]
+  );
 
   let transitions;
 
@@ -172,9 +175,12 @@ const Animate = ({ currentStep, children }) => {
   const [show, set] = useState(false);
   const isLarge = useMedia("(min-width: 64em)");
 
-  useEffect(() => {
-    set(currentStep.name);
-  }, [currentStep]);
+  useEffect(
+    () => {
+      set(currentStep.name);
+    },
+    [currentStep]
+  );
 
   const transitions = useTransition(show, null, {
     from: {

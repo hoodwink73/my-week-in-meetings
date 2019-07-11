@@ -31,11 +31,19 @@ const buttonStyles = new Map([
   ]
 ]);
 
-export default function Button({ children, size, type, loading, ...props }) {
+export default function Button({
+  children,
+  size,
+  type,
+  formType,
+  loading,
+  ...props
+}) {
   return (
     <RebassButton
       {...buttonStyles.get(type)}
       {...buttonStyles.get(size)}
+      {...(formType ? { type: formType } : {})}
       {...props}
     >
       <Flex alignItems="center">

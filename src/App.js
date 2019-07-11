@@ -11,6 +11,7 @@ import "@firebase/auth";
 import theme from "./theme";
 import Login from "./components/Login";
 import { Errors, ErrorManagerContextProvider } from "./components/Errors";
+import NewUserForm from "./components/NewUserForm";
 import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
 import FirestoreData from "./components/FirestoreData";
@@ -79,6 +80,7 @@ function App() {
             {user ? (
               <FirestoreData googleID={getUserGoogleID(user)}>
                 <UserConfig>
+                  <NewUserForm />
                   <MyEventsSummary />
                 </UserConfig>
               </FirestoreData>
