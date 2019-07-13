@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "@rebass/emotion";
 
-export default function() {
+export default function Perspective() {
   return (
     <>
       <Text>Own your perspective</Text>

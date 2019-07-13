@@ -30,6 +30,8 @@ const ActiveParticipation = ({ ...props }) => (
   <Image width={1} src={ActiveParticipationTipImage} {...props} />
 );
 
+// The Component used for steps needs to have explicitly
+// named function otherwise the navigation through steps will break
 const TIPS_CONTENT = new Map([
   [
     "InviteList",

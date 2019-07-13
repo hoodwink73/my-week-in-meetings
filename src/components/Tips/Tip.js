@@ -1,11 +1,19 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Flex, Box, Text, Button, Image, Card, Link } from "@rebass/emotion";
+import { Flex, Box, Text, Image, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import Modal from "../Modal";
 import Pagination from "../Pagination";
+import Button from "../Button";
 import useMedia from "react-use/lib/useMedia";
+import { useTransition, animated } from "react-spring";
+
+const ANIMATION_CONFIG = {
+  mass: 1.1,
+  tension: 100,
+  friction: 50
+};
 
 export default function Tip({ title, steps, graphic: Graphic }) {
   const reducer = (state, action) => {
@@ -23,10 +31,37 @@ export default function Tip({ title, steps, graphic: Graphic }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [stepCount, setStepCount] = useState(0);
 
+  const [animateGraphic, setAnimateGraphic] = useState(false);
+  const [animateCurrentStep, setAnimateCurrentStep] = useState(false);
+
   const isLarge = useMedia("(min-width: 64em)");
+
+  useEffect(() => {
+    setAnimateGraphic(isModalOpen);
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    setAnimateCurrentStep(CurrentStep.name);
+  }, [CurrentStep.name]);
 
   let isIntroStep = CurrentStep === steps.get("intro");
   let isLastStep = CurrentStep === steps.get("finish");
+
+  const slideUpTransitions = useTransition(animateCurrentStep, null, {
+    from: { transform: "translateY(200%)", opacity: 1 },
+    enter: { transform: "translateY(0%)" },
+    leave: { transform: "translateY(100%)", opacity: 0 },
+    config: { mass: 1, tension: 350, friction: 20 }
+  });
+
+  const opacityTransitions = useTransition(animateGraphic, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: ANIMATION_CONFIG
+  });
+
+  var transitions = opacityTransitions;
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -47,39 +82,90 @@ export default function Tip({ title, steps, graphic: Graphic }) {
     });
   };
 
+  const getComponentByName = componentName => {
+    for (let [currentStep, nextStep] of steps.entries()) {
+      if (currentStep.name === componentName) {
+        return currentStep;
+      } else if (nextStep.name === componentName) {
+        return nextStep;
+      }
+    }
+  };
+
   return (
     <>
       <Modal isOpen={isModalOpen} onRequestClose={handleModalClose} contentFit>
         <Box width={["calc(90vw)", 600]}>
           <>
-            <Flex width={1} bg="primary.0" justifyContent="center">
-              <Graphic
-                css={css`
-                  width: auto;
-                  margin: auto;
-                  height: ${isLarge ? "278px" : "20vh"};
-                `}
-              />
-            </Flex>
-            <Box width={9 / 10} mx="auto">
-              <Text fontSize={2} fontWeight="bold" mx="auto" my={2}>
+            <Box
+              width={1}
+              css={css`
+                position: relative;
+                height: ${isLarge ? "278px" : "20vh"};
+              `}
+            >
+              {transitions.map(
+                ({ item, key, props }) =>
+                  item && (
+                    <animated.div
+                      key={key}
+                      style={props}
+                      css={css`
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                      `}
+                    >
+                      <Flex width={1} bg="primary.0" justifyContent="center">
+                        <Graphic
+                          css={css`
+                            width: auto;
+                            margin: auto;
+                            height: ${isLarge ? "278px" : "20vh"};
+                          `}
+                        />
+                      </Flex>
+                    </animated.div>
+                  )
+              )}
+            </Box>
+            <Box width={8 / 10} mx="auto">
+              <Text fontSize={2} fontWeight="bold" mx="auto" my={4}>
                 {title}
               </Text>
 
               <Box
                 mt={4}
                 mb={3}
+                fontSize={3}
                 css={css`
+                  position: relative;
                   height: 4em;
                 `}
               >
-                <CurrentStep />
+                {slideUpTransitions.map(({ item, key, props }) => {
+                  var Component = item && getComponentByName(item);
+                  return (
+                    Component && (
+                      <animated.div
+                        key={key}
+                        style={props}
+                        css={css`
+                          position: absolute;
+                        `}
+                      >
+                        <Component />
+                      </animated.div>
+                    )
+                  );
+                })}
               </Box>
 
               <Flex width={1} justifyContent="space-between" mb={3}>
                 {!isIntroStep && (
                   <Pagination
-                    width={12}
+                    width={8}
                     count={steps.size - 1}
                     current={stepCount}
                     alignSelf="center"
@@ -99,23 +185,35 @@ export default function Tip({ title, steps, graphic: Graphic }) {
                       variant="text"
                       onClick={handleModalClose}
                     >
-                      No, Thanks
+                      <Text width={1} fontSize={1}>
+                        No, Thanks
+                      </Text>
                     </Button>
                   )}
 
                   {!isLastStep && (
-                    <Button type="primary" size="medium" onClick={handleYes}>
-                      {isIntroStep ? "Start The Guide" : "Next"}
+                    <Button
+                      width={[0.5, 0.3]}
+                      type="primary"
+                      size="medium"
+                      onClick={handleYes}
+                    >
+                      <Text width={1} fontSize={1}>
+                        {isIntroStep ? "Start The Guide" : "Next"}
+                      </Text>
                     </Button>
                   )}
 
                   {isLastStep && (
                     <Button
+                      width={[0.5, 0.3]}
                       type="primary"
                       size="medium"
                       onClick={handleModalClose}
                     >
-                      Finish
+                      <Text width={1} fontSize={1}>
+                        Finish
+                      </Text>
                     </Button>
                   )}
                 </Flex>

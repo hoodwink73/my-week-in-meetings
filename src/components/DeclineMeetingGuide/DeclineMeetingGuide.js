@@ -93,16 +93,13 @@ const Graphic = ({ currentStep }) => {
 
   const shouldShowGraphic = () => !isResponseMode(currentStep);
 
-  useEffect(
-    () => {
-      if (!shouldShowGraphic()) {
-        set(false);
-      } else {
-        set(IMAGES_FOR_STEP.get(currentStep));
-      }
-    },
-    [currentStep]
-  );
+  useEffect(() => {
+    if (!shouldShowGraphic()) {
+      set(false);
+    } else {
+      set(IMAGES_FOR_STEP.get(currentStep));
+    }
+  }, [currentStep]);
 
   let transitions;
 
@@ -121,9 +118,9 @@ const Graphic = ({ currentStep }) => {
   });
 
   const opacityTransitions = useTransition(show, null, {
-    from: { transform: "opacity: 0" },
-    enter: { transform: "opacity: 1" },
-    leave: { transform: "opacity: 0", transform: "translateX(-100%)" },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0, transform: "translateX(-100%)" },
     config: ANIMATION_CONFIG
   });
 
@@ -175,12 +172,9 @@ const Animate = ({ currentStep, children }) => {
   const [show, set] = useState(false);
   const isLarge = useMedia("(min-width: 64em)");
 
-  useEffect(
-    () => {
-      set(currentStep.name);
-    },
-    [currentStep]
-  );
+  useEffect(() => {
+    set(currentStep.name);
+  }, [currentStep]);
 
   const transitions = useTransition(show, null, {
     from: {

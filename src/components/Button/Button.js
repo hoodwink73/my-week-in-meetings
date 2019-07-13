@@ -64,7 +64,7 @@ export default function Button({
             <LoadingIcon style={{ verticalAlign: "middle" }} />
           </Box>
         )}
-        <Box>{children}</Box>
+        <Box width={1}>{children}</Box>
       </Flex>
     </RebassButton>
   );
