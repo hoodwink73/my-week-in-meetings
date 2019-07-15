@@ -12,6 +12,8 @@ import ResponsibilityImage from "./images/decline-meeting-responsibility.png";
 import NotWellInformedImage from "./images/decline-meeting-not-well-informed.png";
 import BusyImage from "./images/decline-meeting-busy.png";
 import AttendMeetingImage from "./images/attend-meeting-alt.png";
+import InviteListTipImage from "./images/tips-invite-list.png";
+import ActiveParticipationTipImage from "./images/tips-participate-better.png";
 
 // import * as MockDate from "mockdate";
 // MockDate.set("2019-06-25T17:50:00");
@@ -36,7 +38,9 @@ ReactDOM.render(<App />, document.getElementById("root"));
     ResponsibilityImage,
     NotWellInformedImage,
     BusyImage,
-    AttendMeetingImage
+    AttendMeetingImage,
+    InviteListTipImage,
+    ActiveParticipationTipImage
   ];
 
   for (let imageUrl of imagesToPreload) {
