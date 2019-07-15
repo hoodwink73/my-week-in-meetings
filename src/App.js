@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "@firebase/app";
 import "@firebase/auth";
+import useMedia from "react-use/lib/useMedia";
 
 import theme from "./theme";
 import Login from "./components/Login";
@@ -41,6 +42,8 @@ function App() {
   const { initialising: initialisingUser, user } = useAuthState(
     firebase.auth()
   );
+
+  const isLarge = useMedia("(min-width: 64em)");
 
   useEffect(() => {
     const handleGoogleSignInScriptLoad = function() {
@@ -102,7 +105,14 @@ function App() {
 
       {/* React Portal to render errors */}
       <div
-        style={{ position: "fixed", left: "20px", bottom: "20px" }}
+        style={{
+          position: "fixed",
+          left: "20px",
+          bottom: "20px",
+          ...(!isLarge && {
+            right: "20px"
+          })
+        }}
         id="errors-container"
       />
     </>
