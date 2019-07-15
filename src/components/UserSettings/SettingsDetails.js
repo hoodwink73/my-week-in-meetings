@@ -13,6 +13,8 @@ import { UserConfigContext } from "../UserConfig";
 import Modal from "../Modal";
 import Button from "../Button";
 
+import ChooseWorkOffDays from "./ChooseWorkOffDays";
+
 const Select = ({ value, onChange, timeUnit }) => {
   let optionValues = [];
   if (timeUnit === "hours") {
@@ -94,8 +96,29 @@ export default function SettingsDetails({ isOpen, onToggle }) {
       workEndTime: { ...workingTime.workEndTime, minutes: parseInt(value, 10) }
     });
 
+  const handleOffDaysChange = event => {
+    let { value, checked } = event.target;
+
+    value = parseInt(value, 10);
+
+    setWorkingTime(prevWorkingTime => {
+      var prevWorkingDays = prevWorkingTime.workingDays;
+      let workingDays;
+      if (checked) {
+        workingDays = prevWorkingDays.filter(day => day !== value);
+      } else {
+        workingDays = [...prevWorkingDays, value];
+      }
+
+      return {
+        ...prevWorkingTime,
+        workingDays: workingDays.sort()
+      };
+    });
+  };
+
   const handleSavingUserConfig = () => {
-    setUserConfig(workingTime);
+    setUserConfig({ workingTime });
     onToggle();
   };
 
@@ -120,16 +143,6 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         onToggle();
       });
     }
-  };
-
-  const WordDaysInfo = ({ ...props }) => {
-    return (
-      <Card bg="primary.0" borderRadius={10} p={3} {...props}>
-        <Text fontSize={1} fontWeight="bold">
-          We consider Monday to Friday as working days
-        </Text>
-      </Card>
-    );
   };
 
   const WorkTimeSettings = ({ ...props }) => (
@@ -181,6 +194,12 @@ export default function SettingsDetails({ isOpen, onToggle }) {
           </Box>
         </Flex>
       </Flex>
+
+      <ChooseWorkOffDays
+        my={4}
+        daysOfWork={workingTime.workingDays}
+        onChange={handleOffDaysChange}
+      />
 
       <Button
         type="primary"
@@ -236,7 +255,6 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         >
           Settings
         </Text>
-        <WordDaysInfo mt={3} />
         <WorkTimeSettings mt={4} />
         <AccountSettings mt={4} mb={4} />
       </Flex>

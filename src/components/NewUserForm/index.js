@@ -115,7 +115,9 @@ export default function NewUserForm() {
               onFormSubmit={async values => {
                 try {
                   await setUserDetails(cache.current.userDetails);
-                  await setUserConfig(values);
+                  await setUserConfig({
+                    workingTime: { ...values }
+                  });
 
                   dispatch({
                     type: "CLOSE"

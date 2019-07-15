@@ -20,7 +20,7 @@ export default function UserConfig({ children }) {
   const userDocRef = firebase.firestore().doc(`users/${googleUserID}`);
   const { error, loading, value } = useDocument(userDocRef);
 
-  const setUserConfigInFirestore = workingTime => {
+  const setUserConfigInFirestore = ({ workingTime }) => {
     return userDocRef.set(
       {
         userConfig: { workingTime }
