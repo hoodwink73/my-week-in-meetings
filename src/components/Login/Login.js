@@ -227,16 +227,22 @@ export default function Login() {
                   <GoogleLogoNormal />
                 </Box>
               )}
-              <Text
-                width={4 / 5}
-                alignSelf="center"
-                css={css`
-                  font-family: "Roboto", sans-serif;
-                  font-size: 18px;
-                `}
-              >
-                Sign Up With Google
-              </Text>
+              <Flex width={4 / 5} justifyContent="space-evenly">
+                {isAuthenticationInProgress && (
+                  <Box width={24} alignSelf="center">
+                    <LoadingIcon />
+                  </Box>
+                )}
+                <Text
+                  alignSelf="center"
+                  css={css`
+                    font-family: "Roboto", sans-serif;
+                    font-size: 18px;
+                  `}
+                >
+                  Sign Up With Google
+                </Text>
+              </Flex>
             </Flex>
           </Button>
           <Text mt={3} textAlign="center">
