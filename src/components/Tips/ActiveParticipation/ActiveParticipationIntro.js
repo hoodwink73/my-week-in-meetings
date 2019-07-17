@@ -4,8 +4,7 @@ import { Text } from "@rebass/emotion";
 export default function ActiveParticipationIntro() {
   return (
     <Text>
-      Lets walkthrough some tips to learn how to actively participate in a
-      meeting
+      Take this bite-sized lesson to make the most out of your meetings.
     </Text>
   );
 }

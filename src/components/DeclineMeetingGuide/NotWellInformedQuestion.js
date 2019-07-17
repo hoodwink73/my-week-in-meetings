@@ -3,7 +3,7 @@ import PropType from "prop-types";
 
 import Question from "../Question";
 
-const question = "Are you not well informed about the meeting?";
+const question = "Are you well informed about your role in the meeting?";
 
 export default function NotWellInformedQuestion({ handleYes, handleNo }) {
   return (

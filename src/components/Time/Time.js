@@ -8,9 +8,9 @@ const roundOffTimeUnit = (duration, unit) => {
   if (unit === "hours") {
     // we need not round off the hours as we will be providing
     // th minutes
-    return leftPad(parseInt(duration, 10), 2, 0);
+    return `${parseInt(duration, 10)}`;
   } else if (unit === "minutes") {
-    return leftPad(parseFloat(duration).toFixed(0), 2, 0);
+    return `${leftPad(parseFloat(duration).toFixed(0), 2, 0)}`;
   }
 };
 
@@ -19,11 +19,18 @@ export default function Time({ timeInMs, as: Component, ...props }) {
 
   return (
     <Component {...props}>
-      {`${roundOffTimeUnit(duration.asHours(), "hours")}:${roundOffTimeUnit(
-        duration.minutes(),
-        "minutes"
-      )}
-      `}
+      {`${roundOffTimeUnit(duration.asHours(), "hours")}`}
+      <span
+        style={{
+          fontFamily: "monospace",
+          marginLeft: "2px",
+          marginRight: "6px"
+        }}
+      >
+        h
+      </span>
+      {`${roundOffTimeUnit(duration.minutes(), "minutes")}`}
+      <span style={{ fontFamily: "monospace", marginLeft: "2px" }}>m </span>
     </Component>
   );
 }

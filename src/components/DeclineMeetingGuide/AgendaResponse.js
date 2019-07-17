@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 
 import Response from "./Response";
 
-const content = `
-I am unclear about the agenda of the meeting. Can you please clarify it?
+const content = `The agenda of this meeting is not clear to me. Unfortunately, I will have to decline this meeting for now.
 
-If the meeting requires me to prepare something, can you list them?
+Please feel free to update the agenda and invite me again.
 `;
 
 export default function AgendaResponse({ onDeclineResponse }) {

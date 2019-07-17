@@ -44,10 +44,10 @@ const ANIMATION_CONFIG = {
 
 const declineMeetingGuideProgressChart = new Map([
   [Intro, [AgendaQuestion]],
-  [AgendaQuestion, [AgendaResponse, ResponsibilityQuestion]],
-  [ResponsibilityQuestion, [ResponsibilityResponse, NotWellInformedQuestion]],
-  [NotWellInformedQuestion, [NotWellInformedResponse, BusyQuestion]],
-  [BusyQuestion, [BusyResponse, AttendMeeting]]
+  [AgendaQuestion, [ResponsibilityQuestion, AgendaResponse]],
+  [ResponsibilityQuestion, [NotWellInformedQuestion, ResponsibilityResponse]],
+  [NotWellInformedQuestion, [BusyQuestion, NotWellInformedResponse]],
+  [BusyQuestion, [AttendMeeting, BusyResponse]]
 ]);
 
 const IMAGES_FOR_STEP = new Map([
@@ -334,7 +334,7 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
           <>
             <Box width={8 / 10} mx="auto">
               <Text fontSize={2} fontWeight="bold" mx="auto" my={3}>
-                Learn how to say no to meetings politely
+                Say no to meetings, politely
               </Text>
 
               <Animate currentStep={CurrentStep}>

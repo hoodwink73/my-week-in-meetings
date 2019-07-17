@@ -4,7 +4,7 @@ import { Text } from "@rebass/emotion";
 export default function InviteListIntro() {
   return (
     <Text>
-      Lets walkthrough some tips to decide who to invite to the meeting
+      Take this bite-sized lesson to be mindful about your invite list.
     </Text>
   );
 }

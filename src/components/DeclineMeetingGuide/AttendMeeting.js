@@ -11,7 +11,7 @@ export default function AttendMeeting({ handleYes }) {
   return (
     <Flex flexDirection="column" justifyContent="center" mx="auto" my={3}>
       <Text mb={3} fontSize={3}>
-        The meeting looks reasonable. Maybe you should attend it.
+        The meeting looks reasonable. Attend, you shall!
       </Text>
 
       <Box width={[1 / 2, 1 / 3]}>

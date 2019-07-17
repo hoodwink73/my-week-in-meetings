@@ -21,6 +21,8 @@ import { DAY_STATUSES } from "../../constants";
 // a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
+const IN_PROGRESS_TEXT_OPTIONS = [];
+
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
     FirestoreDataContext
@@ -105,18 +107,19 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
 
   switch (getDayStatus(userConfig)) {
     case DAY_STATUSES.get("NO_WORK_TODAY"):
-      Content = () => <Text {...textProps}>Enjoy the day!</Text>;
+      Content = () => <Text {...textProps}>Its a spa day today!</Text>;
       break;
     case DAY_STATUSES.get("YET_TO_BEGIN"):
       Content = () => (
-        <Text {...textProps}>{pluralize`Ready for the day! You have ${[
-          events.length,
-          "no"
-        ]} ${["meeting", "meetings"]} today`}</Text>
+        <Text
+          {...textProps}
+        >{pluralize`Namaste! Today is going to be fabulous.`}</Text>
       );
       break;
     case DAY_STATUSES.get("ENDED"):
-      Content = () => <Text {...textProps}>Hope you had a great day!</Text>;
+      Content = () => (
+        <Text {...textProps}>Take rest. You did well today.</Text>
+      );
       break;
     case DAY_STATUSES.get("IN_PROGRESS"):
     default:

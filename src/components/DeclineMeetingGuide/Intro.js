@@ -8,12 +8,11 @@ export default function Intro({ handleYes, handleNo }) {
   return (
     <Card width={1} mx="auto" my={3} borderRadius={0}>
       <Text fontSize={2} lineHeight={1.5}>
-        The walkthrough will guide you to decline meetings appropriately.
+        The walkthrough will guide you to decline meetings.
       </Text>
 
       <Text mt={2} fontSize={2} lineHeight={1.5}>
-        Just take the interactive guide and select the appropriate response to
-        send when declining the meeting.
+        Take the quiz. Get a fitting reply to decline this meeting.
       </Text>
       <Flex width={1} justifyContent="flex-end" mt={5}>
         <Button mr={2} size="small" variant="text" onClick={handleNo}>

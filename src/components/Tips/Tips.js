@@ -37,7 +37,7 @@ const TIPS_CONTENT = new Map([
     "InviteList",
     {
       graphic: InviteListGraphic,
-      title: "How to be mindful about your invite list",
+      title: "Who should you invite to a meeting",
       steps: new Map([
         ["intro", InviteListIntro],
         ["finish", Participation],
@@ -59,7 +59,7 @@ const TIPS_CONTENT = new Map([
     "ActiveParticpation",
     {
       graphic: ActiveParticipation,
-      title: "How to make most out of your meetings",
+      title: "How to actively participate in a meeting",
       steps: new Map([
         ["intro", ActiveParticipationIntro],
         ["finish", SelfAware],
