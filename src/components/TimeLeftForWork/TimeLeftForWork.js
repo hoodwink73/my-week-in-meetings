@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { Flex, Box, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { FirestoreDataContext } from "../FirestoreData";
+import { useTransition, animated } from "react-spring";
 
+import { FirestoreDataContext } from "../FirestoreData";
 import { UserConfigContext } from "../UserConfig";
 import Time from "../Time";
 import Progress from "../Progress";
@@ -21,7 +22,45 @@ import { DAY_STATUSES } from "../../constants";
 // a minute
 const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
-const IN_PROGRESS_TEXT_OPTIONS = [];
+const IN_PROGRESS_TEXT_OPTIONS = ["build", "make", "create", "get work done"];
+
+let AnimateText = () => {
+  const [animateText, setAnimatetext] = useState([
+    { key: 0, text: IN_PROGRESS_TEXT_OPTIONS[0] }
+  ]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (animateText[0].key < IN_PROGRESS_TEXT_OPTIONS.length - 1) {
+        console.log("here");
+        setAnimatetext([
+          {
+            key: animateText[0].key + 1,
+            text: IN_PROGRESS_TEXT_OPTIONS[animateText[0].key + 1]
+          }
+        ]);
+      }
+    }, 1000);
+  }, [animateText]);
+
+  const transitions = useTransition(animateText, item => item.key, {
+    from: {
+      position: "absolute",
+      transform: "translate3d(0,-40px,0)",
+      opacity: 0
+    },
+    enter: { transform: "translate3d(0,0px,0)", opacity: 1 },
+    leave: { transform: "translate3d(0,-40px,0)", opacity: 0 }
+  });
+
+  return transitions.map(({ item, props, key }) => (
+    <animated.span key={key} style={props}>
+      {item.text}
+    </animated.span>
+  ));
+};
+
+AnimateText = memo(AnimateText);
 
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
@@ -126,7 +165,7 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
       Content = () => (
         <Text {...textProps}>
           <Time timeInMs={timeLeftFromThisInstant} as="span" />
-          <span> left today to get work done</span>
+          <span> left today to</span>
         </Text>
       );
   }
@@ -149,6 +188,25 @@ export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
           mr={[2, 3]}
         />
         <Content />
+        {getDayStatus(userConfig) === DAY_STATUSES.get("IN_PROGRESS") && (
+          <Text
+            {...textProps}
+            css={css`
+              position: relative;
+              width: 12ch;
+              height: 1.2em;
+              display: inline-block;
+              margin-left: 4px;
+              span {
+                height: 1em;
+
+                left: 0;
+              }
+            `}
+          >
+            <AnimateText />
+          </Text>
+        )}
       </Flex>
     </Box>
   );
