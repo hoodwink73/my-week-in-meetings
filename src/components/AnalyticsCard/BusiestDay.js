@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 import { Flex, Box, Text, Card } from "@rebass/emotion";
-import { ReactComponent as MeetingIcon } from "../../icons/meeting.svg";
+import { ReactComponent as BusyIcon } from "../../icons/no-event-icon.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { VictoryChart, VictoryAxis, VictoryArea } from "victory";
@@ -33,11 +33,11 @@ const CardIcon = ({ width, ...props }) => (
       text-align: center;
       height: ${width}px;
       border-radius: 50%;
-      padding: 8px;
+      padding: 12px;
     `}
     {...props}
   >
-    <MeetingIcon
+    <BusyIcon
       css={theme => css`
         path {
           fill: ${theme.colors.primary[5]};
@@ -49,7 +49,7 @@ const CardIcon = ({ width, ...props }) => (
 
 const CardTitle = ({ ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
-    Busiest Day of the Week
+    Busiest day
   </Text>
 );
 

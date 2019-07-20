@@ -37,7 +37,7 @@ const CardIcon = ({ width, ...props }) => (
 
 const CardTitle = ({ ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
-    Top Collaborators
+    Collaborators
   </Text>
 );
 
@@ -70,8 +70,7 @@ const Explain = ({ ...props }) => (
     color="neutrals.5"
     {...props}
   >
-    Top three people who attended the same meetings with you over last four
-    weeks
+    People who you meet most frequently
   </Text>
 );
 

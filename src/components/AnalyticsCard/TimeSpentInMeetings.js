@@ -8,7 +8,7 @@ import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
 import { getWorkHours } from "../../utils";
 import { UserConfigContext } from "../UserConfig";
 import AggregatedDataPropType from "./AggregatedData.propType";
-import { ReactComponent as MeetingIcon } from "../../icons/meeting.svg";
+import { ReactComponent as TimeSpentIcon } from "../../icons/dollar-icon.svg";
 import { ReactComponent as InfoIcon } from "../../icons/icon-information.svg";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -30,11 +30,11 @@ const CardIcon = ({ width, ...props }) => (
       text-align: center;
       height: ${width}px;
       border-radius: 50%;
-      padding: 8px;
+      padding: 12px;
     `}
     {...props}
   >
-    <MeetingIcon
+    <TimeSpentIcon
       css={theme => css`
         path {
           fill: ${theme.colors.primary[5]};
@@ -46,7 +46,7 @@ const CardIcon = ({ width, ...props }) => (
 
 const CardTitle = ({ ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.6" {...props}>
-    Time Spent in Meeting
+    Time spent
   </Text>
 );
 
@@ -72,13 +72,13 @@ const Explain = ({ ...props }) => (
       color="neutrals.5"
       {...props}
     >
-      Total time spent in meetings over last four weeks
-      <CardInfo
+      How much time do you usually spend in meetings in a week
+      {/* <CardInfo
         css={css`
           padding-left: 5px;
           vertical-align: bottom;
         `}
-      />
+      /> */}
     </Text>
   </>
 );
@@ -106,8 +106,11 @@ export default function TimeSpentInMeetings({ data, ...props }) {
 
   const totalTimeSpentInMeetingsInHours = moment
     .duration(totalTimeSpentInMeetingsInMs)
-    .asHours()
-    .toFixed(1);
+    .asHours();
+
+  const weeklyAverageTimeSpentInMeetingsInHours = (
+    totalTimeSpentInMeetingsInHours / 4
+  ).toFixed(1);
 
   const timeSpentInMeetingsAsPercent = (
     (totalTimeSpentInMeetingsInMs / totalWorkTimeAvailableInMs) *
@@ -139,7 +142,7 @@ export default function TimeSpentInMeetings({ data, ...props }) {
           <Explain mt={4} />
           <Box width={1} justifyContent="space-between" alignSelf="flex-end">
             <TotalTimeSpentInMeetings
-              metric={totalTimeSpentInMeetingsInHours}
+              metric={weeklyAverageTimeSpentInMeetingsInHours}
             />
 
             <TimeInMeetinsRelativeToWorkInPercent
