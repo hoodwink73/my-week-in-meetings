@@ -50,9 +50,9 @@ const CardTitle = ({ ...props }) => (
   </Text>
 );
 
-const TotalTimeSpentInMeetings = ({ metric, ...props }) => (
+const WeeklyAverageTimeSpentInMeetings = ({ metric, ...props }) => (
   <Text width={1} fontSize={5} fontWeight="bold" color="neutrals.7" {...props}>
-    {metric} hrs
+    {metric}
   </Text>
 );
 
@@ -108,9 +108,9 @@ export default function TimeSpentInMeetings({ data, ...props }) {
     .duration(totalTimeSpentInMeetingsInMs)
     .asHours();
 
-  const weeklyAverageTimeSpentInMeetingsInHours = (
-    totalTimeSpentInMeetingsInHours / 4
-  ).toFixed(1);
+  const weeklyAverageTimeSpentInMeetingsInMs = moment.duration(
+    totalTimeSpentInMeetingsInMs / WEEKS_TO_AGGREGATE_OVER
+  );
 
   const timeSpentInMeetingsAsPercent = (
     (totalTimeSpentInMeetingsInMs / totalWorkTimeAvailableInMs) *
@@ -141,8 +141,13 @@ export default function TimeSpentInMeetings({ data, ...props }) {
         >
           <Explain mt={4} />
           <Box width={1} justifyContent="space-between" alignSelf="flex-end">
-            <TotalTimeSpentInMeetings
-              metric={weeklyAverageTimeSpentInMeetingsInHours}
+            <WeeklyAverageTimeSpentInMeetings
+              metric={`${parseInt(
+                weeklyAverageTimeSpentInMeetingsInMs.asHours(),
+                10
+              )} h ${weeklyAverageTimeSpentInMeetingsInMs
+                .minutes()
+                .toFixed(0)} m`}
             />
 
             <TimeInMeetinsRelativeToWorkInPercent
