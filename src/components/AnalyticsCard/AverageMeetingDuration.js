@@ -12,7 +12,7 @@ import { ReactComponent as InfoIcon } from "../../icons/icon-information.svg";
 import { css, jsx } from "@emotion/core";
 
 const WEEKS_TO_AGGREGATE_OVER = 4;
-const KEY_FOR_AGGREGATED_DATA = "aggregateAverageMeetingTime";
+const KEY_FOR_AGGREGATED_DATA = "aggregateMeetingDurations";
 
 const CardInfo = ({ ...props }) => (
   <Tooltip label="This data is calculated over last four weeks">
@@ -70,13 +70,22 @@ const Explain = ({ ...props }) => (
 );
 
 export default function AverageMeetingDuration({ data, ...props }) {
-  const averageMeetingTimeForAllWeeksInMs =
-    data.reduce((cumulative, aggregateForAWeek = {}) => {
-      return cumulative + delve(aggregateForAWeek, KEY_FOR_AGGREGATED_DATA, 0);
-    }, 0) / WEEKS_TO_AGGREGATE_OVER;
+  const sum = arr => arr.reduce((a, b) => a + b);
+
+  const durationForAllEventsInMs = data.reduce(
+    (allEvents, aggregateForAWeek = {}) => {
+      return allEvents.concat(
+        delve(aggregateForAWeek, KEY_FOR_AGGREGATED_DATA, [])
+      );
+    },
+    []
+  );
+
+  const averageMeetingTimeForEventsInMs =
+    sum(durationForAllEventsInMs) / durationForAllEventsInMs.length;
 
   const averageMeetingTimeForAllWeeksInMinutes = moment
-    .duration(averageMeetingTimeForAllWeeksInMs)
+    .duration(averageMeetingTimeForEventsInMs)
     .asMinutes()
     .toFixed(0);
 
