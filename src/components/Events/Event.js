@@ -37,33 +37,12 @@ export default function Event({ data, isHappeningNow, readOnly }) {
 
   const highlightEventStyle = ({ colors }) => css`
     border-radius: 10px;
-
-    ${!isActive &&
-      `
-      color: ${colors.neutrals[3]};
-    `}
-
-    ${isLarge ? "&:hover" : "&"} {
-      ${(isActive || !isLarge) &&
-        !readOnly &&
-        `box-shadow: 0px 0px 0px 2px
-        ${isActive ? colors.primary[2] : colors.neutrals[3]};`}
-      & > div:nth-child(2) {
-        visibility: visible;
-      }
-    }
-
-    ${isLarge &&
-      `
-        & > div:nth-child(2) {
-          visibility: hidden;
-        }
-      `}
+    box-shadow: 0px 0px 0px 2px ${colors.primary[1]};
   `;
 
   return (
     <>
-      <Box key={data.id} mb={[4, 1]} css={highlightEventStyle}>
+      <Box key={data.id} mb={[4]} css={highlightEventStyle}>
         <Flex justifyContent="space-between" px={2} py={3}>
           <Flex
             flexDirection="column"
@@ -98,15 +77,10 @@ export default function Event({ data, isHappeningNow, readOnly }) {
             </Text>
 
             <Flex flexDirection={["column", "row"]}>
-              <Text fontSize={1} color={isActive ? "gray.3" : "neutrals.3"}>
+              <Text fontSize={1} color={"gray.3"}>
                 {"organised by"}
               </Text>
-              <Text
-                fontSize={1}
-                color={isActive ? "gray.3" : "neutrals.3"}
-                fontWeight="bold"
-                ml={[0, 1]}
-              >
+              <Text fontSize={1} color={"gray.3"} fontWeight="bold" ml={[0, 1]}>
                 {isEventOrganisedByUser ? "you" : data.organizer.email}
               </Text>
             </Flex>
@@ -117,6 +91,7 @@ export default function Event({ data, isHappeningNow, readOnly }) {
           <Card
             as={Flex}
             justifyContent="space-between"
+            alignItems="center"
             mt={3}
             p={2}
             bg="primary.0"
@@ -125,7 +100,9 @@ export default function Event({ data, isHappeningNow, readOnly }) {
               border-radius: 0 0 10px 10px;
             `}
           >
-            <Text fontSize={2}> Decline this meeting?</Text>
+            <Text p={1} fontSize={2}>
+              Decline this meeting?
+            </Text>
             <Button
               type="primary"
               size="small"
