@@ -6,6 +6,7 @@ import { ReactComponent as BusyIcon } from "../../icons/no-event-icon.svg";
 import { css, jsx } from "@emotion/core";
 import { VictoryChart, VictoryAxis, VictoryArea } from "victory";
 
+import { UserConfigContext } from "../UserConfig";
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { sortCollectionByKey } from "../../utils";
 import { DAYS_OF_WEEKS } from "../../constants";
@@ -19,7 +20,7 @@ const getDataForChart = sortedData => {
   }
 
   result.sort((a, b) => {
-    return a.day < b.day ? -1 : 1;
+    return parseInt(a.day, 10) < parseInt(b.day, 10) ? -1 : 1;
   });
 
   return result;
@@ -110,6 +111,7 @@ const NoDataAvailable = ({ ...props }) => (
 );
 
 export default function BusiestDay({ data, ...props }) {
+  const { userConfig } = useContext(UserConfigContext);
   let noDataAvailable = false;
   let dataForChart = null;
   let upperLimitRange = null;
@@ -137,6 +139,26 @@ export default function BusiestDay({ data, ...props }) {
 
   useMemo(() => {
     dataForChart = getDataForChart(sortedMeetingTimeByDays);
+
+    var daysIncludedInChart = [];
+
+    for (let chartDataForDay of dataForChart) {
+      daysIncludedInChart.push(parseInt(chartDataForDay.day, 10));
+    }
+
+    // lets say a person has never done a meeting on Wednesday and it
+    // is a valid working day, we need to show the data with zero meeting
+    // duration
+    for (let day of userConfig.workingDays) {
+      if (!daysIncludedInChart.includes(day)) {
+        dataForChart.push({ day: `${day}`, duration: 0 });
+      }
+    }
+
+    dataForChart = dataForChart.sort((a, b) => {
+      return parseInt(a.day, 10) < parseInt(b.day, 10) ? -1 : 1;
+    });
+
     [upperLimitRange] = sortedMeetingTimeByDays.values();
     // we want our y-scale range to be a little greater than
     // the largest y-value, otherwise the chart cuts at the top
