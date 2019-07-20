@@ -5,7 +5,7 @@ import firebase from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
 import "@firebase/functions";
-import { Flex, Box, Text, Link } from "@rebass/emotion";
+import { Flex, Box, Text, Card, Link } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
@@ -134,9 +134,18 @@ export default function Login() {
   const isLargeDesktop = useMedia("(min-width: 90em)");
 
   const handleSignUp = () => {
-    setAuthenticationInProgress(true);
+    const setAuthenticationProgress = authDetails =>
+      ASQ().val(() => {
+        setAuthenticationInProgress(true);
+        return authDetails;
+      });
+
     return ASQ()
-      .seq(getOfflineAccessToken, persistOfflineAccessToken)
+      .seq(
+        getOfflineAccessToken,
+        setAuthenticationProgress,
+        persistOfflineAccessToken
+      )
       .val(({ data: idToken }) => ({ idToken }))
       .seq(signInWithFirebase)
       .or(error => {
@@ -152,11 +161,14 @@ export default function Login() {
   };
 
   const handleSignIn = () => {
-    // Sign the user in, and then retrieve their ID.
-    setAuthenticationInProgress(true);
     return ASQ()
       .seq(signInWithGoogle)
       .seq(hasUserProvidedEventsPermission)
+      .val(googleAccountDetails => {
+        // Sign the user in, and then retrieve their ID.
+        setAuthenticationInProgress(true);
+        return googleAccountDetails;
+      })
       .seq(signInWithFirebase)
       .or(error => {
         setAuthenticationInProgress(false);
@@ -273,121 +285,139 @@ export default function Login() {
     </Text>
   );
 
-  return (
-    <>
-      <Box
-        css={css`
-          width: 100vw;
-          height: ${isSmall ? "auto" : "80vh"};
-        `}
-      >
-        <Flex
-          flexDirection={["column", "row", "row"]}
-          mb={5}
+  const Authenticating = () => (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      css={css`
+        height: 100vh;
+      `}
+    >
+      <Box width={64} pt={1} mr={2} flex="0 0 auto">
+        <LoadingIcon />
+      </Box>
+    </Flex>
+  );
+
+  if (isAuthenticationInProgress) {
+    return <Authenticating />;
+  } else {
+    return (
+      <>
+        <Box
           css={css`
-            position: relative;
-            height: ${isSmall ? "auto" : "100%"};
+            width: 100vw;
+            height: ${isSmall ? "auto" : "80vh"};
           `}
         >
-          <Box
-            width={[1, 0.5]}
-            order={[2, 1, 1]}
+          <Flex
+            flexDirection={["column", "row", "row"]}
+            mb={5}
             css={css`
-              height: ${isLarge ? "120%" : "auto"};
+              position: relative;
+              height: ${isSmall ? "auto" : "100%"};
             `}
           >
-            <Flex
-              justifyContent="flex-end"
-              alignItems="center"
+            <Box
+              width={[1, 0.5]}
+              order={[2, 1, 1]}
               css={css`
-              position: ${isLarge ? "relative" : "static"};
-            ${
-              "" /* adjust to keep distance from the absolutely positioned logo */
-            }
-              height: 100%;
-              align-items: center;
-              background-image: url(${smallBlobInBackground});
-              background-repeat: no-repeat;
-              background-position: left top;
-              background-size: 100%;
-              background-blend-mode: lighten;
-
-              ${isTablet &&
-                css`
-                  padding-left: 32px;
-                `}
-
-              ${isLarge &&
-                css`
-                  padding-left: 64px;
-                `}
-
-              ${isLargeDesktop &&
-                css`
-                  padding-left: 132px;
-                  width: 80%;
-                `}
-            `}
+                height: ${isLarge ? "120%" : "auto"};
+              `}
             >
-              <Logo />
-              <Box width={[1]} px={[4, 0]}>
-                <Text
-                  mt={[0, 4]}
-                  fontSize={[6, 7]}
-                  fontWeight={900}
-                  textAlign={["center", "left"]}
-                  css={css`
-                    font-family: Quicksand, ${DEFAULT_FONT_FAMILY};
-                  `}
-                >
-                  <Text>Keep a tab </Text>
-                  <Text>on your day</Text>
-                </Text>
-                <Text
-                  fontSize={[3, 4]}
-                  mt={[4]}
-                  lineHeight={2}
-                  textAlign={["center", "left"]}
-                  css={css`
-                    font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
-                  `}
-                >
-                  Worried that your time is lost in unproductive meetings — use
-                  our deepwork clock and free up more time with our interactive
-                  bite-sized guide.
-                </Text>
-                <SignUpButton width={[0.7]} mt={4} mx={["auto", 0]} />
-              </Box>
-            </Flex>
-          </Box>
-          <Box
-            width={[1, 0.5]}
-            order={[1, 2, 2]}
-            css={css`
-              height: ${isSmall ? "45vh" : "100%"};
-              background-image: url(${heroImage}), url(${bigBlobInBackground});
-              background-repeat: no-repeat;
-              background-position: center center,
-                left ${isSmall ? "100%" : isLargeDesktop ? "100%" : "50%"};
-              background-size: 80%, 130%;
-              flex-shrink: 0;
-              background-blend-mode: luminosity;
-            `}
-          />
-        </Flex>
-      </Box>
-      <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
+              <Flex
+                justifyContent="flex-end"
+                alignItems="center"
+                css={css`
+                position: ${isLarge ? "relative" : "static"};
+              ${
+                "" /* adjust to keep distance from the absolutely positioned logo */
+              }
+                height: 100%;
+                align-items: center;
+                background-image: url(${smallBlobInBackground});
+                background-repeat: no-repeat;
+                background-position: left top;
+                background-size: 100%;
+                background-blend-mode: lighten;
 
-      <Flex width={["80vw", 300]} mx="auto" my={5} justifyContent="center">
-        <Link fontSize={1} href="/privacy-policy" color="gray.4">
-          Privacy Policy
-        </Link>
-        <Link fontSize={1} ml={2} href="/toc" color="gray.4">
-          Terms And Conditions
-        </Link>
-      </Flex>
-      {/* hack to prevent margin collapse in Safari */}
-      <Box p={1} />
-    </>
-  );
+                ${isTablet &&
+                  css`
+                    padding-left: 32px;
+                  `}
+
+                ${isLarge &&
+                  css`
+                    padding-left: 64px;
+                  `}
+
+                ${isLargeDesktop &&
+                  css`
+                    padding-left: 132px;
+                    width: 80%;
+                  `}
+              `}
+              >
+                <Logo />
+                <Box width={[1]} px={[4, 0]}>
+                  <Text
+                    mt={[0, 4]}
+                    fontSize={[6, 7]}
+                    fontWeight={900}
+                    textAlign={["center", "left"]}
+                    css={css`
+                      font-family: Quicksand, ${DEFAULT_FONT_FAMILY};
+                    `}
+                  >
+                    <Text>Keep a tab </Text>
+                    <Text>on your day</Text>
+                  </Text>
+                  <Text
+                    fontSize={[3, 4]}
+                    mt={[4]}
+                    lineHeight={2}
+                    textAlign={["center", "left"]}
+                    css={css`
+                      font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
+                    `}
+                  >
+                    Worried that your time is lost in unproductive meetings —
+                    use our deepwork clock and free up more time with our
+                    interactive bite-sized guide.
+                  </Text>
+                  <SignUpButton width={[0.7]} mt={4} mx={["auto", 0]} />
+                </Box>
+              </Flex>
+            </Box>
+            <Box
+              width={[1, 0.5]}
+              order={[1, 2, 2]}
+              css={css`
+                height: ${isSmall ? "45vh" : "100%"};
+                background-image: url(${heroImage}), url(${bigBlobInBackground});
+                background-repeat: no-repeat;
+                background-position: center center,
+                  left ${isSmall ? "100%" : isLargeDesktop ? "100%" : "50%"};
+                background-size: 80%, 130%;
+                flex-shrink: 0;
+                background-blend-mode: luminosity;
+              `}
+            />
+          </Flex>
+        </Box>
+        <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
+
+        <Flex width={["80vw", 300]} mx="auto" my={5} justifyContent="center">
+          <Link fontSize={1} href="/privacy-policy" color="gray.4">
+            Privacy Policy
+          </Link>
+          <Link fontSize={1} ml={2} href="/toc" color="gray.4">
+            Terms And Conditions
+          </Link>
+        </Flex>
+        {/* hack to prevent margin collapse in Safari */}
+        <Box p={1} />
+      </>
+    );
+  }
 }
