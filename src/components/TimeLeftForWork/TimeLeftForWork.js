@@ -40,7 +40,7 @@ let AnimateText = () => {
           }
         ]);
       }
-    }, 1000);
+    }, 2000);
   }, [animateText]);
 
   const transitions = useTransition(animateText, item => item.key, {
@@ -50,7 +50,7 @@ let AnimateText = () => {
       opacity: 0
     },
     enter: { transform: "translate3d(0,0px,0)", opacity: 1 },
-    leave: { transform: "translate3d(0,-40px,0)", opacity: 0 }
+    leave: { opacity: 0 }
   });
 
   return transitions.map(({ item, props, key }) => (
