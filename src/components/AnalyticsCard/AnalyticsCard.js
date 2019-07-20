@@ -6,6 +6,7 @@ import TimeSpentInMeetings from "./TimeSpentInMeetings";
 import BusiestDay from "./BusiestDay";
 import TopCollaborator from "./TopCollaborator";
 import MeetingsByDomains from "./MeetingsByDomains";
+import AverageMeetingDuration from "./AverageMeetingDuration";
 
 import { FirestoreDataContext } from "../FirestoreData";
 
@@ -29,13 +30,15 @@ export default function AnalyticsCard({ type, ...props }) {
   let Component;
 
   switch (type) {
-    case "timeSpentInMeetings":
     case "busiestDay":
     case "topCollaborator":
     case "meetingsByDomains":
+    case "timeSpentInMeetings":
+    case "averageMeetingDuration":
       loading = areDataForLastWeeksLoading;
       data = [dataForThisWeek, ...dataForLastWeeks];
       break;
+
     default:
       loading = isDataForThisWeekLoading;
       data = [dataForThisWeek];
@@ -53,6 +56,9 @@ export default function AnalyticsCard({ type, ...props }) {
       break;
     case "meetingsByDomains":
       Component = MeetingsByDomains;
+      break;
+    case "averageMeetingDuration":
+      Component = AverageMeetingDuration;
       break;
     default:
       Component = "div";
@@ -81,6 +87,7 @@ AnalyticsCard.propTypes = {
     "timeSpentInMeetings",
     "busiestDay",
     "topCollaborator",
-    "meetingsByDomains"
+    "meetingsByDomains",
+    "averageMeetingDuration"
   ])
 };
