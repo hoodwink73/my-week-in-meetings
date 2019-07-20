@@ -8,6 +8,7 @@ import "@firebase/functions";
 import { Flex, Box, Text, Link } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import useMedia from "react-use/lib/useMedia";
 
 import FAQ from "../FAQ";
 import { useErrorManager } from "../Errors";
@@ -17,9 +18,15 @@ import {
 } from "../../constants";
 import { AppError } from "../../utils";
 import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
-import { ReactComponent as Logo } from "../../icons/logo.svg";
-import { ReactComponent as GoogleLogoNormal } from "../../icons/btn_google_dark_normal.svg";
+import { ReactComponent as GoogleLogoNormal } from "../../icons/btn_google_light_normal_ios.svg";
 import { ReactComponent as GoogleLogoDisabled } from "../../icons/btn_google_dark_disabled.svg";
+
+import bigBlobInBackground from "../../images/big-blob.svg";
+import smallBlobInBackground from "../../images/small-blob.svg";
+import heroImage from "../../images/hero-image.png";
+
+import Features from "./Features";
+import "./Login.css";
 
 // this is a simple sign in with google without wanting
 // any offline access token
@@ -107,12 +114,24 @@ const persistOfflineAccessToken = ({ authorizationCode, googleID }) => {
   return ASQ().promise(googleCloudFn({ code: authorizationCode, googleID }));
 };
 
+const DEFAULT_FONT_FAMILY = `
+-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
+`;
+
 export default function Login() {
   const [isAuthenticationInProgress, setAuthenticationInProgress] = useState(
     false
   );
 
   const { registerError } = useErrorManager();
+
+  const isLarge = useMedia("(min-width: 64em)");
+  const isSmall = useMedia("(max-width: 40em )");
+
+  const isTablet = useMedia("(min-width: 48em)");
+  const isLargeDesktop = useMedia("(min-width: 90em)");
 
   const handleSignUp = () => {
     setAuthenticationInProgress(true);
@@ -152,173 +171,212 @@ export default function Login() {
       });
   };
 
-  return (
-    <Box>
-      <Flex
-        width="100vw"
-        style={{ height: "100%", minHeight: "100vh" }}
-        bg="gray.0"
-        flexDirection={["column", "row"]}
-        justifyContent="center"
-        alignItems="flex-start"
-        pt={[4, 6]}
-        pb={[4, 6]}
-      >
-        <Flex
-          flexDirection="column"
-          mx={["auto", 3]}
-          css={css`
-            width: min-content;
+  const SignUpButton = props => {
+    return (
+      <Box {...props}>
+        <Button
+          width={[1]}
+          bg={isAuthenticationInProgress ? "googleButton.2" : "white.0"}
+          color="gray.4"
+          onClick={handleSignUp}
+          style={{ cursor: "pointer" }}
+          disabled={isAuthenticationInProgress}
+          px={1}
+          py={1}
+          borderderRadius={1}
+          alignSelf="center"
+          css={({ colors }) => css`
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
           `}
         >
-          <Flex
-            width={["80vw", 300]}
-            mb={4}
-            alignSelf="center"
-            flexWrap="wrap"
-            css={css`
-              position: relative;
-            `}
-          >
-            <Box width={1}>
-              <Logo />
-            </Box>
-            <Text
-              width={1 / 2}
-              color="gray.4"
-              fontWeight="bold"
-              fontSize={[6]}
-              css={css`
-                position: absolute;
-                top: calc(70%);
-              `}
-            >
-              Deepwork Today
-            </Text>
-          </Flex>
-          <Button
-            width={[1]}
-            bg={
-              isAuthenticationInProgress ? "googleButton.2" : "googleButton.0"
-            }
-            color={isAuthenticationInProgress ? "gray.4" : "white.1"}
-            onClick={handleSignUp}
-            style={{ cursor: "pointer" }}
-            disabled={isAuthenticationInProgress}
-            px={1}
-            py={1}
-            borderderRadius={1}
-            alignSelf="center"
-            css={({ colors }) => css`
-              &:active {
-                background-color: ${colors.googleButton[1]};
-              }
-            `}
-          >
+          <Flex justifyContent="center">
+            {isAuthenticationInProgress && (
+              <Box bg="transparent" pt={1}>
+                <GoogleLogoDisabled />
+              </Box>
+            )}
+
+            {!isAuthenticationInProgress && (
+              <Box bg="white.0" pt={1}>
+                <GoogleLogoNormal />
+              </Box>
+            )}
             <Flex>
               {isAuthenticationInProgress && (
-                <Box width={1 / 5} bg="transparent">
-                  <GoogleLogoDisabled />
+                <Box width={24} alignSelf="center">
+                  <LoadingIcon />
                 </Box>
               )}
+              <Text
+                alignSelf="center"
+                css={css`
+                  font-family: "Roboto", sans-serif;
+                  font-size: ${isLarge ? "18px" : "14px"};
+                `}
+              >
+                Sign Up With Google
+              </Text>
+            </Flex>
+          </Flex>
+        </Button>
+        <Text mt={3} textAlign={["center", "left"]}>
+          Already have an account?{" "}
+          <Link
+            css={css`
+              cursor: pointer;
+              text-decoration: underline;
+            `}
+            color="gray.4"
+            onClick={handleSignIn}
+          >
+            Login
+          </Link>
+        </Text>
+      </Box>
+    );
+  };
 
-              {!isAuthenticationInProgress && (
-                <Box width={1 / 5} bg="white.0">
-                  <GoogleLogoNormal />
-                </Box>
-              )}
-              <Flex width={4 / 5} justifyContent="space-evenly">
-                {isAuthenticationInProgress && (
-                  <Box width={24} alignSelf="center">
-                    <LoadingIcon />
-                  </Box>
-                )}
+  const Logo = () => (
+    <Text
+      css={css`
+        position: absolute;
+        text-transform: uppercase;
+        top: 20px;
+        letter-spacing: 10px;
+        width: 100%;
+        ${!isLarge &&
+          `
+          width: auto;
+          left: 0;
+          right: 0;
+          text-align: center;
+          background-color: #ffffff5c;
+          border-radius: 10px;
+          padding: 4px;
+        `}
+
+        ${isLarge &&
+          css`
+            padding-left: 64px;
+          `}
+
+        ${isLargeDesktop &&
+          css`
+            padding-left: 132px;
+          `}
+    }
+      `}
+      fontWeight={700}
+      fontSize={[2, 3]}
+    >
+      Deepwork.today
+    </Text>
+  );
+
+  return (
+    <>
+      <Box
+        css={css`
+          width: 100vw;
+          height: ${isSmall ? "auto" : "100vh"};
+        `}
+      >
+        <Flex
+          flexDirection={["column", "row", "row"]}
+          mb={5}
+          css={css`
+            position: relative;
+            height: ${isSmall ? "auto" : "100%"};
+          `}
+        >
+          <Box
+            width={[1, 0.5]}
+            order={[2, 1, 1]}
+            css={css`
+              height: ${isLarge ? "100%" : "auto"};
+              flex-shrink: 0;
+            `}
+          >
+            <Flex
+              justifyContent="flex-end"
+              alignItems="center"
+              css={css`
+              position: ${isLarge ? "relative" : "static"};
+              height: 100%;
+              align-items: center;
+              background-image: url(${smallBlobInBackground});
+              background-repeat: no-repeat;
+              background-position: left bottom;
+              background-size: 100%;
+              background-blend-mode: lighten;
+
+              ${isTablet &&
+                css`
+                  padding-left: 32px;
+                `}
+
+              ${isLarge &&
+                css`
+                  padding-left: 64px;
+                `}
+
+              ${isLargeDesktop &&
+                css`
+                  padding-left: 132px;
+                  width: 80%;
+                `}
+            `}
+            >
+              <Logo />
+              <Box width={[1]} px={[4, 0]}>
                 <Text
-                  alignSelf="center"
+                  mt={[0, 4]}
+                  fontSize={[6, 7]}
+                  fontWeight={900}
+                  textAlign={["center", "left"]}
                   css={css`
-                    font-family: "Roboto", sans-serif;
-                    font-size: 18px;
+                    font-family: Quicksand, ${DEFAULT_FONT_FAMILY};
                   `}
                 >
-                  Sign Up With Google
+                  <Text>Keep a tab </Text>
+                  <Text>on your day</Text>
                 </Text>
-              </Flex>
+                <Text
+                  fontSize={[3, 4]}
+                  mt={[4, 5]}
+                  lineHeight={2}
+                  textAlign={["center", "left"]}
+                  css={css`
+                    font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
+                  `}
+                >
+                  Worried that your time is lost in unproductive meetings — use
+                  our deepwork clock and free up more time with our interactive
+                  bite-sized guide.
+                </Text>
+                <SignUpButton width={[0.7]} mt={5} mx={["auto", 0]} />
+              </Box>
             </Flex>
-          </Button>
-          <Text mt={3} textAlign="center">
-            Already have an account?{" "}
-            <Link
-              css={css`
-                cursor: pointer;
-                text-decoration: underline;
-              `}
-              color="gray.4"
-              onClick={handleSignIn}
-            >
-              Login
-            </Link>
-          </Text>
+          </Box>
+          <Box
+            width={[1, 0.5]}
+            order={[1, 2, 2]}
+            css={css`
+              height: ${isSmall ? "45vh" : "100%"};
+              background-image: url(${heroImage}), url(${bigBlobInBackground});
+              background-repeat: no-repeat;
+              background-position: center center,
+                left ${isSmall ? "100%" : isLargeDesktop ? "100%" : "50%"};
+              background-size: 80%, 130%;
+              flex-shrink: 0;
+              background-blend-mode: luminosity;
+            `}
+          />
         </Flex>
-        <Box width={["80vw", 300]} mx={["auto", 4]} my={[5, 0]}>
-          <Box mb={5}>
-            <Text fontWeight="bold" fontSize={[6]} color="gray.4">
-              Time is finite. Spend it well, everyday.
-            </Text>
-          </Box>
-
-          <Box mb={4}>
-            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
-              Seperate work and distractions
-            </Text>
-            <Text fontSize={2} color="gray.4">
-              Always be aware about the potential time you have left to get work
-              done.
-            </Text>
-          </Box>
-
-          <Box mb={4}>
-            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
-              Spend time on things that matter
-            </Text>
-            <Text fontSize={2} color="gray.4">
-              We help you say no to unnecessary meetings and save time.
-            </Text>
-          </Box>
-
-          <Box mb={4}>
-            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
-              Collaboration thrives on agency
-            </Text>
-            <Text fontSize={2} color="gray.4">
-              We provide tips to help you better organise and participate in
-              meetings.
-            </Text>
-          </Box>
-
-          <Box mb={4}>
-            <Text fontWeight="bold" mb={2} fontSize={3} color="gray.4">
-              The big picture
-            </Text>
-            <Text fontSize={2} color="gray.4">
-              We summarise your collaborations. Know relative time spent between
-              meetings and work. And much more.
-            </Text>
-          </Box>
-        </Box>
-      </Flex>
-
-      <Flex width={["80vw", 600]} mx="auto" justifyContent="center">
-        <FAQ />
-      </Flex>
-
-      <Flex width={["80vw", 300]} mx="auto" py={5} justifyContent="center">
-        <Link fontSize={1} href="/privacy-policy" color="gray.4">
-          Privacy Policy
-        </Link>
-        <Link fontSize={1} ml={2} href="/toc" color="gray.4">
-          Terms And Conditions
-        </Link>
-      </Flex>
-    </Box>
+      </Box>
+      <Features width={[4 / 5, 3 / 4]} mx="auto" my={6} />
+      {/* hack to prevent margin collapse in Safari */}
+      <Box p={1} />
+    </>
   );
 }
