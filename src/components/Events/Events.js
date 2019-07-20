@@ -13,6 +13,7 @@ export default function Events({ events, happeningNow }) {
       ) : (
         events.map(event => (
           <Event
+            key={event.id}
             data={event}
             isHappeningNow={happeningNow.includes(event.id)}
           />
