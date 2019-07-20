@@ -278,7 +278,7 @@ export default function Login() {
       <Box
         css={css`
           width: 100vw;
-          height: ${isSmall ? "auto" : "100vh"};
+          height: ${isSmall ? "auto" : "80vh"};
         `}
       >
         <Flex
@@ -293,8 +293,7 @@ export default function Login() {
             width={[1, 0.5]}
             order={[2, 1, 1]}
             css={css`
-              height: ${isLarge ? "100%" : "auto"};
-              flex-shrink: 0;
+              height: ${isLarge ? "120%" : "auto"};
             `}
           >
             <Flex
@@ -302,11 +301,14 @@ export default function Login() {
               alignItems="center"
               css={css`
               position: ${isLarge ? "relative" : "static"};
+            ${
+              "" /* adjust to keep distance from the absolutely positioned logo */
+            }
               height: 100%;
               align-items: center;
               background-image: url(${smallBlobInBackground});
               background-repeat: no-repeat;
-              background-position: left bottom;
+              background-position: left top;
               background-size: 100%;
               background-blend-mode: lighten;
 
@@ -343,7 +345,7 @@ export default function Login() {
                 </Text>
                 <Text
                   fontSize={[3, 4]}
-                  mt={[4, 5]}
+                  mt={[4]}
                   lineHeight={2}
                   textAlign={["center", "left"]}
                   css={css`
@@ -354,7 +356,7 @@ export default function Login() {
                   our deepwork clock and free up more time with our interactive
                   bite-sized guide.
                 </Text>
-                <SignUpButton width={[0.7]} mt={5} mx={["auto", 0]} />
+                <SignUpButton width={[0.7]} mt={4} mx={["auto", 0]} />
               </Box>
             </Flex>
           </Box>
@@ -374,7 +376,16 @@ export default function Login() {
           />
         </Flex>
       </Box>
-      <Features width={[4 / 5, 3 / 4]} mx="auto" my={6} />
+      <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
+
+      <Flex width={["80vw", 300]} mx="auto" my={5} justifyContent="center">
+        <Link fontSize={1} href="/privacy-policy" color="gray.4">
+          Privacy Policy
+        </Link>
+        <Link fontSize={1} ml={2} href="/toc" color="gray.4">
+          Terms And Conditions
+        </Link>
+      </Flex>
       {/* hack to prevent margin collapse in Safari */}
       <Box p={1} />
     </>

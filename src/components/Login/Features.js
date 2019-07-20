@@ -19,12 +19,14 @@ const featureItemStyles = {
 
 const featureItemIconStyles = {
   width: 64,
+  mx: "auto",
   mb: 4
 };
 
 const FeatureIcon = ({ IconComponent, width, ...props }) => {
   return (
     <Flex
+      justifyContent="center"
       alignItems="center"
       css={css`
         width: ${2 * width}px;
@@ -32,7 +34,7 @@ const FeatureIcon = ({ IconComponent, width, ...props }) => {
         background-image: url(${smallBlobInBackground});
         background-repeat: no-repeat;
         background-size: 70%;
-        background-position: -30% 60%;
+        background-position: center 60%;
       `}
       {...props}
     >
@@ -67,12 +69,18 @@ export default function Features({ ...props }) {
       <Flex flexDirection={["column", "row"]} justifyContent="center" width={1}>
         <Box {...featureItemStyles}>
           <FeatureIcon {...featureItemIconStyles} IconComponent={BusyIcon} />
-          <Text as={"span"} fontSize={3} fontWeight="bold">
-            Decline your meetings, politely.
-          </Text>
-          <Text as={"span"} fontSize={3} ml={1}>
-            Take a quiz and get a fitting reply to decline any meeting.
-          </Text>
+          <Box
+            css={css`
+              text-align: center;
+            `}
+          >
+            <Text as={"span"} fontSize={3} fontWeight="bold">
+              Decline your meetings, politely.
+            </Text>
+            <Text as={"span"} fontSize={3} ml={1}>
+              Take a quiz and get a fitting reply to decline any meeting.
+            </Text>
+          </Box>
         </Box>
 
         <Box {...featureItemStyles}>
@@ -80,24 +88,36 @@ export default function Features({ ...props }) {
             {...featureItemIconStyles}
             IconComponent={WebLessonsIcon}
           />
-          <Text as={"span"} fontSize={3} fontWeight="bold">
-            Become better at meetings with our byte-size lessons.
-          </Text>
-          <Text as={"span"} fontSize={3} ml={1}>
-            We have condensed boring HBR articles into byte size learnings. No
-            pun intended.
-          </Text>
+          <Box
+            css={css`
+              text-align: center;
+            `}
+          >
+            <Text as={"span"} fontSize={3} fontWeight="bold">
+              Become better at meetings with our byte-size lessons.
+            </Text>
+            <Text as={"span"} fontSize={3} ml={1}>
+              We have condensed boring HBR articles into byte size learnings. No
+              pun intended.
+            </Text>
+          </Box>
         </Box>
 
         <Box {...featureItemStyles}>
           <FeatureIcon {...featureItemIconStyles} IconComponent={WakeUpIcon} />
-          <Text as={"span"} fontSize={3} fontWeight="bold">
-            Gain deeper insights on your meeting habits.
-          </Text>
-          <Text as={"span"} fontSize={3} ml={1}>
-            Get a weekly and monthly overview on your meetings, learn a little
-            more about your culture.{" "}
-          </Text>
+          <Box
+            css={css`
+              text-align: center;
+            `}
+          >
+            <Text as={"span"} fontSize={3} fontWeight="bold">
+              Gain deeper insights on your meeting habits.
+            </Text>
+            <Text as={"span"} fontSize={3} ml={1}>
+              Get a weekly and monthly overview on your meetings, learn a little
+              more about your culture.{" "}
+            </Text>
+          </Box>
         </Box>
       </Flex>
     </Box>
