@@ -65,6 +65,17 @@ export default function Tip({ title, steps, graphic: Graphic }) {
 
   const handleModalOpen = () => {
     setModalOpen(true);
+
+    // track how many times a user is clicking on tip
+    if (window.ga) {
+      console.log("sending event to ga", title);
+      window.ga("send", {
+        hitType: "event",
+        eventCategory: "tips",
+        eventAction: "view",
+        eventLabel: title
+      });
+    }
   };
 
   const handleModalClose = () => {
