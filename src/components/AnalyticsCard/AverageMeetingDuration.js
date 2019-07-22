@@ -70,7 +70,7 @@ const Explain = ({ ...props }) => (
 );
 
 export default function AverageMeetingDuration({ data, ...props }) {
-  const sum = arr => arr.reduce((a, b) => a + b);
+  const sum = arr => arr.reduce((a, b) => a + b, 0);
 
   const durationForAllEventsInMs = data.reduce(
     (allEvents, aggregateForAWeek = {}) => {
