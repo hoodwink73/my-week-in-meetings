@@ -60,6 +60,15 @@ function App() {
     window.onGoogleSignInScriptLoad = handleGoogleSignInScriptLoad;
   }, []);
 
+  useEffect(() => {
+    if (user && window.ga) {
+      // set the google id as an unqiue id to track events for the
+      // user on
+      window.ga("set", "userId", user.providerData[0].uid);
+      window.ga("send", "event", "authentication", "user-id available");
+    }
+  }, [user]);
+
   return (
     <>
       <ThemeProvider theme={theme}>
