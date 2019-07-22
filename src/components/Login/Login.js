@@ -148,6 +148,11 @@ export default function Login() {
       )
       .val(({ data: idToken }) => ({ idToken }))
       .seq(signInWithFirebase)
+      .val(() => {
+        if (window.ga) {
+          window.ga("send", "event", "authentication", "new user");
+        }
+      })
       .or(error => {
         setAuthenticationInProgress(false);
         if (error instanceof AppError) {
