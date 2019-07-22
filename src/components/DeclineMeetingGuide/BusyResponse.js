@@ -8,8 +8,16 @@ Unfortunately I will have to decline this meeting as I am occupied with other pr
 `;
 
 export default function BusyResponse({ onDeclineResponse }) {
-  return <Response content={content} onDeclineResponse={onDeclineResponse} />;
+  return (
+    <Response
+      stepName="BusyResponse"
+      content={content}
+      onDeclineResponse={onDeclineResponse}
+    />
+  );
 }
+
+BusyResponse.stepName = "BusyResponse";
 
 BusyResponse.propTypes = {
   onDeclineResponse: PropTypes.func.isRequired

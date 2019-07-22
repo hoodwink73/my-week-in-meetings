@@ -7,6 +7,7 @@ import { css, jsx } from "@emotion/core";
 import Button from "../Button";
 
 export default function Response({
+  stepName,
   onDeclineResponse,
   content: defaultContent
 }) {
@@ -44,7 +45,11 @@ export default function Response({
             setLoading(true);
 
             try {
-              await onDeclineResponse(content);
+              await onDeclineResponse({
+                step: stepName,
+                comment: content,
+                isDirty: content !== defaultContent
+              });
             } catch (e) {
               setLoading(false);
               console.error(
@@ -61,6 +66,7 @@ export default function Response({
 }
 
 Response.propTypes = {
+  stepName: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   onDeclineResponse: PropTypes.func.isRequired
 };

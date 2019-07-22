@@ -10,8 +10,16 @@ const content = `
 `;
 
 export default function NotWellInformedResponse({ onDeclineResponse }) {
-  return <Response content={content} onDeclineResponse={onDeclineResponse} />;
+  return (
+    <Response
+      stepName="NotWellInformedResponse"
+      content={content}
+      onDeclineResponse={onDeclineResponse}
+    />
+  );
 }
+
+NotWellInformedResponse.stepName = "NotWellInformedResponse";
 
 NotWellInformedResponse.propTypes = {
   onDeclineResponse: PropTypes.func.isRequired

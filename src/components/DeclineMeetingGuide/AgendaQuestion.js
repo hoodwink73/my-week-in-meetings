@@ -19,3 +19,5 @@ AgendaQuestion.propTypes = {
   handleYes: PropType.func.isRequired,
   handleNo: PropType.func.isRequired
 };
+
+AgendaQuestion.stepName = "AgendaQuestion";

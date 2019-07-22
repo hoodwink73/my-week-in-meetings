@@ -11,6 +11,8 @@ export default function NotWellInformedQuestion({ handleYes, handleNo }) {
   );
 }
 
+NotWellInformedQuestion.stepName = "NotWellInformedQuestion";
+
 NotWellInformedQuestion.propTypes = {
   handleYes: PropType.func.isRequired,
   handleNo: PropType.func.isRequired

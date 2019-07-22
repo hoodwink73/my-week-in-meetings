@@ -12,6 +12,8 @@ export default function ResponsibilityQuestion({ handleYes, handleNo }) {
   );
 }
 
+ResponsibilityQuestion.stepName = "ResponsibilityQuestion";
+
 ResponsibilityQuestion.propTypes = {
   handleYes: PropType.func.isRequired,
   handleNo: PropType.func.isRequired

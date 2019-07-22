@@ -15,6 +15,8 @@ export default function BusyQuestion({ handleYes, handleNo }) {
   );
 }
 
+BusyQuestion.stepName = "BusyQuestion";
+
 BusyQuestion.propTypes = {
   handleYes: PropType.func.isRequired,
   handleNo: PropType.func.isRequired

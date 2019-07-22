@@ -22,3 +22,5 @@ export default function AttendMeeting({ handleYes }) {
     </Flex>
   );
 }
+
+AttendMeeting.stepName = "AttendMeeting";

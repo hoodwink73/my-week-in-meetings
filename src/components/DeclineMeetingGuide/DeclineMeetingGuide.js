@@ -270,19 +270,22 @@ const reducer = (state, action) => {
 function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
   const [CurrentStep, dispatch] = useReducer(reducer, Intro);
   const { user } = useAuthState(firebase.auth());
-  const isLarge = useMedia("(min-width: 64em)");
 
   const declineEventCloudFn = firebase
     .functions()
     .httpsCallable("declineEvent");
 
-  const handleDeclineResponse = async comment => {
+  const handleDeclineResponse = async ({ step, comment, isDirty }) => {
     const googleUserID = getUserGoogleID(user);
+
+    console.log(step);
 
     const declineEventResponse = await declineEventCloudFn({
       userID: googleUserID,
       eventID: event.id,
-      comment
+      step,
+      comment,
+      isDirty
     });
 
     onRequestClose();

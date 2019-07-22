@@ -9,8 +9,16 @@ Please feel free to update the agenda and invite me again.
 `;
 
 export default function AgendaResponse({ onDeclineResponse }) {
-  return <Response content={content} onDeclineResponse={onDeclineResponse} />;
+  return (
+    <Response
+      stepName="AgendaResponse"
+      content={content}
+      onDeclineResponse={onDeclineResponse}
+    />
+  );
 }
+
+AgendaResponse.stepName = "AgendaResponse";
 
 AgendaResponse.propTypes = {
   onDeclineResponse: PropTypes.func.isRequired

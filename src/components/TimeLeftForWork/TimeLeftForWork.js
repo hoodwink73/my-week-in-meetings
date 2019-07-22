@@ -32,7 +32,6 @@ let AnimateText = () => {
   useEffect(() => {
     setTimeout(() => {
       if (animateText[0].key < IN_PROGRESS_TEXT_OPTIONS.length - 1) {
-        console.log("here");
         setAnimatetext([
           {
             key: animateText[0].key + 1,

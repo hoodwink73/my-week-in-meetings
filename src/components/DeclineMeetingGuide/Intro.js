@@ -26,6 +26,8 @@ export default function Intro({ handleYes, handleNo }) {
   );
 }
 
+Intro.stepName = "Intro";
+
 Intro.propTypes = {
   handleYes: PropTypes.func.isRequired,
   handleNo: PropTypes.func.isRequired

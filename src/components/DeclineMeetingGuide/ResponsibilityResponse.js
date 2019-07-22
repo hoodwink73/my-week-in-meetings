@@ -10,8 +10,16 @@ If you think otherwise, please let me know how can I make myself useful.
 `;
 
 export default function ResponsibilityResponse({ onDeclineResponse }) {
-  return <Response content={content} onDeclineResponse={onDeclineResponse} />;
+  return (
+    <Response
+      stepName="ResponsibilityResponse"
+      content={content}
+      onDeclineResponse={onDeclineResponse}
+    />
+  );
 }
+
+ResponsibilityResponse.stepName = "ResponsibilityResponse";
 
 ResponsibilityResponse.propTypes = {
   onDeclineResponse: PropTypes.func.isRequired
