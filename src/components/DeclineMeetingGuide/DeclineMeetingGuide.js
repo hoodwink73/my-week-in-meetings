@@ -278,8 +278,6 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
   const handleDeclineResponse = async ({ step, comment, isDirty }) => {
     const googleUserID = getUserGoogleID(user);
 
-    console.log(step);
-
     const declineEventResponse = await declineEventCloudFn({
       userID: googleUserID,
       eventID: event.id,
@@ -287,6 +285,17 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
       comment,
       isDirty
     });
+
+    if (window.ga) {
+      window.ga("send", {
+        hitType: "event",
+        eventCategory: "decline",
+        eventAction: "decline",
+        eventLabel: step,
+        hasEdited: isDirty,
+        comment
+      });
+    }
 
     onRequestClose();
 
