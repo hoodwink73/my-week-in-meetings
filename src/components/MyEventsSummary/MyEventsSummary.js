@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Flex, Box, Card, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -19,6 +19,13 @@ import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { useDoesUserHaveAggregatedData } from "../../hooks";
 import { FirestoreDataContext } from "../FirestoreData";
 
+const initMixpanel = () => {
+  if (process.env.NODE_ENV === "production") {
+    window.mixpanel &&
+      window.mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_ID);
+  }
+};
+
 export default function MyEventsSummary() {
   const {
     value: aggregatedDataForUser,
@@ -30,6 +37,9 @@ export default function MyEventsSummary() {
 
   const { aggregatedEvents, eventsThisWeek } = useContext(FirestoreDataContext);
 
+  useEffect(() => {
+    initMixpanel();
+  }, []);
   // when user signs up for the first time
   // they will not have any events and as we fetch events
   // for past four weeks, it might take a bit more time
