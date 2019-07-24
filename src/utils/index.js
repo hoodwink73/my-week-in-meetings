@@ -11,7 +11,7 @@ import getDayStatus from "./getDayStatus";
 import pluralize from "./pluralize";
 import AppError from "./AppError";
 import track from "./trackAnalytics";
-
+import reportError from "./reportError";
 export {
   getStartOfWeekInUTC,
   filterEventsForToday,
@@ -25,5 +25,6 @@ export {
   getDayStatus,
   pluralize,
   track,
+  reportError,
   AppError
 };

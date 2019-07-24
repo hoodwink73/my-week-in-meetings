@@ -107,7 +107,6 @@ export default function MyEventsSummary() {
             <UpcomingMeetings />
 
             <Tips />
-
             <LoadingContainer isLoading={!hasAggregatedEventsLoaded}>
               <Flex
                 justifyContent="space-between"

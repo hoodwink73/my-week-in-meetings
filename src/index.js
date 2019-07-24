@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 
 import "./index.css";
 import App from "./App";
+import { reportError } from "./utils";
 
 import IntroImage from "./images/decline-meeting-intro.png";
 import AgendaUnclearImage from "./images/decline-meeting-agenda-unclear.png";
@@ -28,7 +29,7 @@ const config = {
 };
 
 firebase.initializeApp(config);
-
+reportError.activate();
 ReactDOM.render(<App />, document.getElementById("root"));
 
 (function preloadImages() {

@@ -1,7 +1,7 @@
-import { TURN_ON_ANALYCTIS_FOR_ENVIRONMENT } from "../constants";
+import { TURN_ON_ANALYTICS_FOR_ENVIRONMENT } from "../constants";
 
 const isAnalyticsTurnedOn = () =>
-  TURN_ON_ANALYCTIS_FOR_ENVIRONMENT.includes(process.env.NODE_ENV);
+  TURN_ON_ANALYTICS_FOR_ENVIRONMENT.includes(process.env.NODE_ENV);
 
 const sendAuthenticationEventToGoogleAnalytics = ({ userID }) => {
   if (isAnalyticsTurnedOn()) {
