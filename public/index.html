@@ -95,29 +95,14 @@
     <!-- end Mixpanel -->
     <!-- Google Analytics -->
     <script>
-      if (`%NODE_ENV%` === "production") {
-        window.ga =
-          window.ga ||
-          function() {
-            (ga.q = ga.q || []).push(arguments);
-          };
-        ga.l = +new Date();
-        ga("create", "UA-144292267-1", "auto");
-        ga("send", "pageview");
-      }
-    </script>
+      const scriptEl = document.createElement("script");
+      scriptEl.setAttribute(
+        "src",
+        "https://www.google-analytics.com/analytics.js"
+      );
+      scriptEl.setAttribute("async", true);
 
-    <script>
-      if (`%NODE_ENV%` === "production") {
-        const scriptEl = document.createElement("script");
-        scriptEl.setAttribute(
-          "src",
-          "https://www.google-analytics.com/analytics.js"
-        );
-        scriptEl.setAttribute("async", true);
-
-        document.querySelector("head").prepend(scriptEl);
-      }
+      document.querySelector("head").prepend(scriptEl);
     </script>
     <!-- End Google Analytics -->
 

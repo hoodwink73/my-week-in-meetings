@@ -12,6 +12,7 @@ import GetDailySchedule from "./GetDailySchedule";
 import { UserConfigContext } from "../UserConfig";
 import { useUser } from "../../hooks";
 import { useErrorManager } from "../Errors";
+import { track, getUserGoogleID } from "../../utils";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -129,6 +130,11 @@ export default function NewUserForm() {
                   });
                   console.error(e);
                 }
+
+                track.sendUserRoleToMixpanel({
+                  userID: getUserGoogleID(user),
+                  role: cache.current.userDetails.role
+                });
               }}
             />
           )}

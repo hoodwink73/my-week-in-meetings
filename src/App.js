@@ -17,7 +17,7 @@ import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
 import FirestoreData from "./components/FirestoreData";
 import UserConfig from "./components/UserConfig";
-import { getUserGoogleID } from "./utils";
+import { track, getUserGoogleID } from "./utils";
 import { ReactComponent as LoadingIcon } from "./icons/icon-refresh.svg";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE = "profile email openid";
@@ -58,14 +58,18 @@ function App() {
     };
 
     window.onGoogleSignInScriptLoad = handleGoogleSignInScriptLoad;
+
+    track.activateGoogleAnalytics();
   }, []);
 
   useEffect(() => {
-    if (user && window.ga) {
-      // set the google id as an unqiue id to track events for the
-      // user on
-      window.ga("set", "userId", user.providerData[0].uid);
-      window.ga("send", "event", "authentication", "user-id available");
+    if (user) {
+      track.sendAuthenticationEventToGoogleAnalytics({
+        userID: getUserGoogleID(user)
+      });
+      track.sendAuthenticationEventToMixpanel({
+        userID: getUserGoogleID(user)
+      });
     }
   }, [user]);
 

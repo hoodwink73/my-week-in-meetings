@@ -10,6 +10,7 @@ import sortCollectionByKey from "./sortCollectionByKey";
 import getDayStatus from "./getDayStatus";
 import pluralize from "./pluralize";
 import AppError from "./AppError";
+import track from "./trackAnalytics";
 
 export {
   getStartOfWeekInUTC,
@@ -23,5 +24,6 @@ export {
   sortCollectionByKey,
   getDayStatus,
   pluralize,
+  track,
   AppError
 };

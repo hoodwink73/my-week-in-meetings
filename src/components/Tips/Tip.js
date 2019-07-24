@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 import { Flex, Box, Text, Image, Card } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import useMedia from "react-use/lib/useMedia";
+import { useTransition, animated } from "react-spring";
+
 import Modal from "../Modal";
 import Pagination from "../Pagination";
 import Button from "../Button";
-import useMedia from "react-use/lib/useMedia";
-import { useTransition, animated } from "react-spring";
+import { track } from "../../utils";
 
 const ANIMATION_CONFIG = {
   mass: 1.1,
@@ -66,16 +68,18 @@ export default function Tip({ title, steps, graphic: Graphic }) {
   const handleModalOpen = () => {
     setModalOpen(true);
 
-    // track how many times a user is clicking on tip
-    if (window.ga) {
-      console.log("sending event to ga", title);
-      window.ga("send", {
+    track({
+      ga: {
         hitType: "event",
         eventCategory: "tips",
         eventAction: "view",
         eventLabel: title
-      });
-    }
+      },
+      mixpanel: {
+        eventName: "view tips",
+        title
+      }
+    });
   };
 
   const handleModalClose = () => {

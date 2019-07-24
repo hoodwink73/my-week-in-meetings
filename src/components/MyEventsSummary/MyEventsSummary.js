@@ -18,13 +18,7 @@ import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 
 import { useDoesUserHaveAggregatedData } from "../../hooks";
 import { FirestoreDataContext } from "../FirestoreData";
-
-const initMixpanel = () => {
-  if (process.env.NODE_ENV === "production") {
-    window.mixpanel &&
-      window.mixpanel.init(process.env.REACT_APP_MIXPANEL_PROJECT_ID);
-  }
-};
+import { track } from "../../utils";
 
 export default function MyEventsSummary() {
   const {
@@ -38,7 +32,10 @@ export default function MyEventsSummary() {
   const { aggregatedEvents, eventsThisWeek } = useContext(FirestoreDataContext);
 
   useEffect(() => {
-    initMixpanel();
+    // we are using the free plan of mixpanel
+    // it has a low limit on users that we can track monthly
+    // so we only want to activate mixpanel for authenticated users
+    track.activateMixpanel();
   }, []);
   // when user signs up for the first time
   // they will not have any events and as we fetch events

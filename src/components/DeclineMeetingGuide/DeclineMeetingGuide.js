@@ -19,7 +19,7 @@ import AttendMeetingImage from "../../images/attend-meeting-alt.png";
 import { FadeIn, SlideUp } from "../Animate";
 import Modal from "../Modal";
 import { Event } from "../Events";
-import { getUserGoogleID } from "../../utils";
+import { track, getUserGoogleID } from "../../utils";
 
 import Intro from "./Intro";
 
@@ -286,16 +286,24 @@ function DeclineMeetingGuide({ event, isOpen, onRequestClose }) {
       isDirty
     });
 
-    if (window.ga) {
-      window.ga("send", {
+    track({
+      ga: {
         hitType: "event",
         eventCategory: "decline",
         eventAction: "decline",
         eventLabel: step,
         hasEdited: isDirty,
         comment
-      });
-    }
+      },
+      mixpanel: {
+        eventName: "decline",
+        step,
+        comment,
+        isDirty,
+        durationInMinutes: event.enrichedData.durationInMs / 1000 / 60,
+        attendeeCount: event.attendees && event.attendees.length
+      }
+    });
 
     onRequestClose();
 

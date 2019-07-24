@@ -103,3 +103,5 @@ export const USER_JOB_ROLES = new Map([
 
 export const INCLUDE_COOL_OFF_TIME = true;
 export const COOL_OFF_TIME_IN_MINUTES = 10;
+
+export const TURN_ON_ANALYCTIS_FOR_ENVIRONMENT = ["production"];
