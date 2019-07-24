@@ -17,7 +17,9 @@ import InviteListTipImage from "./images/tips-invite-list.png";
 import ActiveParticipationTipImage from "./images/tips-participate-better.png";
 
 // import * as MockDate from "mockdate";
-// MockDate.set("2019-06-25T17:50:00");
+// if (process.env.NODE_ENV=== "development") {
+//   MockDate.set("2019-06-25T17:50:00");
+// }
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_API_KEY,
