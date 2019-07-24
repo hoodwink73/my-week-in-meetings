@@ -196,7 +196,8 @@ export default function SettingsDetails({ isOpen, onToggle }) {
       </Flex>
 
       <ChooseWorkOffDays
-        my={4}
+        mt={4}
+        mb={2}
         daysOfWork={workingTime.workingDays}
         onChange={handleOffDaysChange}
       />

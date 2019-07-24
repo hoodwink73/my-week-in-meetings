@@ -46,21 +46,26 @@ Day.propTypes = {
 export default function ChooseWorkOffDays({ daysOfWork, onChange, ...props }) {
   return (
     <Box {...props}>
-      <Text fontSize={2} fontWeight="bold" mb={3}>
-        Choose your off days
+      <Text fontSize={2} fontWeight="bold" mb={1}>
+        Choose your weekend?
+      </Text>
+      <Text fontSize={1} mb={2} color="neutrals.7">
+        Uncheck the day if you are working
       </Text>
       <Flex flexWrap="wrap">
-        {Array.from(daysOfWeek.entries()).map(([day, value]) => {
-          return (
-            <Day
-              key={day}
-              value={value}
-              day={day}
-              onChange={onChange}
-              checked={!daysOfWork.includes(value)}
-            />
-          );
-        })}
+        {Array.from(daysOfWeek.entries())
+          .slice(-2)
+          .map(([day, value]) => {
+            return (
+              <Day
+                key={day}
+                value={value}
+                day={day}
+                onChange={onChange}
+                checked={!daysOfWork.includes(value)}
+              />
+            );
+          })}
       </Flex>
     </Box>
   );
