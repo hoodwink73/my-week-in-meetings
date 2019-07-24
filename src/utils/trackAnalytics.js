@@ -38,6 +38,12 @@ const sendAuthenticationEventToMixpanel = ({ userID }) => {
 
     try {
       mixpanel.identify(userID);
+
+      track({
+        mixpanel: {
+          eventName: "user authenticated"
+        }
+      });
     } catch (e) {
       console.error(
         "Could not let Mixpanel know that the user has authenticated",
