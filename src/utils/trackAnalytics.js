@@ -37,12 +37,43 @@ const sendAuthenticationEventToMixpanel = ({ userID }) => {
     }
 
     try {
+      let EVENT_NAME_TO_TRACK_SESSION = "session";
       mixpanel.identify(userID);
 
       track({
         mixpanel: {
           eventName: "user authenticated"
         }
+      });
+
+      mixpanel.time_event(EVENT_NAME_TO_TRACK_SESSION);
+
+      window.addEventListener("beforeunload", () => {
+        const { btoa } = window;
+
+        let startTime =
+          mixpanel["persistence"]["props"]["__timers"][
+            EVENT_NAME_TO_TRACK_SESSION
+          ];
+        let duration = new Date().getTime() - startTime;
+        //duration is in minutes.
+        duration = parseFloat((duration / 1000 / 60).toFixed(3));
+
+        console.log(startTime, duration);
+        let data = btoa(
+          JSON.stringify({
+            event: EVENT_NAME_TO_TRACK_SESSION,
+            properties: {
+              token: process.env.REACT_APP_MIXPANEL_PROJECT_ID,
+              distinct_id: userID,
+              $duration: duration,
+              ...mixpanel._.info.properties(),
+              ...mixpanel["persistence"].properties()
+            }
+          })
+        );
+
+        navigator.sendBeacon(`https://api.mixpanel.com/track/?data=${data}`);
       });
     } catch (e) {
       console.error(
