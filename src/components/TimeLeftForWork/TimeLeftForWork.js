@@ -9,6 +9,7 @@ import { FirestoreDataContext } from "../FirestoreData";
 import { UserConfigContext } from "../UserConfig";
 import Time from "../Time";
 import Progress from "../Progress";
+import { useBeat } from "../../hooks";
 import {
   filterEventsForToday,
   timeLeftForWorkInMs,
@@ -16,11 +17,8 @@ import {
   getDayStatus,
   pluralize
 } from "../../utils";
-import { useRerender } from "../../hooks";
-import { DAY_STATUSES } from "../../constants";
 
-// a minute
-const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
+import { DAY_STATUSES } from "../../constants";
 
 const IN_PROGRESS_TEXT_OPTIONS = ["build", "make", "create", "get work done"];
 
@@ -30,7 +28,7 @@ let AnimateText = () => {
   ]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutID = setTimeout(() => {
       if (animateText[0].key < IN_PROGRESS_TEXT_OPTIONS.length - 1) {
         setAnimatetext([
           {
@@ -40,6 +38,10 @@ let AnimateText = () => {
         ]);
       }
     }, 2000);
+
+    return () => {
+      clearTimeout(timeoutID);
+    };
   }, [animateText]);
 
   const transitions = useTransition(animateText, item => item.key, {
@@ -59,17 +61,14 @@ let AnimateText = () => {
   ));
 };
 
-AnimateText = memo(AnimateText);
-
 export default function TimeLeftForWork({ selectedTimeRange, ...props }) {
+  useBeat();
+
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
     FirestoreDataContext
   );
 
   const { userConfig } = useContext(UserConfigContext);
-
-  // render the component after a certain interval to get the correct time left
-  useRerender(REFRESH_TIMER_FREQUENCY_IN_MS);
 
   const eventsThisWeek = eventsThisWeekRequest.data;
 

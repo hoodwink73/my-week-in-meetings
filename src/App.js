@@ -12,6 +12,7 @@ import useMedia from "react-use/lib/useMedia";
 import theme from "./theme";
 import Login from "./components/Login";
 import { Errors, ErrorManagerContextProvider } from "./components/Errors";
+import { BeatProvider } from "./hooks";
 import NewUserForm from "./components/NewUserForm";
 import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
@@ -19,6 +20,7 @@ import FirestoreData from "./components/FirestoreData";
 import UserConfig from "./components/UserConfig";
 import { track, getUserGoogleID } from "./utils";
 import { ReactComponent as LoadingIcon } from "./icons/icon-refresh.svg";
+import { REFRESH_BEAT_FREQUENCY_IN_MS } from "./constants";
 
 const GOOGLE_SIGN_IN_OAUTH_SCOPE = "profile email openid";
 
@@ -77,35 +79,37 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <ErrorManagerContextProvider>
-          <div className="App">
-            <GlobalStyles />
-            {initialisingUser && (
-              <Flex
-                justifyContent="center"
-                alignItems="center"
-                css={css`
-                  height: 100vh;
-                `}
-              >
-                <Box width={64} pt={1} mr={2}>
-                  <LoadingIcon />
-                </Box>
-              </Flex>
-            )}
+          <BeatProvider beatEveryInMs={REFRESH_BEAT_FREQUENCY_IN_MS}>
+            <div className="App">
+              <GlobalStyles />
+              {initialisingUser && (
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  css={css`
+                    height: 100vh;
+                  `}
+                >
+                  <Box width={64} pt={1} mr={2}>
+                    <LoadingIcon />
+                  </Box>
+                </Flex>
+              )}
 
-            {user ? (
-              <FirestoreData googleID={getUserGoogleID(user)}>
-                <UserConfig>
-                  <NewUserForm />
-                  <MyEventsSummary />
-                </UserConfig>
-              </FirestoreData>
-            ) : (
-              !initialisingUser && <Login />
-            )}
-          </div>
+              {user ? (
+                <FirestoreData googleID={getUserGoogleID(user)}>
+                  <UserConfig>
+                    <NewUserForm />
+                    <MyEventsSummary />
+                  </UserConfig>
+                </FirestoreData>
+              ) : (
+                !initialisingUser && <Login />
+              )}
+            </div>
 
-          <Errors />
+            <Errors />
+          </BeatProvider>
         </ErrorManagerContextProvider>
       </ThemeProvider>
       {/* we are appending the current time stamp to script source to burst cache.

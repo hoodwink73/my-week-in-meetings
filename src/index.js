@@ -17,7 +17,7 @@ import InviteListTipImage from "./images/tips-invite-list.png";
 import ActiveParticipationTipImage from "./images/tips-participate-better.png";
 
 // import * as MockDate from "mockdate";
-// if (process.env.NODE_ENV=== "development") {
+// if (process.env.NODE_ENV === "development") {
 //   MockDate.set("2019-06-25T17:50:00");
 // }
 

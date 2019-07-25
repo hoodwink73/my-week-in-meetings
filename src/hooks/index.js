@@ -1,15 +1,16 @@
 import useAggregatedEventData from "./useAggregatedEventData";
 import useEventsForWeek from "./useEventsForWeek";
-import useRerender from "./useRerender";
 import useUser from "./useUser";
 import useDoesUserHaveAggregatedData from "./useDoesUserHaveAggregatedData";
 import useAggregationCompleteEvent from "./useAggregationCompleteEvent";
+import { useBeat, BeatProvider } from "./useBeat";
 
 export {
   useAggregatedEventData,
   useEventsForWeek,
-  useRerender,
   useUser,
   useDoesUserHaveAggregatedData,
-  useAggregationCompleteEvent
+  useAggregationCompleteEvent,
+  useBeat,
+  BeatProvider
 };

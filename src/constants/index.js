@@ -106,3 +106,4 @@ export const COOL_OFF_TIME_IN_MINUTES = 10;
 
 export const TURN_ON_ANALYTICS_FOR_ENVIRONMENT = ["production"];
 export const TURN_ON_ERROR_HANDLING_FOR_ENVIRONMENT = ["production"];
+export const REFRESH_BEAT_FREQUENCY_IN_MS = 60 * 1000;

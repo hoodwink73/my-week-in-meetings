@@ -1,6 +1,8 @@
 import React from "react";
-import moment from "moment";
+
+import { useBeat } from "../../hooks";
 
 export default function Today() {
-  return moment().format("dddd, D MMM, h:mm A");
+  const lastUpdated = useBeat();
+  return <>{lastUpdated.format("dddd, D MMM, h:mm A")}</>;
 }

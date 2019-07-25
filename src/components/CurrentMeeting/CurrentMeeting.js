@@ -5,11 +5,7 @@ import { Flex, Box, Text } from "@rebass/emotion";
 
 import { UserConfigContext } from "../UserConfig";
 import { sortEvents, getWorkHours, groupEventsByTime } from "../../utils";
-import { useRerender } from "../../hooks";
 import Events from "../Events";
-
-// a minute
-const REFRESH_TIMER_FREQUENCY_IN_MS = 60 * 1000;
 
 export default function CurrentMeeting() {
   const { eventsThisWeek: eventsThisWeekRequest } = useContext(
