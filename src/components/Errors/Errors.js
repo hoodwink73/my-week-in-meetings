@@ -51,13 +51,14 @@ export default function Errors() {
                           color="red.2"
                           fontSize={1}
                           fontWeight="bold"
-                          flex="1 0 auto"
+                          flex="1 1 auto"
                         >
                           {item.message}
                         </Text>
                         {item.canDismiss && (
                           <Box
                             alignSelf="flex-end"
+                            flex="1 0 auto"
                             onClick={() =>
                               dispatch({
                                 type: "DISMISS",
