@@ -6,11 +6,15 @@ import "@firebase/auth";
 import "@firebase/firestore";
 import "@firebase/functions";
 import { Flex, Box, Text, Card, Link } from "@rebass/emotion";
+import { Link as RouteLink, Route } from "react-router-dom";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 
 import FAQ from "../FAQ";
+import About from "../About";
+import Logo from "../Logo";
+import Nav from "../Nav";
 import { useErrorManager } from "../Errors";
 import {
   CALENDAR_EVENTS_PERMISSION_SCOPE,
@@ -253,43 +257,6 @@ export default function Login() {
     );
   };
 
-  const Logo = () => (
-    <Text
-      css={css`
-        position: absolute;
-        text-transform: uppercase;
-        top: 20px;
-        letter-spacing: 10px;
-        width: 100%;
-        ${!isLarge &&
-          `
-          width: auto;
-          left: 0;
-          right: 0;
-          text-align: center;
-          background-color: #ffffff5c;
-          border-radius: 10px;
-          padding: 4px;
-        `}
-
-        ${isLarge &&
-          css`
-            padding-left: 64px;
-          `}
-
-        ${isLargeDesktop &&
-          css`
-            padding-left: 132px;
-          `}
-    }
-      `}
-      fontWeight={700}
-      fontSize={[2, 3]}
-    >
-      Deepwork.today
-    </Text>
-  );
-
   const Authenticating = () => (
     <Flex
       justifyContent="center"
@@ -309,119 +276,154 @@ export default function Login() {
   } else {
     return (
       <>
-        <Box
-          css={css`
-            width: 100vw;
-            height: ${isSmall ? "auto" : "80vh"};
-          `}
-        >
-          <Flex
-            flexDirection={["column", "row", "row"]}
-            mb={5}
-            css={css`
-              position: relative;
-              height: ${isSmall ? "auto" : "100%"};
-            `}
-          >
-            <Box
-              width={[1, 0.5]}
-              order={[2, 1, 1]}
-              css={css`
-                height: ${isLarge ? "120%" : "auto"};
-              `}
-            >
-              <Flex
-                justifyContent="flex-end"
-                alignItems="center"
-                css={css`
-                position: ${isLarge ? "relative" : "static"};
-              ${
-                "" /* adjust to keep distance from the absolutely positioned logo */
-              }
-                height: 100%;
-                align-items: center;
-                background-image: url(${smallBlobInBackground});
-                background-repeat: no-repeat;
-                background-position: left top;
-                background-size: 100%;
-                background-blend-mode: lighten;
-
-                ${isTablet &&
-                  css`
-                    padding-left: 32px;
-                  `}
-
-                ${isLarge &&
-                  css`
-                    padding-left: 64px;
-                  `}
-
-                ${isLargeDesktop &&
-                  css`
-                    padding-left: 132px;
-                    width: 80%;
-                  `}
-              `}
-              >
-                <Logo />
-                <Box width={[1]} px={[4, 0]}>
-                  <Text
-                    mt={[0, 4]}
-                    fontSize={[6, 7]}
-                    fontWeight={900}
-                    textAlign={["center", "left"]}
+        <Route path="/" exact>
+          {({ match }) => {
+            return (
+              match && (
+                <>
+                  <Box
                     css={css`
-                      font-family: Quicksand, ${DEFAULT_FONT_FAMILY};
+                      width: 100vw;
+                      height: ${isSmall ? "auto" : "80vh"};
                     `}
                   >
-                    <Text>Keep a tab </Text>
-                    <Text>on your day</Text>
-                  </Text>
-                  <Text
-                    fontSize={[3, 4]}
-                    mt={[4]}
-                    lineHeight={2}
-                    textAlign={["center", "left"]}
-                    css={css`
-                      font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
-                    `}
-                  >
-                    Worried that your time is lost in unproductive meetings —
-                    use our deepwork clock and free up more time with our
-                    interactive bite-sized guide.
-                  </Text>
-                  <SignUpButton width={[0.7]} mt={4} mx={["auto", 0]} />
-                </Box>
-              </Flex>
-            </Box>
-            <Box
-              width={[1, 0.5]}
-              order={[1, 2, 2]}
-              css={css`
-                height: ${isSmall ? "45vh" : "100%"};
-                background-image: url(${heroImage}), url(${bigBlobInBackground});
-                background-repeat: no-repeat;
-                background-position: center center,
-                  left ${isSmall ? "100%" : isLargeDesktop ? "100%" : "50%"};
-                background-size: 80%, 130%;
-                flex-shrink: 0;
-                background-blend-mode: luminosity;
-              `}
-            />
-          </Flex>
-        </Box>
-        <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
+                    <Flex
+                      flexDirection={["column", "row", "row"]}
+                      mb={5}
+                      css={css`
+                        position: relative;
+                        height: ${isSmall ? "auto" : "100%"};
+                      `}
+                    >
+                      <Box
+                        width={[1, 0.5]}
+                        order={[2, 1, 1]}
+                        css={css`
+                          height: ${isLarge ? "120%" : "auto"};
+                        `}
+                      >
+                        <Flex
+                          justifyContent="flex-end"
+                          alignItems="center"
+                          css={css`
+                    position: ${isLarge ? "relative" : "static"};
+                  ${
+                    "" /* adjust to keep distance from the absolutely positioned logo */
+                  }
+                    height: 100%;
+                    align-items: center;
+                    background-image: url(${smallBlobInBackground});
+                    background-repeat: no-repeat;
+                    background-position: left top;
+                    background-size: 100%;
+                    background-blend-mode: lighten;
 
-        <Flex width={["80vw", 300]} mx="auto" my={5} justifyContent="center">
-          <Link fontSize={1} href="/privacy-policy" color="gray.4">
-            Privacy Policy
-          </Link>
-          <Link fontSize={1} ml={2} href="/toc" color="gray.4">
-            Terms And Conditions
-          </Link>
-        </Flex>
-        {/* hack to prevent margin collapse in Safari */}
-        <Box p={1} />
+                    ${isTablet &&
+                      css`
+                        padding-left: 32px;
+                      `}
+
+                    ${isLarge &&
+                      css`
+                        padding-left: 64px;
+                      `}
+
+                    ${isLargeDesktop &&
+                      css`
+                        padding-left: 132px;
+                        width: 80%;
+                      `}
+                  `}
+                        >
+                          <Logo />
+                          <Box width={[1]} px={[4, 0]}>
+                            <Text
+                              mt={[0, 4]}
+                              fontSize={[6, 7]}
+                              fontWeight={900}
+                              textAlign={["center", "left"]}
+                              css={css`
+                                font-family: Quicksand, ${DEFAULT_FONT_FAMILY};
+                              `}
+                            >
+                              <Text>Keep a tab </Text>
+                              <Text>on your day</Text>
+                            </Text>
+                            <Text
+                              fontSize={[3, 4]}
+                              mt={[4]}
+                              lineHeight={2}
+                              textAlign={["center", "left"]}
+                              css={css`
+                                font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
+                              `}
+                            >
+                              Worried that your time is lost in unproductive
+                              meetings — use our deepwork clock and free up more
+                              time with our interactive bite-sized guide.
+                            </Text>
+                            <SignUpButton
+                              width={[0.7]}
+                              mt={4}
+                              mx={["auto", 0]}
+                            />
+                          </Box>
+                        </Flex>
+                      </Box>
+                      <Flex
+                        width={[1, 0.5]}
+                        order={[1, 2, 2]}
+                        justifyContent="flex-end"
+                        css={css`
+                          height: ${isSmall ? "45vh" : "100%"};
+                          background-image: url(${heroImage}),
+                            url(${bigBlobInBackground});
+                          background-repeat: no-repeat;
+                          background-position: center center,
+                            left
+                              ${isSmall
+                                ? "100%"
+                                : isLargeDesktop
+                                ? "100%"
+                                : "50%"};
+                          background-size: 80%, 130%;
+                          flex-shrink: 0;
+                          background-blend-mode: luminosity;
+                        `}
+                      >
+                        <Nav />
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
+
+                  <Flex
+                    width={["80vw", 300]}
+                    mx="auto"
+                    my={5}
+                    justifyContent="center"
+                  >
+                    <Link fontSize={1} href="/privacy-policy" color="gray.4">
+                      Privacy Policy
+                    </Link>
+                    <Link fontSize={1} ml={2} href="/toc" color="gray.4">
+                      Terms And Conditions
+                    </Link>
+                  </Flex>
+                  {/* hack to prevent margin collapse in Safari */}
+                  <Box p={1} />
+                </>
+              )
+            );
+          }}
+        </Route>
+        <Route
+          path="/about"
+          exact
+          render={routeProps => {
+            return <About {...routeProps} />;
+          }}
+        />
       </>
     );
   }

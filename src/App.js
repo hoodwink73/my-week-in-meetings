@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Flex, Box } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -77,41 +78,43 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <ErrorManagerContextProvider>
-          <BeatProvider beatEveryInMs={REFRESH_BEAT_FREQUENCY_IN_MS}>
-            <div className="App">
-              <GlobalStyles />
-              {initialisingUser && (
-                <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  css={css`
-                    height: 100vh;
-                  `}
-                >
-                  <Box width={64} pt={1} mr={2}>
-                    <LoadingIcon />
-                  </Box>
-                </Flex>
-              )}
+      <Router>
+        <ThemeProvider theme={theme}>
+          <ErrorManagerContextProvider>
+            <BeatProvider beatEveryInMs={REFRESH_BEAT_FREQUENCY_IN_MS}>
+              <div className="App">
+                <GlobalStyles />
 
-              {user ? (
-                <FirestoreData googleID={getUserGoogleID(user)}>
-                  <UserConfig>
-                    <NewUserForm />
-                    <MyEventsSummary />
-                  </UserConfig>
-                </FirestoreData>
-              ) : (
-                !initialisingUser && <Login />
-              )}
-            </div>
+                {initialisingUser && (
+                  <Flex
+                    justifyContent="center"
+                    alignItems="center"
+                    css={css`
+                      height: 100vh;
+                    `}
+                  >
+                    <Box width={64} pt={1} mr={2}>
+                      <LoadingIcon />
+                    </Box>
+                  </Flex>
+                )}
 
-            <Errors />
-          </BeatProvider>
-        </ErrorManagerContextProvider>
-      </ThemeProvider>
+                {user ? (
+                  <FirestoreData googleID={getUserGoogleID(user)}>
+                    <UserConfig>
+                      <NewUserForm />
+                      <MyEventsSummary />
+                    </UserConfig>
+                  </FirestoreData>
+                ) : (
+                  !initialisingUser && <Login />
+                )}
+              </div>
+              <Errors />
+            </BeatProvider>
+          </ErrorManagerContextProvider>
+        </ThemeProvider>
+      </Router>
       {/* we are appending the current time stamp to script source to burst cache.
           iOS Safari is not executing the google sign in script onLoad handler
           if the script is loaded from disk cache
