@@ -359,8 +359,8 @@ export default function Login() {
                               `}
                             >
                               Worried that your time is lost in unproductive
-                              meetings — use our deepwork clock and free up more
-                              time with our interactive bite-sized guide.
+                              meetings — use our deepwork clock and interactive
+                              bite-sized guide to free up more time.
                             </Text>
                             <SignUpButton
                               width={[0.7]}
