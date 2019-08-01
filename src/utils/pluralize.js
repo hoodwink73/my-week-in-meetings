@@ -3,7 +3,11 @@
 // Example
 // pluralize`You have ${events.length} ${["meeting","meetings"]} today`
 
-export default function pluralize(strings, num, [singularWord, pluralWord]) {
+export default function pluralize(
+  strings,
+  num,
+  [singularWord, pluralWord] = []
+) {
   let word, emptyWord;
   let result = "";
 
