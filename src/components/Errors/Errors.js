@@ -37,14 +37,7 @@ export default function Errors() {
             <>
               {transitions.map(({ item, props, key }) => (
                 <animated.div key={key} style={props}>
-                  <Card
-                    as={animated.div}
-                    bg="red.0"
-                    mb={3}
-                    borderRadius={4}
-                    p={3}
-                    boxShadow="small"
-                  >
+                  <Card as={animated.div} bg="red.0" mb={3} p={3}>
                     <Alert>
                       <Flex>
                         <Text

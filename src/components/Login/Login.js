@@ -56,14 +56,24 @@ const signInWithGoogle = () => {
   });
 };
 
-const hasUserProvidedEventsPermission = ({ googleID, idToken }) => {
+const hasUserProvidedEventsPermission = authDetails => {
   const auth2 = window.gapi.auth2.getAuthInstance();
+  let error = "USER_SCOPE_INADEQUATE";
+  // if this sequence is used in the sign up sequence
+  // we need to change the error message
+  // litmus test for a sign up sequence is that the auth details
+  // will have `authorizationCode`
+  // while auth details passed forwarded by sign in sequence will not
+  if (authDetails.authorizationCode) {
+    error = "USER_DENIED_PERMISSION";
+  }
+
   return ASQ().val(() => {
     const currentUser = auth2.currentUser.get();
     if (currentUser.hasGrantedScopes(CALENDAR_EVENTS_PERMISSION_SCOPE)) {
-      return { googleID, idToken };
+      return authDetails;
     } else {
-      throw new AppError("USER_SCOPE_INADEQUATE");
+      throw new AppError(error);
     }
   });
 };
@@ -147,6 +157,7 @@ export default function Login() {
     return ASQ()
       .seq(
         getOfflineAccessToken,
+        hasUserProvidedEventsPermission,
         setAuthenticationProgress,
         persistOfflineAccessToken
       )
