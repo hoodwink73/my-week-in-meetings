@@ -135,7 +135,8 @@ const createUserProfileInMixpanel = ({
         $firstName: firstName,
         $lastName: lastName,
         $email: email,
-        role
+        role,
+        deleted: false
       });
       mixpanel.identify(userID);
     } catch (e) {

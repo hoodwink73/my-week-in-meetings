@@ -9,6 +9,7 @@ import firebase from "@firebase/app";
 import "@firebase/functions";
 
 import { useUser } from "../../hooks";
+import { track } from "../../utils";
 import { UserConfigContext } from "../UserConfig";
 import Modal from "../Modal";
 import Button from "../Button";
@@ -123,11 +124,11 @@ export default function SettingsDetails({ isOpen, onToggle }) {
   };
 
   const handleDeleteAccount = () => {
-    const choice = window.confirm(
-      `Are you sure you want to delete the account?
+    const choice = window.confirm(`
+      Are you sure you want to delete the account?
       We delete all your data once you delete the account.
-      It cannot be recovered.`
-    );
+      It cannot be recovered.
+    `);
 
     if (choice) {
       setDeleteAccount(true);
@@ -139,6 +140,17 @@ export default function SettingsDetails({ isOpen, onToggle }) {
         } catch (e) {
           console.error("Could not revoke access", e);
         }
+
+        track({
+          mixpanel: {
+            eventName: "delete account"
+          }
+        });
+
+        track.updateUserProfileInMixpanel({
+          deleted: true
+        });
+
         logout();
         onToggle();
       });
