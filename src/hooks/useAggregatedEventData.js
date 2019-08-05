@@ -55,8 +55,8 @@ export default function useAggregatedEventData(googleID) {
 
   // these are timestamp representing the beginning of the week
   // expressed as ISO stings
-  var lastWeeks = [...Array(LAST_WEEKS_TO_FETCH + 1).keys()]
-    .slice(1)
+  var lastWeeks = [...Array(LAST_WEEKS_TO_FETCH).keys()]
+    .map(i => i + 1)
     .map(getStartOfWeekInUTC);
 
   useEffect(() => {

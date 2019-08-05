@@ -6,6 +6,7 @@ import moment from "moment";
 import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
 
 import { getWorkHours } from "../../utils";
+import { useUpdateMixpanelUser } from "../../hooks";
 import { UserConfigContext } from "../UserConfig";
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { ReactComponent as TimeSpentIcon } from "../../icons/dollar-icon.svg";
@@ -116,6 +117,25 @@ export default function TimeSpentInMeetings({ data, ...props }) {
     (totalTimeSpentInMeetingsInMs / totalWorkTimeAvailableInMs) *
     100
   ).toFixed(1);
+
+  const eventsNum = data.reduce(
+    (eventsNumCumulative, aggregateForAWeek = {}) => {
+      return (
+        eventsNumCumulative +
+        delve(aggregateForAWeek, "aggregateMeetingDurations", []).length
+      );
+    },
+    0
+  );
+
+  useUpdateMixpanelUser({
+    "number of events": eventsNum,
+    "average time spent in meetings": parseInt(
+      weeklyAverageTimeSpentInMeetingsInMs.asMinutes().toFixed(0),
+      10
+    ),
+    "percentage of time spent in meetings": timeSpentInMeetingsAsPercent
+  });
 
   return (
     <Card

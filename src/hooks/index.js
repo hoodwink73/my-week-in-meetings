@@ -3,6 +3,7 @@ import useEventsForWeek from "./useEventsForWeek";
 import useUser from "./useUser";
 import useDoesUserHaveAggregatedData from "./useDoesUserHaveAggregatedData";
 import useAggregationCompleteEvent from "./useAggregationCompleteEvent";
+import useUpdateMixpanelUser from "./useUpdateMixpanelUser";
 import { useBeat, BeatProvider } from "./useBeat";
 
 export {
@@ -10,6 +11,7 @@ export {
   useEventsForWeek,
   useUser,
   useDoesUserHaveAggregatedData,
+  useUpdateMixpanelUser,
   useAggregationCompleteEvent,
   useBeat,
   BeatProvider

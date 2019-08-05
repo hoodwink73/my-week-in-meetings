@@ -144,6 +144,22 @@ const createUserProfileInMixpanel = ({
   }
 };
 
+const updateUserProfileInMixpanel = (...data) => {
+  if (isAnalyticsTurnedOn()) {
+    const { mixpanel } = window;
+
+    if (!mixpanel) {
+      return;
+    }
+
+    try {
+      mixpanel.people.append(...data);
+    } catch (e) {
+      console.error("Could not send user role to mixpanel", e);
+    }
+  }
+};
+
 const trackToGoogleAnalytics = detailsToTrack => {
   if (isAnalyticsTurnedOn()) {
     const { ga } = window;
@@ -152,7 +168,7 @@ const trackToGoogleAnalytics = detailsToTrack => {
       return;
     }
 
-    if (!"hitType" in detailsToTrack) {
+    if (!("hitType" in detailsToTrack)) {
       console.error(
         "The event you are trying to track to GA needs a key `hitType`, possibly set to the value `event`"
       );
@@ -197,5 +213,6 @@ track.sendAuthenticationEventToMixpanel = sendAuthenticationEventToMixpanel;
 track.activateGoogleAnalytics = activateGoogleAnalytics;
 track.activateMixpanel = activateMixpanel;
 track.createUserProfileInMixpanel = createUserProfileInMixpanel;
+track.updateUserProfileInMixpanel = updateUserProfileInMixpanel;
 
 export default track;

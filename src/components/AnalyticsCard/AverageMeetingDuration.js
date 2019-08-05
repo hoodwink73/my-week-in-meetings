@@ -6,6 +6,7 @@ import moment from "moment";
 import Tooltip, { useTooltip, TooltipPopup } from "@reach/tooltip";
 
 import AggregatedDataPropType from "./AggregatedData.propType";
+import { useUpdateMixpanelUser } from "../../hooks";
 import { ReactComponent as TimeSpentIcon } from "../../icons/hourglass-icon.svg";
 import { ReactComponent as InfoIcon } from "../../icons/icon-information.svg";
 /** @jsx jsx */
@@ -88,6 +89,10 @@ export default function AverageMeetingDuration({ data, ...props }) {
     .duration(averageMeetingTimeForEventsInMs)
     .asMinutes()
     .toFixed(0);
+
+  useUpdateMixpanelUser({
+    "average meeting time": averageMeetingTimeForAllWeeksInMinutes
+  });
 
   return (
     <Card

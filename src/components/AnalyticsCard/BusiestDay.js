@@ -6,6 +6,7 @@ import { ReactComponent as BusyIcon } from "../../icons/no-event-icon.svg";
 import { css, jsx } from "@emotion/core";
 import { VictoryChart, VictoryAxis, VictoryArea } from "victory";
 
+import { useUpdateMixpanelUser } from "../../hooks";
 import { UserConfigContext } from "../UserConfig";
 import AggregatedDataPropType from "./AggregatedData.propType";
 import { sortCollectionByKey } from "../../utils";
@@ -136,6 +137,13 @@ export default function BusiestDay({ data, ...props }) {
     const [busiestDayIndex] = sortedMeetingTimeByDays.keys();
     busiestDay = DAYS_OF_WEEKS[busiestDayIndex];
   }
+
+  useUpdateMixpanelUser(
+    {
+      "busiest day": busiestDay
+    },
+    true
+  );
 
   useMemo(() => {
     dataForChart = getDataForChart(sortedMeetingTimeByDays);
