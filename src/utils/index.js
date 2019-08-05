@@ -5,6 +5,7 @@ import timeLeftForWorkInMs from "./timeLeftForWorkInMs";
 import sortEvents from "./sortEvents";
 import getWorkHours from "./getWorkHours";
 import getUserGoogleID from "./getUserGoogleID";
+import getUserEmail from "./getUserEmail";
 import getUserDomain from "./getUserDomain";
 import sortCollectionByKey from "./sortCollectionByKey";
 import getDayStatus from "./getDayStatus";
@@ -20,6 +21,7 @@ export {
   sortEvents,
   getWorkHours,
   getUserGoogleID,
+  getUserEmail,
   getUserDomain,
   sortCollectionByKey,
   getDayStatus,

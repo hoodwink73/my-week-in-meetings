@@ -115,7 +115,13 @@ const activateGoogleAnalytics = () => {
   }
 };
 
-const sendUserRoleToMixpanel = ({ userID, role }) => {
+const createUserProfileInMixpanel = ({
+  userID,
+  role,
+  email,
+  firstName,
+  lastName
+}) => {
   if (isAnalyticsTurnedOn()) {
     const { mixpanel } = window;
 
@@ -125,6 +131,10 @@ const sendUserRoleToMixpanel = ({ userID, role }) => {
 
     try {
       mixpanel.people.set({
+        $name: `${firstName} ${lastName}`,
+        $firstName: firstName,
+        $lastName: lastName,
+        $email: email,
         role
       });
       mixpanel.identify(userID);
@@ -186,6 +196,6 @@ track.sendAuthenticationEventToGoogleAnalytics = sendAuthenticationEventToGoogle
 track.sendAuthenticationEventToMixpanel = sendAuthenticationEventToMixpanel;
 track.activateGoogleAnalytics = activateGoogleAnalytics;
 track.activateMixpanel = activateMixpanel;
-track.sendUserRoleToMixpanel = sendUserRoleToMixpanel;
+track.createUserProfileInMixpanel = createUserProfileInMixpanel;
 
 export default track;
