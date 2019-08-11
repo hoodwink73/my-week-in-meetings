@@ -407,7 +407,27 @@ export default function Login() {
                     </Flex>
                   </Box>
                   <Features width={[4 / 5, 3 / 4]} mx="auto" my={4} />
-
+                  {/* <Box
+                    py={1}
+                    width={1}
+                    css={theme =>
+                      css`
+                        height: 1px;
+                        background-color: ${theme.colors.neutrals[1]};
+                      `
+                    }
+                  /> */}
+                  <FAQ
+                    width={[1, 600]}
+                    mx="auto"
+                    my={6}
+                    pt={4}
+                    css={theme =>
+                      css`
+                        border-top: 2px solid ${theme.colors.neutrals[1]};
+                      `
+                    }
+                  />
                   <Flex
                     width={["80vw", 300]}
                     mx="auto"

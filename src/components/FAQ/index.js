@@ -1,101 +1,93 @@
 import React from "react";
 import { Box, Text, Heading, Link } from "@rebass/emotion";
 
-export default function FAQ() {
+export default function FAQ({ ...props }) {
   return (
-    <Box>
-      <Heading as="h1" mt={6} mb={5} textAlign="center" fontSize={5}>
-        Frequently Asked Questions
-      </Heading>
-
-      <Heading as="h2">How to setup Deepwork Today?</Heading>
-
-      <Text as="p" lineHeight={1.5}>
-        Just sign up with your Google Account for work. Permit us to manage your
-        events on your calendar.
-      </Text>
-
-      <Heading as="h2" mt={4}>
-        What data is synced while I sign up with Google?
-      </Heading>
-
-      <Text as="p" lineHeight={1.5}>
-        We get your basic profile information and we regularly sync events from
-        your primary calendar .
-      </Text>
-
-      <Heading as="h2" mt={4}>
-        How do we use your calendar events?
-      </Heading>
-
-      <Text as="p" lineHeight={1.5}>
-        We use duration of <em>events</em> to show you a timer which tells you
-        how time is left for work today.
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        We use partial events deatils to show you upcoming events for today.
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        We also help you to decline events. You can take a quick quiz to decide
-        whether you are ready for the meeting. Depending on the circumstance we
-        provide you a template response with which you can decline the meeting.
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        We use past event details to provide you relevant analytics.
-      </Text>
-
-      <Heading as="h2" mt={4}>
-        How to delete my account?
-      </Heading>
-
-      <Text as="p" lineHeight={1.5}>
-        You can delete your account from <em>Settings</em>?
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        When you delete an account,{" "}
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        - we delete all calendar data and related analytics,{" "}
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        - revoke access to the token we obtain from Google to fetch calendar
-        events{" "}
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        - cancel calendar push notification to ensure we are not notified of
-        your future events
-      </Text>
-
-      <Heading as="h2" mt={4}>
-        How do we secure you data?
-      </Heading>
-
-      <Text as="p" lineHeight={1.5}>
-        Your calendar events and related analytics cannot be accessed by anybody
-        but you.
-      </Text>
-
-      <Text as="p" lineHeight={1.5}>
-        We <strong>do not</strong> share your data with anybody.
-      </Text>
-
-      <Text>
-        App’s use of information received from Google Calendar API will adhere
-        to{" "}
-        <Link
-          color="gray.4"
-          href="https://developers.google.com/terms/api-services-user-data-policy"
-        >
-          Google API Services: User Data Policy
-        </Link>
+    <Box {...props}>
+      <Text fontSize={3} lineHeight={1.5}>
+        <Heading as="h1" mt={6} mb={5} textAlign="center" fontSize={5}>
+          Frequently Asked Questions
+        </Heading>
+        <Heading as="h2">How do you calculate deepwork time?</Heading>
+        <Text as="p" lineHeight={1.5} mt={4}>
+          - <b>time to get work done</b> = time spent at work - (time spent in
+          meetings + cool off time)
+        </Text>
+        <Text as="p">
+          - <em>cool-off time</em> is <b>10 minutes</b> <em>before</em> and{" "}
+          <em>after</em> the meeting
+        </Text>
+        <Text as="p">
+          - you can change your <em>time spent at work</em> from the settings
+        </Text>
+        <Text as="p">
+          - we do not consider meetings before and after the work day
+        </Text>
+        <Text as="p">
+          - meetings overlapping each other are also taken into account
+        </Text>
+        <Heading as="h2" mt={5}>
+          Why is my meeting not showing in the upcoming events?
+        </Heading>
+        <Text as="p" lineHeight={1.5} mt={4}>
+          We filter <em>out</em> events which
+        </Text>
+        <Text> - have no other attendees except you</Text>
+        <Heading as="h2" mt={5}>
+          What permissions do you require on my calendar?
+        </Heading>
+        <Text as="p" lineHeight={1.5} mt={4}>
+          We require a read and write access to your events. We require a write
+          access because we allow you to <b>decline events</b>.
+        </Text>
+        <Heading as="h2" mt={5}>
+          How do I delete my account?
+        </Heading>
+        <Text as="p" lineHeight={1.5} mt={4}>
+          You can delete your account from the settings.
+        </Text>
+        <Text>
+          Once you delete your account, we delete all your data and revoke any
+          permissions provided by you to access your Google profile and
+          calendar.
+        </Text>
+        <Heading as="h2" mt={5}>
+          Why am I facing problem while signing up with my work account?
+        </Heading>
+        <Text mt={4}>
+          Some organisations using G Suite explicitly block third-party apps.
+        </Text>
+        <Text as="p">
+          Contact your G Suite admin and tell them whitelist us.
+        </Text>
+        <Text as="p">
+          You can provide them{" "}
+          <Link
+            color="gray.4"
+            href="https://developers.google.com/terms/api-services-user-data-policy"
+          >
+            this link
+          </Link>{" "}
+          to help them whitelist.
+        </Text>
+        <Text as="p">And also let them know</Text>
+        <Text as="p">
+          - we <b>do not</b> share your data with anybody
+        </Text>
+        <Text as="p">
+          - we abide by{" "}
+          <Link
+            color="gray.4"
+            href="https://developers.google.com/terms/api-services-user-data-policy"
+          >
+            Google User Data Policy.{" "}
+          </Link>
+        </Text>
       </Text>
     </Box>
   );
 }
+
+FAQ.propTypes = {
+  ...Box.propTypes
+};
