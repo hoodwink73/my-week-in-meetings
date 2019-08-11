@@ -91,7 +91,7 @@ function timeLeftForWorkTodayInMs(
       ) {
         return workEndTime.diff(event.start.dateTime, "milliseconds");
       } else {
-        return event.enrichedData.durationInMs;
+        return event.end.dateTime.diff(event.start.dateTime, "milliseconds");
       }
     })
   );
