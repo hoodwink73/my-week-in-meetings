@@ -83,7 +83,9 @@ export default function AverageMeetingDuration({ data, ...props }) {
   );
 
   const averageMeetingTimeForEventsInMs =
-    sum(durationForAllEventsInMs) / durationForAllEventsInMs.length;
+    durationForAllEventsInMs.length > 0
+      ? sum(durationForAllEventsInMs) / durationForAllEventsInMs.length
+      : 0;
 
   const averageMeetingTimeForAllWeeksInMinutes = moment
     .duration(averageMeetingTimeForEventsInMs)
