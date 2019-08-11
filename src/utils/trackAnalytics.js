@@ -84,6 +84,30 @@ const sendAuthenticationEventToMixpanel = ({ userID }) => {
   }
 };
 
+const sendAuthenticationEventToFullStory = ({ userID, email }) => {
+  if (isAnalyticsTurnedOn()) {
+    try {
+      const { FS } = window;
+
+      if (!FS) {
+        console.warn(
+          "Trying to authenticate user to FS before it is initialized"
+        );
+        return;
+      }
+
+      FS.identify(userID, {
+        email: email
+      });
+    } catch (e) {
+      console.error(
+        "Could not let FullStory know that the user has authenticated",
+        e
+      );
+    }
+  }
+};
+
 const activateMixpanel = () => {
   if (isAnalyticsTurnedOn()) {
     const { mixpanel } = window;
@@ -211,6 +235,7 @@ const track = ({ ga, mixpanel }) => {
 
 track.sendAuthenticationEventToGoogleAnalytics = sendAuthenticationEventToGoogleAnalytics;
 track.sendAuthenticationEventToMixpanel = sendAuthenticationEventToMixpanel;
+track.sendAuthenticationEventToFullStory = sendAuthenticationEventToFullStory;
 track.activateGoogleAnalytics = activateGoogleAnalytics;
 track.activateMixpanel = activateMixpanel;
 track.createUserProfileInMixpanel = createUserProfileInMixpanel;

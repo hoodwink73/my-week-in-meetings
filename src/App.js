@@ -19,7 +19,7 @@ import MyEventsSummary from "./components/MyEventsSummary";
 import GlobalStyles from "./components/GlobalStyles";
 import FirestoreData from "./components/FirestoreData";
 import UserConfig from "./components/UserConfig";
-import { track, getUserGoogleID } from "./utils";
+import { track, getUserGoogleID, getUserEmail } from "./utils";
 import { ReactComponent as LoadingIcon } from "./icons/icon-refresh.svg";
 import { REFRESH_BEAT_FREQUENCY_IN_MS } from "./constants";
 
@@ -72,6 +72,10 @@ function App() {
       });
       track.sendAuthenticationEventToMixpanel({
         userID: getUserGoogleID(user)
+      });
+      track.sendAuthenticationEventToFullStory({
+        userID: getUserGoogleID(user),
+        email: getUserEmail(user)
       });
     }
   }, [user]);

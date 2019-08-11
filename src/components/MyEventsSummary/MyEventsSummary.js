@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, memo } from "react";
 import { Flex, Box, Card, Text } from "@rebass/emotion";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import useMedia from "react-use/lib/useMedia";
 import useTimeout from "react-use/lib/useTimeout";
 import delve from "dlv";
+import { Helmet } from "react-helmet";
 
 import LoadingContainer from "../LoadingContainer";
 import Greeting from "../Greeting";
@@ -19,6 +20,78 @@ import { ReactComponent as LoadingIcon } from "../../icons/icon-refresh.svg";
 import { useDoesUserHaveAggregatedData } from "../../hooks";
 import { FirestoreDataContext } from "../FirestoreData";
 import { track } from "../../utils";
+
+// we do not want our script tag to be re-rendered
+// hence we memo this
+const FullStoryScriptTag = memo(() => (
+  <Helmet>
+    <script type="text/javascript">
+      {`
+        try {
+          if ("${process.env.NODE_ENV}" === "development") {
+            throw new Error("dev mode");
+          }
+
+          window["_fs_debug"] = false;
+          window["_fs_host"] = "fullstory.com";
+          window["_fs_org"] = "${process.env.REACT_APP_FULLSTORY_ORGANISATION}";
+          window["_fs_namespace"] = "FS";
+          (function(m, n, e, t, l, o, g, y) {
+            if (e in m) {
+              if (m.console && m.console.log) {
+                m.console.log(
+                  'FullStory namespace conflict. Please set window["_fs_namespace"].'
+                );
+              }
+              return;
+            }
+            g = m[e] = function(a, b, s) {
+              g.q ? g.q.push([a, b, s]) : g._api(a, b, s);
+            };
+            g.q = [];
+            o = n.createElement(t);
+            o.async = 1;
+            o.crossOrigin = "anonymous";
+            o.src = "https://" + _fs_host + "/s/fs.js";
+            y = n.getElementsByTagName(t)[0];
+            y.parentNode.insertBefore(o, y);
+            g.identify = function(i, v, s) {
+              g(l, { uid: i }, s);
+              if (v) g(l, v, s);
+            };
+            g.setUserVars = function(v, s) {
+              g(l, v, s);
+            };
+            g.event = function(i, v, s) {
+              g("event", { n: i, p: v }, s);
+            };
+            g.shutdown = function() {
+              g("rec", !1);
+            };
+            g.restart = function() {
+              g("rec", !0);
+            };
+            g.log = function(a, b) {
+              g("log", [a, b]);
+            };
+            g.consent = function(a) {
+              g("consent", !arguments.length || a);
+            };
+            g.identifyAccount = function(i, v) {
+              o = "account";
+              v = v || {};
+              v.acctId = i;
+              g(o, v);
+            };
+            g.clearUserCookie = function() {};
+          })(window, document, window["_fs_namespace"], "script", "user");
+        } catch (e) {
+          console.warn("Fullstory plugin not executed in dev mode", e);
+        }
+      `}
+    </script>
+  </Helmet>
+));
 
 export default function MyEventsSummary() {
   const {
@@ -131,6 +204,7 @@ export default function MyEventsSummary() {
               </Flex>
             </LoadingContainer>
           </LoadingContainer>
+          <FullStoryScriptTag />
         </Flex>
       </>
     );
