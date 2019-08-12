@@ -9,9 +9,16 @@ export default function FAQ({ ...props }) {
           Frequently Asked Questions
         </Heading>
         <Heading as="h2">How do you calculate deepwork time?</Heading>
+
         <Text as="p" lineHeight={1.5} mt={4}>
-          - <b>time to get work done</b> = time spent at work - (time spent in
-          meetings + cool off time)
+          We use a simple formula,
+        </Text>
+
+        <Text as="p" lineHeight={1.5}>
+          <b>
+            deepwork time = total time spent at work - (time spent in meetings +
+            cool off time for every meeting)
+          </b>
         </Text>
         <Text as="p">
           - <em>cool-off time</em> is <b>10 minutes</b> <em>before</em> and{" "}
