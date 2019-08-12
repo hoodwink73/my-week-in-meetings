@@ -6,6 +6,7 @@ import { rgba } from "polished";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import { Flex, Text } from "@rebass/emotion";
+import useMedia from "react-use/lib/useMedia";
 
 const DEFAULT_FONT_FAMILY = `
 -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -14,6 +15,7 @@ const DEFAULT_FONT_FAMILY = `
 `;
 
 export default function Nav({ ...props }) {
+  const isSmall = useMedia("(max-width: 40em )");
   return (
     <Flex as={Text} fontSize={[1, 2]} {...props}>
       <Route
@@ -25,16 +27,18 @@ export default function Nav({ ...props }) {
               to="/about/"
               css={theme => css`
                 align-self: flex-start;
-                width: 10ch;
-                margin-top: calc(3ch + 10px);
-                margin-right: 3ch;
+                width: ${isSmall ? "7ch" : "10ch"};
+                margin-top: ${isSmall
+                  ? "calc(2ch + 10px)"
+                  : "calc(3ch + 10px)"};
+                margin-right: ${isSmall ? "1ch" : "3ch"};
                 color: ${theme.colors.primary[6]};
                 font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
                 text-transform: uppercase;
                 text-decoration: none;
                 font-weight: bold;
                 background-color: ${rgba(theme.colors.primary[1], 0.6)};
-                padding: 16px;
+                padding: ${isSmall ? "4px" : "16px"};
                 border-radius: 25px;
                 cursor: pointer;
                 text-align: center;
