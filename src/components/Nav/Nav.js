@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link, Route } from "react-router-dom";
+import { rgba } from "polished";
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -26,11 +27,17 @@ export default function Nav({ ...props }) {
                 align-self: flex-start;
                 width: 10ch;
                 margin-top: calc(3ch + 10px);
+                margin-right: 3ch;
                 color: ${theme.colors.primary[6]};
                 font-family: Montserrat, ${DEFAULT_FONT_FAMILY};
                 text-transform: uppercase;
+                text-decoration: none;
                 font-weight: bold;
+                background-color: ${rgba(theme.colors.primary[1], 0.6)};
+                padding: 16px;
+                border-radius: 25px;
                 cursor: pointer;
+                text-align: center;
               `}
             >
               About
