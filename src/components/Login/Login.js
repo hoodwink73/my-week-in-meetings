@@ -418,7 +418,7 @@ export default function Login() {
                     }
                   /> */}
                   <FAQ
-                    width={[1, 600]}
+                    width={[0.8, 600]}
                     mx="auto"
                     my={6}
                     pt={4}
