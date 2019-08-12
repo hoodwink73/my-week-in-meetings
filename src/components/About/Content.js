@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@rebass/emotion";
+import { Text, Link } from "@rebass/emotion";
 
 export default function Content({ ...props }) {
   return (
@@ -57,6 +57,28 @@ export default function Content({ ...props }) {
         task at hand. And if you decide to decline a meeting, we help you with
         thoughtful decline responses.
       </p>
+
+      <p>
+        We want you to try out deepwork.today. Make thoughful interventations
+        each day and restore the balance between collaboration and productivity.
+      </p>
+
+      <p>
+        And we would be glad if you share your active efforts with us and help
+        us make this app better. We look forward to it. Our Twitter DMs are
+        opened.
+      </p>
+
+      <p>Best</p>
+      <Link target="_blank" href="https://twitter.com/tanish2k">
+        Saurabh
+      </Link>
+      <br />
+      <br />
+
+      <Link target="_blank" href="https://twitter.com/hwk73">
+        Arijit
+      </Link>
 
       <Text>
         <h2>Attributions</h2>
