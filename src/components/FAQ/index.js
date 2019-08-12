@@ -71,7 +71,7 @@ export default function FAQ({ ...props }) {
           You can provide them{" "}
           <Link
             color="gray.4"
-            href="https://developers.google.com/terms/api-services-user-data-policy"
+            href="https://support.google.com/a/answer/7281227?hl=en"
           >
             this link
           </Link>{" "}
